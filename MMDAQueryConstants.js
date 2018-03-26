@@ -61,3 +61,13 @@ var folders;
     folders.SUBFOLDERS = "SUBFOLDERS";
     folders.ALL = "ALL";
 })(folders = exports.folders || (exports.folders = {}));
+var layouts;
+(function (layouts) {
+    layouts.ID = "ID";
+    layouts.NAME = "NAME";
+    layouts.TYPE = "TYPE";
+    layouts.CONTAINER = "CONTAINER";
+    layouts.DOCUMENTATION = "DOCUMENTATION";
+    layouts.LAYOUTTYPE = "LAYOUTTYPE";
+    layouts.ALL = "ALL";
+})(layouts = exports.layouts || (exports.layouts = {}));

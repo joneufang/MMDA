@@ -21,7 +21,8 @@ var project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getProjectDomainModelsAsTXT([dms.ID, dms.TYPE, dms.ENTITIES, dms.ASSOCIATIONS],[],[],"./Test.txt");
 //project.getProjectEnumerationsAsTXT([enums.ID, enums.NAME, enums.TYPE, enums.VALUES],[],[],"./enums.txt");
 //project.getProjectImageCollectionsAsXML([imgcol.ID, imgcol.NAME, imgcol.TYPE, imgcol.IMAGES],[],[],"./imagecollections.xml");
-project.getProjectFoldersAsXML([MMDAQueryConstants_1.folders.ID, MMDAQueryConstants_1.folders.NAME, MMDAQueryConstants_1.folders.TYPE, MMDAQueryConstants_1.folders.SUBFOLDERS, MMDAQueryConstants_1.folders.DOCUMENTS], [], [], "./folders.xml");
+//project.getProjectFoldersAsXML([fold.ID, fold.NAME, fold.TYPE, fold.SUBFOLDERS, fold.DOCUMENTS],[],[],"./folders.xml");
+project.getProjectLayoutsAsXML([MMDAQueryConstants_1.layouts.ID, MMDAQueryConstants_1.layouts.NAME, MMDAQueryConstants_1.layouts.TYPE, MMDAQueryConstants_1.layouts.LAYOUTTYPE], [], [], "./layouts.xml");
 //project.getDocumentsFromProject([qrycons.propertys.ID,qrycons.propertys.NAME,qrycons.propertys.TYPE], [qrycons.filter.TYPE,qrycons.filter.NAME], ["Microflow","Testapp"], []); //filtered Result
 //project.getDocumentsFromProject([qrycons.documents.propertys.ID,qrycons.documents.propertys.NAME,qrycons.documents.propertys.TYPE], [qrycons.documents.filter.TYPE], ["No Result Entry"], [1]); //No Result
 //project.getModuleDocumentsAsTXT("Testapp",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.txt");

@@ -258,6 +258,14 @@ var DocumentAdapter = /** @class */ (function (_super) {
     return DocumentAdapter;
 }(ModuleDocumentAdapter));
 exports.DocumentAdapter = DocumentAdapter;
+var FormBaseAdapter = /** @class */ (function (_super) {
+    __extends(FormBaseAdapter, _super);
+    function FormBaseAdapter() {
+        return _super.call(this) || this;
+    }
+    return FormBaseAdapter;
+}(DocumentAdapter));
+exports.FormBaseAdapter = FormBaseAdapter;
 var ConstantAdapter = /** @class */ (function (_super) {
     __extends(ConstantAdapter, _super);
     function ConstantAdapter() {
@@ -497,3 +505,54 @@ var FolderAdapter = /** @class */ (function (_super) {
     return FolderAdapter;
 }(FolderBaseAdapter));
 exports.FolderAdapter = FolderAdapter;
+var LayoutAdapter = /** @class */ (function (_super) {
+    __extends(LayoutAdapter, _super);
+    function LayoutAdapter() {
+        return _super.call(this) || this;
+    }
+    LayoutAdapter.prototype.getLayoutPropertys = function (layout, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.layouts.ALL) {
+            propertys[propertys.length] = this.getId(layout);
+            propertys[propertys.length] = this.getName(layout);
+            propertys[propertys.length] = this.getType(layout);
+            propertys[propertys.length] = this.getContainer(layout);
+            propertys[propertys.length] = this.getLayoutType(layout);
+            propertys[propertys.length] = this.getDocumentation(layout);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.layouts.ID) {
+                    propertys[propertys.length] = _this.getId(layout);
+                }
+                else if (qryprop == qrycons.layouts.NAME) {
+                    propertys[propertys.length] = _this.getName(layout);
+                }
+                else if (qryprop == qrycons.layouts.TYPE) {
+                    propertys[propertys.length] = _this.getType(layout);
+                }
+                else if (qryprop == qrycons.layouts.CONTAINER) {
+                    propertys[propertys.length] = _this.getContainer(layout);
+                }
+                else if (qryprop == qrycons.layouts.LAYOUTTYPE) {
+                    propertys[propertys.length] = _this.getLayoutType(layout);
+                }
+                else if (qryprop == qrycons.layouts.DOCUMENTATION) {
+                    propertys[propertys.length] = _this.getDocumentation(layout);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    LayoutAdapter.prototype.getLayoutType = function (layout) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.layouts.LAYOUTTYPE, layout.layoutType.name);
+        return property;
+    };
+    return LayoutAdapter;
+}(DocumentAdapter));
+exports.LayoutAdapter = LayoutAdapter;

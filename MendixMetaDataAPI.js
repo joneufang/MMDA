@@ -375,6 +375,51 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.getProjectFoldersAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
+    MMDAProject.prototype.getProjectLayouts = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        var outputobjects = new MMDAO.OutputObjectList();
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allLayouts();
+        })
+            .then(function (layouts) {
+            return _this.loadAllLayoutsAsPromise(layouts);
+        })
+            .done(function (loadedlayouts) {
+            loadedlayouts.forEach(function (layout) {
+                if (layout instanceof mendixmodelsdk_1.pages.Layout) {
+                    var layoutadapter = new MMDAA.LayoutAdapter();
+                    var propertys = new Array();
+                    var MMDAobj;
+                    propertys = layoutadapter.getLayoutPropertys(layout, qrypropertys);
+                    MMDAobj = new MMDAO.OutputObject(propertys, "Layout");
+                    if (layoutadapter.filter(MMDAobj, filter)) {
+                        outputobjects.addObject(MMDAobj);
+                    }
+                }
+                else {
+                    console.log("Got Layout which is not instance of pages.Layout");
+                }
+            });
+            outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+            outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+            console.log("Im Done!!!");
+        });
+    };
+    MMDAProject.prototype.getProjectLayoutsAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectLayouts(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectLayoutsAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectLayouts(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectLayoutsAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectLayouts(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectLayoutssAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectLayouts(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.loadAllLayoutsAsPromise = function (layouts) {
+        return when.all(layouts.map(function (lay) { return mendixplatformsdk_1.loadAsPromise(lay); }));
+    };
     //Constants to define output target
     MMDAProject.TEXTFILE = "TEXTFILE";
     MMDAProject.HTMLTABLE = "HTMLTABLE";

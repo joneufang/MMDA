@@ -298,6 +298,12 @@ export class DocumentAdapter extends ModuleDocumentAdapter {
     }
 }
 
+export class FormBaseAdapter extends DocumentAdapter {
+    constructor() {
+        super();   
+    }
+}
+
 export class ConstantAdapter extends DocumentAdapter {
     
     constructor() {
@@ -600,4 +606,67 @@ export class FolderAdapter extends FolderBaseAdapter {
         
         return property;
     }
+}
+
+export class LayoutAdapter extends DocumentAdapter {
+    
+    constructor() {
+        super();   
+    }
+
+    public getLayoutPropertys(layout : pages.Layout, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
+        var propertys : MMDAO.OutputObjectProperty[] = new Array();
+        if(qrypropertys[0] == qrycons.layouts.ALL)
+        {
+            propertys[propertys.length] = this.getId(layout);
+            propertys[propertys.length] = this.getName(layout);
+            propertys[propertys.length] = this.getType(layout);
+            propertys[propertys.length] = this.getContainer(layout);
+            propertys[propertys.length] = this.getLayoutType(layout);
+            propertys[propertys.length] = this.getDocumentation(layout);   
+        }
+        else
+        {
+            qrypropertys.forEach((qryprop) => {
+                if(qryprop == qrycons.layouts.ID)
+                {
+                    propertys[propertys.length] = this.getId(layout);
+                }
+                else if(qryprop == qrycons.layouts.NAME)
+                {
+                    propertys[propertys.length] = this.getName(layout);
+                }
+                else if(qryprop == qrycons.layouts.TYPE)
+                {
+                    propertys[propertys.length] = this.getType(layout);
+                }
+                else if(qryprop == qrycons.layouts.CONTAINER)
+                {
+                    propertys[propertys.length] = this.getContainer(layout);
+                }
+                else if(qryprop == qrycons.layouts.LAYOUTTYPE)
+                {
+                    propertys[propertys.length] = this.getLayoutType(layout);
+                }
+                else if(qryprop == qrycons.layouts.DOCUMENTATION)
+                {
+                    propertys[propertys.length] = this.getDocumentation(layout);
+                }
+                else
+                {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property","Value of Unknown Property");
+                }
+            })
+        }
+        return propertys;
+    }
+
+    protected getLayoutType(layout : pages.Layout) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.layouts.LAYOUTTYPE,layout.layoutType.name);
+        
+        return property;
+    }
+
 }
