@@ -154,6 +154,51 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.loadAllDocumentsAsPromise = function (documents) {
         return when.all(documents.map(function (doc) { return mendixplatformsdk_1.loadAsPromise(doc); }));
     };
+    MMDAProject.prototype.getProjectDomainModels = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        var outputobjects = new MMDAO.OutputObjectList();
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allDomainModels();
+        })
+            .then(function (domainmodels) {
+            return _this.loadAllDomainModelsAsPromise(domainmodels);
+        })
+            .done(function (loadeddms) {
+            loadeddms.forEach(function (dm) {
+                if (dm instanceof mendixmodelsdk_1.domainmodels.DomainModel) {
+                    var domainmodeladapter = new MMDAA.DomainModelAdapter();
+                    var propertys = new Array();
+                    var MMDAobj;
+                    propertys = domainmodeladapter.getDomainModelPropertys(dm, qrypropertys);
+                    MMDAobj = new MMDAO.OutputObject(propertys, "DomainModel"); //Get filtered Documents
+                    if (domainmodeladapter.filter(MMDAobj, filter)) {
+                        outputobjects.addObject(MMDAobj); //filter object
+                    }
+                }
+                else {
+                    console.log("Got Constant which is not instance of constants.Constant");
+                }
+            });
+            outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+            outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+            console.log("Im Done!!!");
+        });
+    };
+    MMDAProject.prototype.getProjectDomainModelsAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectDomainModels(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectDomainModelsAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectDomainModels(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectDomainModelsAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectDomainModels(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectDomainModelsAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectDomainModels(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.loadAllDomainModelsAsPromise = function (domainmodels) {
+        return when.all(domainmodels.map(function (dm) { return mendixplatformsdk_1.loadAsPromise(dm); }));
+    };
     MMDAProject.prototype.getProjectConstants = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
         var _this = this;
         var outputobjects = new MMDAO.OutputObjectList();

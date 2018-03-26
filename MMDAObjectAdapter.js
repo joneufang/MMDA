@@ -84,6 +84,88 @@ var ModuleDocumentAdapter = /** @class */ (function (_super) {
     return ModuleDocumentAdapter;
 }(AbstractElementAdapter));
 exports.ModuleDocumentAdapter = ModuleDocumentAdapter;
+var DomainModelAdapter = /** @class */ (function (_super) {
+    __extends(DomainModelAdapter, _super);
+    function DomainModelAdapter() {
+        return _super.call(this) || this;
+    }
+    DomainModelAdapter.prototype.getDomainModelPropertys = function (domainmodel, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.domainmodels.ALL) {
+            propertys[propertys.length] = this.getId(domainmodel);
+            propertys[propertys.length] = this.getType(domainmodel);
+            propertys[propertys.length] = this.getContainer(domainmodel);
+            propertys[propertys.length] = this.getDocumentation(domainmodel);
+            propertys[propertys.length] = this.getEntities(domainmodel);
+            propertys[propertys.length] = this.getAssociations(domainmodel);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.domainmodels.ID) {
+                    propertys[propertys.length] = _this.getId(domainmodel);
+                }
+                else if (qryprop == qrycons.domainmodels.TYPE) {
+                    propertys[propertys.length] = _this.getType(domainmodel);
+                }
+                else if (qryprop == qrycons.domainmodels.CONTAINER) {
+                    propertys[propertys.length] = _this.getContainer(domainmodel);
+                }
+                else if (qryprop == qrycons.domainmodels.DOCUMENTATION) {
+                    propertys[propertys.length] = _this.getDocumentation(domainmodel);
+                }
+                else if (qryprop == qrycons.domainmodels.ENTITIES) {
+                    propertys[propertys.length] = _this.getEntities(domainmodel);
+                }
+                else if (qryprop == qrycons.domainmodels.ASSOCIATIONS) {
+                    propertys[propertys.length] = _this.getAssociations(domainmodel);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    DomainModelAdapter.prototype.getDocumentation = function (domainmodel) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.domainmodels.DOCUMENTATION, "No Value loaded"); //Muss noch richtig implementiert werden aktuell überall No Value muss mit .load(callback) geladen werden.
+        if (domainmodel.isLoaded) {
+            var docu = domainmodel.documentation;
+            docu = docu.replace(/\r/g, "");
+            docu = docu.replace(/\n/g, "\t");
+            if (docu == "") {
+                property = new MMDAO.OutputObjectProperty(qrycons.domainmodels.DOCUMENTATION, "No Documentation");
+            }
+            else {
+                property = new MMDAO.OutputObjectProperty(qrycons.domainmodels.DOCUMENTATION, docu);
+            }
+        }
+        return property;
+    };
+    DomainModelAdapter.prototype.getEntities = function (domainmodel) {
+        var property;
+        var result = "";
+        domainmodel.entities.forEach(function (entity) {
+            result += entity.qualifiedName + ", ";
+        });
+        console.log("Entities: " + result + "\n");
+        property = new MMDAO.OutputObjectProperty(qrycons.domainmodels.ENTITIES, result);
+        return property;
+    };
+    DomainModelAdapter.prototype.getAssociations = function (domainmodel) {
+        var property;
+        var result = "";
+        domainmodel.associations.forEach(function (associ) {
+            result += associ.qualifiedName + ", ";
+        });
+        console.log("Associations: " + result + "\n");
+        property = new MMDAO.OutputObjectProperty(qrycons.domainmodels.ASSOCIATIONS, result);
+        return property;
+    };
+    return DomainModelAdapter;
+}(ModuleDocumentAdapter));
+exports.DomainModelAdapter = DomainModelAdapter;
 //Adapter to get propertys of Mendix Documents
 var DocumentAdapter = /** @class */ (function (_super) {
     __extends(DocumentAdapter, _super);

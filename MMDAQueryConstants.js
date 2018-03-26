@@ -21,3 +21,13 @@ var constants;
     constants.DOCUMENTATION = "DOCUMENTATION";
     constants.ALL = "ALL";
 })(constants = exports.constants || (exports.constants = {}));
+var domainmodels;
+(function (domainmodels) {
+    domainmodels.ID = "ID";
+    domainmodels.TYPE = "TYPE";
+    domainmodels.CONTAINER = "CONTAINER";
+    domainmodels.DOCUMENTATION = "DOCUMENTATION";
+    domainmodels.ENTITIES = "ENTITIES";
+    domainmodels.ASSOCIATIONS = "ASSOCIATIONS";
+    domainmodels.ALL = "ALL";
+})(domainmodels = exports.domainmodels || (exports.domainmodels = {}));

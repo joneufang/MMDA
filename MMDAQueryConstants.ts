@@ -19,3 +19,13 @@ export namespace constants {
         export const DOCUMENTATION : string = "DOCUMENTATION";
         export const ALL : string = "ALL";
 }
+
+export namespace domainmodels {
+        export const ID : string = "ID";
+        export const TYPE : string = "TYPE";
+        export const CONTAINER : string = "CONTAINER";
+        export const DOCUMENTATION : string = "DOCUMENTATION";
+        export const ENTITIES : string = "ENTITIES";
+        export const ASSOCIATIONS : string = "ASSOCIATIONS";
+        export const ALL : string = "ALL";
+}
