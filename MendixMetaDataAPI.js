@@ -244,6 +244,96 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.loadAllConstantsAsPromise = function (constants) {
         return when.all(constants.map(function (con) { return mendixplatformsdk_1.loadAsPromise(con); }));
     };
+    MMDAProject.prototype.getProjectEnumerations = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        var outputobjects = new MMDAO.OutputObjectList();
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allEnumerations();
+        })
+            .then(function (enumerations) {
+            return _this.loadAllEnumerationsAsPromise(enumerations);
+        })
+            .done(function (loadedenums) {
+            loadedenums.forEach(function (num) {
+                if (num instanceof mendixmodelsdk_1.enumerations.Enumeration) {
+                    var enumadapter = new MMDAA.EnumerationAdapter();
+                    var propertys = new Array();
+                    var MMDAobj;
+                    propertys = enumadapter.getEnumerationPropertys(num, qrypropertys);
+                    MMDAobj = new MMDAO.OutputObject(propertys, "Enumeration"); //Get filtered Documents
+                    if (enumadapter.filter(MMDAobj, filter)) {
+                        outputobjects.addObject(MMDAobj); //filter object
+                    }
+                }
+                else {
+                    console.log("Got Enumeration which is not instance of enumerations.Enumeration");
+                }
+            });
+            outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+            outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+            console.log("Im Done!!!");
+        });
+    };
+    MMDAProject.prototype.getProjectEnumerationsAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectEnumerationsAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectEnumerationsAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectEnumerationsAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.loadAllEnumerationsAsPromise = function (enumerations) {
+        return when.all(enumerations.map(function (num) { return mendixplatformsdk_1.loadAsPromise(num); }));
+    };
+    MMDAProject.prototype.getProjectImageCollections = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        var outputobjects = new MMDAO.OutputObjectList();
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allImageCollections();
+        })
+            .then(function (imagecollections) {
+            return _this.loadAllImageCollectionsAsPromise(imagecollections);
+        })
+            .done(function (loadedimgcol) {
+            loadedimgcol.forEach(function (imgcol) {
+                if (imgcol instanceof mendixmodelsdk_1.images.ImageCollection) {
+                    var imgcoladapter = new MMDAA.ImageCollectionAdapter();
+                    var propertys = new Array();
+                    var MMDAobj;
+                    propertys = imgcoladapter.getImageCollectionPropertys(imgcol, qrypropertys);
+                    MMDAobj = new MMDAO.OutputObject(propertys, "ImageCollection"); //Get filtered Documents
+                    if (imgcoladapter.filter(MMDAobj, filter)) {
+                        outputobjects.addObject(MMDAobj); //filter object
+                    }
+                }
+                else {
+                    console.log("Got ImageCollection which is not instance of images.ImageCollection");
+                }
+            });
+            outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+            outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+            console.log("Im Done!!!");
+        });
+    };
+    MMDAProject.prototype.getProjectImageCollectionsAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectImageCollectionsAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectImageCollectionsAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectImageCollectionsAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.loadAllImageCollectionsAsPromise = function (imagecollections) {
+        return when.all(imagecollections.map(function (img) { return mendixplatformsdk_1.loadAsPromise(img); }));
+    };
     //Constants to define output target
     MMDAProject.TEXTFILE = "TEXTFILE";
     MMDAProject.HTMLTABLE = "HTMLTABLE";

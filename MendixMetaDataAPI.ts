@@ -1,4 +1,4 @@
-import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, constants} from "mendixmodelsdk";
+import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, constants, enumerations, images} from "mendixmodelsdk";
 import {MendixSdkClient, Project, OnlineWorkingCopy, loadAsPromise} from "mendixplatformsdk";
 import when = require("when");
 import fs = require("fs-extra");
@@ -299,6 +299,110 @@ export class MMDAProject {
 
     protected loadAllConstantsAsPromise(constants: constants.IConstant[]): when.Promise<constants.Constant[]> {
         return when.all<constants.Constant[]>(constants.map( con => loadAsPromise(con)));
+    }
+
+    protected getProjectEnumerations(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allEnumerations();
+        })
+        .then((enumerations) => { 
+            return this.loadAllEnumerationsAsPromise(enumerations);
+        })
+        .done((loadedenums) => {
+            loadedenums.forEach((num) => {
+                if(num instanceof enumerations.Enumeration){
+                    var enumadapter : MMDAA.EnumerationAdapter = new MMDAA.EnumerationAdapter();
+                    var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                    var MMDAobj : MMDAO.OutputObject;
+                    propertys = enumadapter.getEnumerationPropertys(num, qrypropertys);
+                    MMDAobj = new MMDAO.OutputObject(propertys,"Enumeration");                   //Get filtered Documents
+                    if(enumadapter.filter(MMDAobj,filter))
+                    {
+                        outputobjects.addObject(MMDAobj);                        //filter object
+                    }
+                }
+                else
+                {
+                    console.log("Got Enumeration which is not instance of enumerations.Enumeration");
+                }
+            });
+            outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+            outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+            console.log("Im Done!!!");
+        });
+    }
+
+    public getProjectEnumerationsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getProjectEnumerationsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getProjectEnumerationsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getProjectEnumerationsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected loadAllEnumerationsAsPromise(enumerations: enumerations.IEnumeration[]): when.Promise<enumerations.Enumeration[]> {
+        return when.all<enumerations.Enumeration[]>(enumerations.map( num => loadAsPromise(num)));
+    }
+
+    protected getProjectImageCollections(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allImageCollections();
+        })
+        .then((imagecollections) => { 
+            return this.loadAllImageCollectionsAsPromise(imagecollections);
+        })
+        .done((loadedimgcol) => {
+            loadedimgcol.forEach((imgcol) => {
+                if(imgcol instanceof images.ImageCollection){
+                    var imgcoladapter : MMDAA.ImageCollectionAdapter = new MMDAA.ImageCollectionAdapter();
+                    var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                    var MMDAobj : MMDAO.OutputObject;
+                    propertys = imgcoladapter.getImageCollectionPropertys(imgcol, qrypropertys);
+                    MMDAobj = new MMDAO.OutputObject(propertys,"ImageCollection");                   //Get filtered Documents
+                    if(imgcoladapter.filter(MMDAobj,filter))
+                    {
+                        outputobjects.addObject(MMDAobj);                        //filter object
+                    }
+                }
+                else
+                {
+                    console.log("Got ImageCollection which is not instance of images.ImageCollection");
+                }
+            });
+            outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+            outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+            console.log("Im Done!!!");
+        });
+    }
+
+    public getProjectImageCollectionsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getProjectImageCollectionsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getProjectImageCollectionsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getProjectImageCollectionsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected loadAllImageCollectionsAsPromise(imagecollections : images.IImageCollection[]): when.Promise<images.ImageCollection[]> {
+        return when.all<images.ImageCollection[]>(imagecollections.map( img => loadAsPromise(img)));
     }
 }    
 

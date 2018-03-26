@@ -149,7 +149,7 @@ var DomainModelAdapter = /** @class */ (function (_super) {
         domainmodel.entities.forEach(function (entity) {
             result += entity.qualifiedName + ", ";
         });
-        console.log("Entities: " + result + "\n");
+        //console.log("Entities: " + result + "\n");
         property = new MMDAO.OutputObjectProperty(qrycons.domainmodels.ENTITIES, result);
         return property;
     };
@@ -159,7 +159,7 @@ var DomainModelAdapter = /** @class */ (function (_super) {
         domainmodel.associations.forEach(function (associ) {
             result += associ.qualifiedName + ", ";
         });
-        console.log("Associations: " + result + "\n");
+        //console.log("Associations: " + result + "\n");
         property = new MMDAO.OutputObjectProperty(qrycons.domainmodels.ASSOCIATIONS, result);
         return property;
     };
@@ -294,3 +294,113 @@ var ConstantAdapter = /** @class */ (function (_super) {
     return ConstantAdapter;
 }(DocumentAdapter));
 exports.ConstantAdapter = ConstantAdapter;
+var EnumerationAdapter = /** @class */ (function (_super) {
+    __extends(EnumerationAdapter, _super);
+    function EnumerationAdapter() {
+        return _super.call(this) || this;
+    }
+    EnumerationAdapter.prototype.getEnumerationPropertys = function (enumeration, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.enumerations.ALL) {
+            propertys[propertys.length] = this.getId(enumeration);
+            propertys[propertys.length] = this.getName(enumeration);
+            propertys[propertys.length] = this.getType(enumeration);
+            propertys[propertys.length] = this.getValues(enumeration);
+            propertys[propertys.length] = this.getContainer(enumeration);
+            propertys[propertys.length] = this.getDocumentation(enumeration);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.enumerations.ID) {
+                    propertys[propertys.length] = _this.getId(enumeration);
+                }
+                else if (qryprop == qrycons.enumerations.NAME) {
+                    propertys[propertys.length] = _this.getName(enumeration);
+                }
+                else if (qryprop == qrycons.enumerations.TYPE) {
+                    propertys[propertys.length] = _this.getType(enumeration);
+                }
+                else if (qryprop == qrycons.enumerations.VALUES) {
+                    propertys[propertys.length] = _this.getValues(enumeration);
+                }
+                else if (qryprop == qrycons.enumerations.CONTAINER) {
+                    propertys[propertys.length] = _this.getContainer(enumeration);
+                }
+                else if (qryprop == qrycons.enumerations.DOCUMENTATION) {
+                    propertys[propertys.length] = _this.getDocumentation(enumeration);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    EnumerationAdapter.prototype.getValues = function (enumeration) {
+        var property;
+        var result = "";
+        enumeration.values.forEach(function (value) {
+            result += value.name + ", ";
+        });
+        property = new MMDAO.OutputObjectProperty(qrycons.enumerations.VALUES, result);
+        return property;
+    };
+    return EnumerationAdapter;
+}(DocumentAdapter));
+exports.EnumerationAdapter = EnumerationAdapter;
+var ImageCollectionAdapter = /** @class */ (function (_super) {
+    __extends(ImageCollectionAdapter, _super);
+    function ImageCollectionAdapter() {
+        return _super.call(this) || this;
+    }
+    ImageCollectionAdapter.prototype.getImageCollectionPropertys = function (imagecollection, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.imagecollections.ALL) {
+            propertys[propertys.length] = this.getId(imagecollection);
+            propertys[propertys.length] = this.getName(imagecollection);
+            propertys[propertys.length] = this.getType(imagecollection);
+            propertys[propertys.length] = this.getImages(imagecollection);
+            propertys[propertys.length] = this.getContainer(imagecollection);
+            propertys[propertys.length] = this.getDocumentation(imagecollection);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.imagecollections.ID) {
+                    propertys[propertys.length] = _this.getId(imagecollection);
+                }
+                else if (qryprop == qrycons.imagecollections.NAME) {
+                    propertys[propertys.length] = _this.getName(imagecollection);
+                }
+                else if (qryprop == qrycons.imagecollections.TYPE) {
+                    propertys[propertys.length] = _this.getType(imagecollection);
+                }
+                else if (qryprop == qrycons.imagecollections.IMAGES) {
+                    propertys[propertys.length] = _this.getImages(imagecollection);
+                }
+                else if (qryprop == qrycons.imagecollections.IMAGES) {
+                    propertys[propertys.length] = _this.getContainer(imagecollection);
+                }
+                else if (qryprop == qrycons.imagecollections.DOCUMENTATION) {
+                    propertys[propertys.length] = _this.getDocumentation(imagecollection);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    ImageCollectionAdapter.prototype.getImages = function (imagecollection) {
+        var property;
+        var result = "";
+        imagecollection.images.forEach(function (img) {
+            result += img.qualifiedName + ", ";
+        });
+        property = new MMDAO.OutputObjectProperty(qrycons.imagecollections.IMAGES, result);
+        return property;
+    };
+    return ImageCollectionAdapter;
+}(DocumentAdapter));
+exports.ImageCollectionAdapter = ImageCollectionAdapter;

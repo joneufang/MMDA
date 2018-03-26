@@ -1,4 +1,4 @@
-import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, AbstractElement, constants} from "mendixmodelsdk";
+import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, AbstractElement, constants, enumerations, images} from "mendixmodelsdk";
 import * as MMDAO from "./MMDAOutputObject";
 import * as MMDA from "./MendixMetaDataAPI";
 import * as qrycons from "./MMDAQueryConstants";
@@ -356,3 +356,140 @@ export class ConstantAdapter extends DocumentAdapter {
 
 }
 
+export class EnumerationAdapter extends DocumentAdapter {
+    
+    constructor() {
+        super();   
+    }
+
+    public getEnumerationPropertys(enumeration : enumerations.Enumeration, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
+        var propertys : MMDAO.OutputObjectProperty[] = new Array();
+        if(qrypropertys[0] == qrycons.enumerations.ALL)
+        {
+            propertys[propertys.length] = this.getId(enumeration);
+            propertys[propertys.length] = this.getName(enumeration);
+            propertys[propertys.length] = this.getType(enumeration);
+            propertys[propertys.length] = this.getValues(enumeration);
+            propertys[propertys.length] = this.getContainer(enumeration);
+            propertys[propertys.length] = this.getDocumentation(enumeration);   
+        }
+        else
+        {
+            qrypropertys.forEach((qryprop) => {
+                if(qryprop == qrycons.enumerations.ID)
+                {
+                    propertys[propertys.length] = this.getId(enumeration);
+                }
+                else if(qryprop == qrycons.enumerations.NAME)
+                {
+                    propertys[propertys.length] = this.getName(enumeration);
+                }
+                else if(qryprop == qrycons.enumerations.TYPE)
+                {
+                    propertys[propertys.length] = this.getType(enumeration);
+                }
+                else if(qryprop == qrycons.enumerations.VALUES)
+                {
+                    propertys[propertys.length] = this.getValues(enumeration);
+                }
+                else if(qryprop == qrycons.enumerations.CONTAINER)
+                {
+                    propertys[propertys.length] = this.getContainer(enumeration);
+                }
+                else if(qryprop == qrycons.enumerations.DOCUMENTATION)
+                {
+                    propertys[propertys.length] = this.getDocumentation(enumeration);
+                }
+                else
+                {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property","Value of Unknown Property");
+                }
+            })
+        }
+        return propertys;
+    }
+
+    protected getValues(enumeration : enumerations.Enumeration) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+
+        var result : string = "";
+        
+                enumeration.values.forEach((value) => {
+                    result += value.name + ", ";
+                });
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.enumerations.VALUES,result);
+       
+        return property;
+    }
+
+}
+
+export class ImageCollectionAdapter extends DocumentAdapter {
+    
+    constructor() {
+        super();   
+    }
+
+    public getImageCollectionPropertys(imagecollection : images.ImageCollection, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
+        var propertys : MMDAO.OutputObjectProperty[] = new Array();
+        if(qrypropertys[0] == qrycons.imagecollections.ALL)
+        {
+            propertys[propertys.length] = this.getId(imagecollection);
+            propertys[propertys.length] = this.getName(imagecollection);
+            propertys[propertys.length] = this.getType(imagecollection);
+            propertys[propertys.length] = this.getImages(imagecollection);
+            propertys[propertys.length] = this.getContainer(imagecollection);
+            propertys[propertys.length] = this.getDocumentation(imagecollection);   
+        }
+        else
+        {
+            qrypropertys.forEach((qryprop) => {
+                if(qryprop == qrycons.imagecollections.ID)
+                {
+                    propertys[propertys.length] = this.getId(imagecollection);
+                }
+                else if(qryprop == qrycons.imagecollections.NAME)
+                {
+                    propertys[propertys.length] = this.getName(imagecollection);
+                }
+                else if(qryprop == qrycons.imagecollections.TYPE)
+                {
+                    propertys[propertys.length] = this.getType(imagecollection);
+                }
+                else if(qryprop == qrycons.imagecollections.IMAGES)
+                {
+                    propertys[propertys.length] = this.getImages(imagecollection);
+                }
+                else if(qryprop == qrycons.imagecollections.IMAGES)
+                {
+                    propertys[propertys.length] = this.getContainer(imagecollection);
+                }
+                else if(qryprop == qrycons.imagecollections.DOCUMENTATION)
+                {
+                    propertys[propertys.length] = this.getDocumentation(imagecollection);
+                }
+                else
+                {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property","Value of Unknown Property");
+                }
+            })
+        }
+        return propertys;
+    }
+
+    protected getImages(imagecollection : images.ImageCollection) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+
+        var result : string = "";
+        
+                imagecollection.images.forEach((img) => {
+                    result += img.qualifiedName + ", ";
+                });
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.imagecollections.IMAGES,result);
+       
+        return property;
+    }
+
+}

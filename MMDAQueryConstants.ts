@@ -29,3 +29,23 @@ export namespace domainmodels {
         export const ASSOCIATIONS : string = "ASSOCIATIONS";
         export const ALL : string = "ALL";
 }
+
+export namespace enumerations {
+        export const ID : string = "ID";
+        export const NAME : string = "NAME";
+        export const TYPE : string = "TYPE";
+        export const CONTAINER : string = "CONTAINER";
+        export const VALUES : string = "VALUES";
+        export const DOCUMENTATION : string = "DOCUMENTATION";
+        export const ALL : string = "ALL";
+}
+
+export namespace imagecollections {
+        export const ID : string = "ID";
+        export const NAME : string = "NAME";
+        export const TYPE : string = "TYPE";
+        export const CONTAINER : string = "CONTAINER";
+        export const IMAGES : string = "IMAGES";
+        export const DOCUMENTATION : string = "DOCUMENTATION";
+        export const ALL : string = "ALL";
+}

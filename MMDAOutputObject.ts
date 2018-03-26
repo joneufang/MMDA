@@ -84,7 +84,7 @@ export class OutputObjectList
         var xml = new XMLWriter();
         if(this.objects.length > 0) {
             xml.startDocument();
-            xml.startElement("MxACatalog");
+            xml.startElement("MMDACatalog");
             this.objects.forEach((obj) => {
                 xml.startElement(obj.getType());
                 xml = obj.toXMLString(xml);
@@ -126,7 +126,7 @@ export class OutputObjectList
         var objectcounter : number = 0;
         if(this.objects.length > 0) {
             result += "{\n";
-            result += "\"MxACatalog\": {\n";
+            result += "\"MMDACatalog\": {\n";
             for(var i=0; i < this.objects.length; i++) {
                 result += "\"" + this.objects[i].getType() + objectcounter + "\": {";
                 objectcounter += 1;
@@ -222,7 +222,17 @@ export class OutputObject {
     public toXMLString(xml : XMLWriter) {
         this.propertys.forEach((prop) => {
             xml.startElement(prop.getName());
-            xml.text(prop.toString());
+            var text = "";
+            text = prop.toString();
+            if(text != "")
+            {
+                xml.text(text);
+            }
+            else
+            {
+                xml.text("");
+            }
+            
             xml.endElement();
         });
         return xml;
