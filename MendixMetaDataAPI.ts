@@ -447,9 +447,31 @@ export class MMDAProject {
         this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getProjectLayouts(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnLayouts(loadedlayouts : pages.Layout[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
-        
+        loadedlayouts.forEach((layout) => {
+            if(layout instanceof pages.Layout){
+                var layoutadapter : MMDAA.LayoutAdapter = new MMDAA.LayoutAdapter();
+                var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                var MMDAobj : MMDAO.OutputObject;
+                propertys = layoutadapter.getLayoutPropertys(layout, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys,"Layout");                   
+                if(layoutadapter.filter(MMDAobj,filter))
+                {
+                    outputobjects.addObject(MMDAobj);                       
+                }
+            }
+            else
+            {
+                console.log("Got Layout which is not instance of pages.Layout");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
+    protected getProjectLayouts(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allLayouts();
         })
@@ -457,26 +479,7 @@ export class MMDAProject {
             return this.loadAllLayoutsAsPromise(layouts);
         })
         .done((loadedlayouts) => {
-            loadedlayouts.forEach((layout) => {
-                if(layout instanceof pages.Layout){
-                    var layoutadapter : MMDAA.LayoutAdapter = new MMDAA.LayoutAdapter();
-                    var propertys : MMDAO.OutputObjectProperty[] = new Array();
-                    var MMDAobj : MMDAO.OutputObject;
-                    propertys = layoutadapter.getLayoutPropertys(layout, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys,"Layout");                   
-                    if(layoutadapter.filter(MMDAobj,filter))
-                    {
-                        outputobjects.addObject(MMDAobj);                       
-                    }
-                }
-                else
-                {
-                    console.log("Got Layout which is not instance of pages.Layout");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
-            outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
-            console.log("Im Done!!!");
+            this.returnLayouts(loadedlayouts, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     }
 

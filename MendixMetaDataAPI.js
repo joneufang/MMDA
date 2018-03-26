@@ -368,9 +368,29 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.getProjectFoldersAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
+    MMDAProject.prototype.returnLayouts = function (loadedlayouts, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        loadedlayouts.forEach(function (layout) {
+            if (layout instanceof mendixmodelsdk_1.pages.Layout) {
+                var layoutadapter = new MMDAA.LayoutAdapter();
+                var propertys = new Array();
+                var MMDAobj;
+                propertys = layoutadapter.getLayoutPropertys(layout, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys, "Layout");
+                if (layoutadapter.filter(MMDAobj, filter)) {
+                    outputobjects.addObject(MMDAobj);
+                }
+            }
+            else {
+                console.log("Got Layout which is not instance of pages.Layout");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+        outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+        console.log("Im Done!!!");
+    };
     MMDAProject.prototype.getProjectLayouts = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
         var _this = this;
-        var outputobjects = new MMDAO.OutputObjectList();
         this.project.createWorkingCopy().then(function (workingCopy) {
             return workingCopy.model().allLayouts();
         })
@@ -378,24 +398,7 @@ var MMDAProject = /** @class */ (function () {
             return _this.loadAllLayoutsAsPromise(layouts);
         })
             .done(function (loadedlayouts) {
-            loadedlayouts.forEach(function (layout) {
-                if (layout instanceof mendixmodelsdk_1.pages.Layout) {
-                    var layoutadapter = new MMDAA.LayoutAdapter();
-                    var propertys = new Array();
-                    var MMDAobj;
-                    propertys = layoutadapter.getLayoutPropertys(layout, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys, "Layout");
-                    if (layoutadapter.filter(MMDAobj, filter)) {
-                        outputobjects.addObject(MMDAobj);
-                    }
-                }
-                else {
-                    console.log("Got Layout which is not instance of pages.Layout");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
-            outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
-            console.log("Im Done!!!");
+            _this.returnLayouts(loadedlayouts, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     };
     MMDAProject.prototype.getProjectLayoutsAsHTML = function (propertys, filter, sortcolumn, filename) {
