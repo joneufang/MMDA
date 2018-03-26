@@ -222,17 +222,7 @@ export class OutputObject {
     public toXMLString(xml : XMLWriter) {
         this.propertys.forEach((prop) => {
             xml.startElement(prop.getName());
-            var text = "";
-            text = prop.toString();
-            if(text != "")
-            {
-                xml.text(text);
-            }
-            else
-            {
-                xml.text("");
-            }
-            
+            xml.text(prop.toString());
             xml.endElement();
         });
         return xml;

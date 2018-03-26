@@ -183,14 +183,7 @@ var OutputObject = /** @class */ (function () {
     OutputObject.prototype.toXMLString = function (xml) {
         this.propertys.forEach(function (prop) {
             xml.startElement(prop.getName());
-            var text = "";
-            text = prop.toString();
-            if (text != "") {
-                xml.text(text);
-            }
-            else {
-                xml.text("");
-            }
+            xml.text(prop.toString());
             xml.endElement();
         });
         return xml;
