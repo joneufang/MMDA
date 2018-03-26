@@ -282,8 +282,32 @@ export class MMDAProject {
         return when.all<constants.Constant[]>(constants.map( con => loadAsPromise(con)));
     }
 
-    protected getProjectEnumerations(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnEnumerations(loadedenums : enumerations.Enumeration[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        loadedenums.forEach((num) => {
+            if(num instanceof enumerations.Enumeration){
+                var enumadapter : MMDAA.EnumerationAdapter = new MMDAA.EnumerationAdapter();
+                var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                var MMDAobj : MMDAO.OutputObject;
+                propertys = enumadapter.getEnumerationPropertys(num, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys,"Enumeration");                   //Get filtered Documents
+                if(enumadapter.filter(MMDAobj,filter))
+                {
+                    outputobjects.addObject(MMDAobj);                        //filter object
+                }
+            }
+            else
+            {
+                console.log("Got Enumeration which is not instance of enumerations.Enumeration");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
+    protected getProjectEnumerations(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allEnumerations();
         })
@@ -291,26 +315,7 @@ export class MMDAProject {
             return this.loadAllEnumerationsAsPromise(enumerations);
         })
         .done((loadedenums) => {
-            loadedenums.forEach((num) => {
-                if(num instanceof enumerations.Enumeration){
-                    var enumadapter : MMDAA.EnumerationAdapter = new MMDAA.EnumerationAdapter();
-                    var propertys : MMDAO.OutputObjectProperty[] = new Array();
-                    var MMDAobj : MMDAO.OutputObject;
-                    propertys = enumadapter.getEnumerationPropertys(num, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys,"Enumeration");                   //Get filtered Documents
-                    if(enumadapter.filter(MMDAobj,filter))
-                    {
-                        outputobjects.addObject(MMDAobj);                        //filter object
-                    }
-                }
-                else
-                {
-                    console.log("Got Enumeration which is not instance of enumerations.Enumeration");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
-            outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
-            console.log("Im Done!!!");
+            this.returnEnumerations(loadedenums, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     }
 

@@ -227,9 +227,29 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.loadAllConstantsAsPromise = function (constants) {
         return when.all(constants.map(function (con) { return mendixplatformsdk_1.loadAsPromise(con); }));
     };
+    MMDAProject.prototype.returnEnumerations = function (loadedenums, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        loadedenums.forEach(function (num) {
+            if (num instanceof mendixmodelsdk_1.enumerations.Enumeration) {
+                var enumadapter = new MMDAA.EnumerationAdapter();
+                var propertys = new Array();
+                var MMDAobj;
+                propertys = enumadapter.getEnumerationPropertys(num, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys, "Enumeration"); //Get filtered Documents
+                if (enumadapter.filter(MMDAobj, filter)) {
+                    outputobjects.addObject(MMDAobj); //filter object
+                }
+            }
+            else {
+                console.log("Got Enumeration which is not instance of enumerations.Enumeration");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+        outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+        console.log("Im Done!!!");
+    };
     MMDAProject.prototype.getProjectEnumerations = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
         var _this = this;
-        var outputobjects = new MMDAO.OutputObjectList();
         this.project.createWorkingCopy().then(function (workingCopy) {
             return workingCopy.model().allEnumerations();
         })
@@ -237,24 +257,7 @@ var MMDAProject = /** @class */ (function () {
             return _this.loadAllEnumerationsAsPromise(enumerations);
         })
             .done(function (loadedenums) {
-            loadedenums.forEach(function (num) {
-                if (num instanceof mendixmodelsdk_1.enumerations.Enumeration) {
-                    var enumadapter = new MMDAA.EnumerationAdapter();
-                    var propertys = new Array();
-                    var MMDAobj;
-                    propertys = enumadapter.getEnumerationPropertys(num, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys, "Enumeration"); //Get filtered Documents
-                    if (enumadapter.filter(MMDAobj, filter)) {
-                        outputobjects.addObject(MMDAobj); //filter object
-                    }
-                }
-                else {
-                    console.log("Got Enumeration which is not instance of enumerations.Enumeration");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
-            outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
-            console.log("Im Done!!!");
+            _this.returnEnumerations(loadedenums, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     };
     MMDAProject.prototype.getProjectEnumerationsAsHTML = function (propertys, filter, sortcolumn, filename) {
