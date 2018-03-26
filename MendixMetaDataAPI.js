@@ -275,9 +275,29 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.loadAllEnumerationsAsPromise = function (enumerations) {
         return when.all(enumerations.map(function (num) { return mendixplatformsdk_1.loadAsPromise(num); }));
     };
+    MMDAProject.prototype.returnImageCollections = function (loadedimgcol, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        loadedimgcol.forEach(function (imgcol) {
+            if (imgcol instanceof mendixmodelsdk_1.images.ImageCollection) {
+                var imgcoladapter = new MMDAA.ImageCollectionAdapter();
+                var propertys = new Array();
+                var MMDAobj;
+                propertys = imgcoladapter.getImageCollectionPropertys(imgcol, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys, "ImageCollection"); //Get filtered Documents
+                if (imgcoladapter.filter(MMDAobj, filter)) {
+                    outputobjects.addObject(MMDAobj); //filter object
+                }
+            }
+            else {
+                console.log("Got ImageCollection which is not instance of images.ImageCollection");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+        outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+        console.log("Im Done!!!");
+    };
     MMDAProject.prototype.getProjectImageCollections = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
         var _this = this;
-        var outputobjects = new MMDAO.OutputObjectList();
         this.project.createWorkingCopy().then(function (workingCopy) {
             return workingCopy.model().allImageCollections();
         })
@@ -285,24 +305,7 @@ var MMDAProject = /** @class */ (function () {
             return _this.loadAllImageCollectionsAsPromise(imagecollections);
         })
             .done(function (loadedimgcol) {
-            loadedimgcol.forEach(function (imgcol) {
-                if (imgcol instanceof mendixmodelsdk_1.images.ImageCollection) {
-                    var imgcoladapter = new MMDAA.ImageCollectionAdapter();
-                    var propertys = new Array();
-                    var MMDAobj;
-                    propertys = imgcoladapter.getImageCollectionPropertys(imgcol, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys, "ImageCollection"); //Get filtered Documents
-                    if (imgcoladapter.filter(MMDAobj, filter)) {
-                        outputobjects.addObject(MMDAobj); //filter object
-                    }
-                }
-                else {
-                    console.log("Got ImageCollection which is not instance of images.ImageCollection");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
-            outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
-            console.log("Im Done!!!");
+            _this.returnImageCollections(loadedimgcol, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     };
     MMDAProject.prototype.getProjectImageCollectionsAsHTML = function (propertys, filter, sortcolumn, filename) {

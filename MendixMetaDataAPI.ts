@@ -339,8 +339,31 @@ export class MMDAProject {
         return when.all<enumerations.Enumeration[]>(enumerations.map( num => loadAsPromise(num)));
     }
 
-    protected getProjectImageCollections(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnImageCollections(loadedimgcol : images.ImageCollection[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        loadedimgcol.forEach((imgcol) => {
+            if(imgcol instanceof images.ImageCollection){
+                var imgcoladapter : MMDAA.ImageCollectionAdapter = new MMDAA.ImageCollectionAdapter();
+                var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                var MMDAobj : MMDAO.OutputObject;
+                propertys = imgcoladapter.getImageCollectionPropertys(imgcol, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys,"ImageCollection");                   //Get filtered Documents
+                if(imgcoladapter.filter(MMDAobj,filter))
+                {
+                    outputobjects.addObject(MMDAobj);                        //filter object
+                }
+            }
+            else
+            {
+                console.log("Got ImageCollection which is not instance of images.ImageCollection");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
+    protected getProjectImageCollections(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allImageCollections();
         })
@@ -348,26 +371,7 @@ export class MMDAProject {
             return this.loadAllImageCollectionsAsPromise(imagecollections);
         })
         .done((loadedimgcol) => {
-            loadedimgcol.forEach((imgcol) => {
-                if(imgcol instanceof images.ImageCollection){
-                    var imgcoladapter : MMDAA.ImageCollectionAdapter = new MMDAA.ImageCollectionAdapter();
-                    var propertys : MMDAO.OutputObjectProperty[] = new Array();
-                    var MMDAobj : MMDAO.OutputObject;
-                    propertys = imgcoladapter.getImageCollectionPropertys(imgcol, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys,"ImageCollection");                   //Get filtered Documents
-                    if(imgcoladapter.filter(MMDAobj,filter))
-                    {
-                        outputobjects.addObject(MMDAobj);                        //filter object
-                    }
-                }
-                else
-                {
-                    console.log("Got ImageCollection which is not instance of images.ImageCollection");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
-            outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
-            console.log("Im Done!!!");
+            this.returnImageCollections(loadedimgcol, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     }
 
