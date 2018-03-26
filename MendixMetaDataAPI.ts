@@ -395,8 +395,31 @@ export class MMDAProject {
         return when.all<images.ImageCollection[]>(imagecollections.map( img => loadAsPromise(img)));
     }
 
-    protected getProjectFolders(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnFolders(loadedfolders : projects.IFolder[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        loadedfolders.forEach((folder) => {
+            if(folder instanceof projects.Folder){
+                var folderadapter : MMDAA.FolderAdapter = new MMDAA.FolderAdapter();
+                var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                var MMDAobj : MMDAO.OutputObject;
+                propertys = folderadapter.getFolderPropertys(folder, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys,"Folder");                   //Get filtered Documents
+                if(folderadapter.filter(MMDAobj,filter))
+                {
+                    outputobjects.addObject(MMDAobj);                        //filter object
+                }
+            }
+            else
+            {
+                console.log("Got Folder which is not instance of projects.Folder");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
+    protected getProjectFolders(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allFolders();
         })
@@ -404,26 +427,7 @@ export class MMDAProject {
             return folders;
         })
         .done((loadedfolders) => {
-            loadedfolders.forEach((folder) => {
-                if(folder instanceof projects.Folder){
-                    var folderadapter : MMDAA.FolderAdapter = new MMDAA.FolderAdapter();
-                    var propertys : MMDAO.OutputObjectProperty[] = new Array();
-                    var MMDAobj : MMDAO.OutputObject;
-                    propertys = folderadapter.getFolderPropertys(folder, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys,"Folder");                   //Get filtered Documents
-                    if(folderadapter.filter(MMDAobj,filter))
-                    {
-                        outputobjects.addObject(MMDAobj);                        //filter object
-                    }
-                }
-                else
-                {
-                    console.log("Got Folder which is not instance of projects.Folder");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
-            outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
-            console.log("Im Done!!!");
+            this.returnFolders(loadedfolders, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     }
 
