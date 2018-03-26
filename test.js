@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //import * as MxAA from "./MxAObjectAdapter";
 var MMDA = require("./MendixMetaDataAPI");
 var MMDAQueryConstants_1 = require("./MMDAQueryConstants");
+var MMDAQueryConstants_2 = require("./MMDAQueryConstants");
 var username = 'jochen.neufang@mansystems.de';
 var apikey = 'e6a890bf-6377-4395-8924-87bfe8da7330';
 var projectId = "01bfc705-81e4-4ffa-8bc9-0c43e7f2b5ba";
@@ -18,11 +19,11 @@ var project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getDocumentsFromProject([qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER], [], [], [qrycons.sorting.TYPE,qrycons.sorting.NAME]);  //unfiltered Result with sorting
 //project.getProjectDocumentsAsTXT([docs.ID,docs.NAME, docs.TYPE, docs.CONTAINER],[new MMDA.Filter(docs.NAME, "Testapp")], [docs.TYPE,docs.NAME],  "./Test.txt");  //filtered Result with sorting
 //project.getProjectConstantsAsTXT([cons.ID, cons.NAME, cons.TYPE, cons.DATATYPE, cons.DATAVALUE],[new MMDA.Filter(docs.NAME, "Testapp")],[cons.DATATYPE],"./Test.txt");
-//project.getProjectDomainModelsAsTXT([dms.ID, dms.TYPE, dms.ENTITIES, dms.ASSOCIATIONS],[],[],"./Test.txt");
+project.getProjectDomainModelsAsXML([MMDAQueryConstants_1.domainmodels.ID, MMDAQueryConstants_1.domainmodels.TYPE, MMDAQueryConstants_1.domainmodels.ENTITIES, MMDAQueryConstants_1.domainmodels.ASSOCIATIONS], [], [], "./domainmodels.xml");
 //project.getProjectEnumerationsAsTXT([enums.ID, enums.NAME, enums.TYPE, enums.VALUES],[],[],"./enums.txt");
 //project.getProjectImageCollectionsAsXML([imgcol.ID, imgcol.NAME, imgcol.TYPE, imgcol.IMAGES],[],[],"./imagecollections.xml");
 //project.getProjectFoldersAsXML([fold.ID, fold.NAME, fold.TYPE, fold.SUBFOLDERS, fold.DOCUMENTS],[],[],"./folders.xml");
-project.getProjectLayoutsAsXML([MMDAQueryConstants_1.layouts.ID, MMDAQueryConstants_1.layouts.NAME, MMDAQueryConstants_1.layouts.TYPE, MMDAQueryConstants_1.layouts.LAYOUTTYPE], [], [], "./layouts.xml");
+project.getProjectLayoutsAsXML([MMDAQueryConstants_2.layouts.ID, MMDAQueryConstants_2.layouts.NAME, MMDAQueryConstants_2.layouts.TYPE, MMDAQueryConstants_2.layouts.LAYOUTTYPE], [], [], "./layouts.xml");
 //project.getDocumentsFromProject([qrycons.propertys.ID,qrycons.propertys.NAME,qrycons.propertys.TYPE], [qrycons.filter.TYPE,qrycons.filter.NAME], ["Microflow","Testapp"], []); //filtered Result
 //project.getDocumentsFromProject([qrycons.documents.propertys.ID,qrycons.documents.propertys.NAME,qrycons.documents.propertys.TYPE], [qrycons.documents.filter.TYPE], ["No Result Entry"], [1]); //No Result
 //project.getModuleDocumentsAsTXT("Testapp",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.txt");

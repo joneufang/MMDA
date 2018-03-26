@@ -27,7 +27,7 @@ let project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getDocumentsFromProject([qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER], [], [], [qrycons.sorting.TYPE,qrycons.sorting.NAME]);  //unfiltered Result with sorting
 //project.getProjectDocumentsAsTXT([docs.ID,docs.NAME, docs.TYPE, docs.CONTAINER],[new MMDA.Filter(docs.NAME, "Testapp")], [docs.TYPE,docs.NAME],  "./Test.txt");  //filtered Result with sorting
 //project.getProjectConstantsAsTXT([cons.ID, cons.NAME, cons.TYPE, cons.DATATYPE, cons.DATAVALUE],[new MMDA.Filter(docs.NAME, "Testapp")],[cons.DATATYPE],"./Test.txt");
-//project.getProjectDomainModelsAsTXT([dms.ID, dms.TYPE, dms.ENTITIES, dms.ASSOCIATIONS],[],[],"./Test.txt");
+//project.getProjectDomainModelsAsXML([dms.ID, dms.TYPE, dms.ENTITIES, dms.ASSOCIATIONS],[],[],"./domainmodels.xml");
 //project.getProjectEnumerationsAsTXT([enums.ID, enums.NAME, enums.TYPE, enums.VALUES],[],[],"./enums.txt");
 //project.getProjectImageCollectionsAsXML([imgcol.ID, imgcol.NAME, imgcol.TYPE, imgcol.IMAGES],[],[],"./imagecollections.xml");
 //project.getProjectFoldersAsXML([fold.ID, fold.NAME, fold.TYPE, fold.SUBFOLDERS, fold.DOCUMENTS],[],[],"./folders.xml");
