@@ -76,6 +76,30 @@ var AbstractElementAdapter = /** @class */ (function (_super) {
     return AbstractElementAdapter;
 }(StructureAdapter));
 exports.AbstractElementAdapter = AbstractElementAdapter;
+var AbstractUnitAdapter = /** @class */ (function (_super) {
+    __extends(AbstractUnitAdapter, _super);
+    function AbstractUnitAdapter() {
+        return _super.call(this) || this;
+    }
+    return AbstractUnitAdapter;
+}(StructureAdapter));
+exports.AbstractUnitAdapter = AbstractUnitAdapter;
+var StructuralUnitAdapter = /** @class */ (function (_super) {
+    __extends(StructuralUnitAdapter, _super);
+    function StructuralUnitAdapter() {
+        return _super.call(this) || this;
+    }
+    return StructuralUnitAdapter;
+}(AbstractUnitAdapter));
+exports.StructuralUnitAdapter = StructuralUnitAdapter;
+var FolderBaseAdapter = /** @class */ (function (_super) {
+    __extends(FolderBaseAdapter, _super);
+    function FolderBaseAdapter() {
+        return _super.call(this) || this;
+    }
+    return FolderBaseAdapter;
+}(StructuralUnitAdapter));
+exports.FolderBaseAdapter = FolderBaseAdapter;
 var ModuleDocumentAdapter = /** @class */ (function (_super) {
     __extends(ModuleDocumentAdapter, _super);
     function ModuleDocumentAdapter() {
@@ -404,3 +428,72 @@ var ImageCollectionAdapter = /** @class */ (function (_super) {
     return ImageCollectionAdapter;
 }(DocumentAdapter));
 exports.ImageCollectionAdapter = ImageCollectionAdapter;
+var FolderAdapter = /** @class */ (function (_super) {
+    __extends(FolderAdapter, _super);
+    function FolderAdapter() {
+        return _super.call(this) || this;
+    }
+    FolderAdapter.prototype.getFolderPropertys = function (folder, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.folders.ALL) {
+            propertys[propertys.length] = this.getId(folder);
+            propertys[propertys.length] = this.getName(folder);
+            propertys[propertys.length] = this.getType(folder);
+            propertys[propertys.length] = this.getContainer(folder);
+            propertys[propertys.length] = this.getDocuments(folder);
+            propertys[propertys.length] = this.getSubFolders(folder);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.folders.ID) {
+                    propertys[propertys.length] = _this.getId(folder);
+                }
+                else if (qryprop == qrycons.folders.NAME) {
+                    propertys[propertys.length] = _this.getName(folder);
+                }
+                else if (qryprop == qrycons.folders.TYPE) {
+                    propertys[propertys.length] = _this.getType(folder);
+                }
+                else if (qryprop == qrycons.folders.CONTAINER) {
+                    propertys[propertys.length] = _this.getContainer(folder);
+                }
+                else if (qryprop == qrycons.folders.SUBFOLDERS) {
+                    propertys[propertys.length] = _this.getSubFolders(folder);
+                }
+                else if (qryprop == qrycons.folders.DOCUMENTS) {
+                    propertys[propertys.length] = _this.getDocuments(folder);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    FolderAdapter.prototype.getDocuments = function (folder) {
+        var property;
+        var result = "";
+        folder.documents.forEach(function (doc) {
+            result += doc.qualifiedName + ", ";
+        });
+        property = new MMDAO.OutputObjectProperty(qrycons.folders.DOCUMENTS, result);
+        return property;
+    };
+    FolderAdapter.prototype.getSubFolders = function (folder) {
+        var property;
+        var result = "";
+        folder.folders.forEach(function (fold) {
+            result += fold.name + ", ";
+        });
+        property = new MMDAO.OutputObjectProperty(qrycons.folders.SUBFOLDERS, result);
+        return property;
+    };
+    FolderAdapter.prototype.getName = function (folder) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.documents.NAME, folder.name);
+        return property;
+    };
+    return FolderAdapter;
+}(FolderBaseAdapter));
+exports.FolderAdapter = FolderAdapter;

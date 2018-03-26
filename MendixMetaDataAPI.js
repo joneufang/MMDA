@@ -334,6 +334,47 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.loadAllImageCollectionsAsPromise = function (imagecollections) {
         return when.all(imagecollections.map(function (img) { return mendixplatformsdk_1.loadAsPromise(img); }));
     };
+    MMDAProject.prototype.getProjectFolders = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allFolders();
+        })
+            .then(function (folders) {
+            return folders;
+        })
+            .done(function (loadedfolders) {
+            loadedfolders.forEach(function (folder) {
+                if (folder instanceof mendixmodelsdk_1.projects.Folder) {
+                    var folderadapter = new MMDAA.FolderAdapter();
+                    var propertys = new Array();
+                    var MMDAobj;
+                    propertys = folderadapter.getFolderPropertys(folder, qrypropertys);
+                    MMDAobj = new MMDAO.OutputObject(propertys, "Folder"); //Get filtered Documents
+                    if (folderadapter.filter(MMDAobj, filter)) {
+                        outputobjects.addObject(MMDAobj); //filter object
+                    }
+                }
+                else {
+                    console.log("Got Folder which is not instance of projects.Folder");
+                }
+            });
+            outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+            outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+            console.log("Im Done!!!");
+        });
+    };
+    MMDAProject.prototype.getProjectFoldersAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectFoldersAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectFoldersAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectFoldersAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
     //Constants to define output target
     MMDAProject.TEXTFILE = "TEXTFILE";
     MMDAProject.HTMLTABLE = "HTMLTABLE";

@@ -84,6 +84,24 @@ export class AbstractElementAdapter extends StructureAdapter {
     }
 }
 
+export class AbstractUnitAdapter extends StructureAdapter {
+    constructor() {
+        super();   
+    }
+}
+
+export class StructuralUnitAdapter extends AbstractUnitAdapter {
+    constructor() {
+        super();   
+    }
+}
+
+export class FolderBaseAdapter extends StructuralUnitAdapter {
+    constructor() {
+        super();   
+    }
+}
+
 export class ModuleDocumentAdapter extends AbstractElementAdapter {
     constructor() {
         super();   
@@ -492,4 +510,94 @@ export class ImageCollectionAdapter extends DocumentAdapter {
         return property;
     }
 
+}
+
+export class FolderAdapter extends FolderBaseAdapter {
+    
+    constructor() {
+        super();   
+    }
+
+    public getFolderPropertys(folder : projects.Folder, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
+        var propertys : MMDAO.OutputObjectProperty[] = new Array();
+        if(qrypropertys[0] == qrycons.folders.ALL)
+        {
+            propertys[propertys.length] = this.getId(folder);
+            propertys[propertys.length] = this.getName(folder);
+            propertys[propertys.length] = this.getType(folder);
+            propertys[propertys.length] = this.getContainer(folder);
+            propertys[propertys.length] = this.getDocuments(folder); 
+            propertys[propertys.length] = this.getSubFolders(folder);  
+        }
+        else
+        {
+            qrypropertys.forEach((qryprop) => {
+                if(qryprop == qrycons.folders.ID)
+                {
+                    propertys[propertys.length] = this.getId(folder);
+                }
+                else if(qryprop == qrycons.folders.NAME)
+                {
+                    propertys[propertys.length] = this.getName(folder);
+                }
+                else if(qryprop == qrycons.folders.TYPE)
+                {
+                    propertys[propertys.length] = this.getType(folder);
+                }
+                else if(qryprop == qrycons.folders.CONTAINER)
+                {
+                    propertys[propertys.length] = this.getContainer(folder);
+                }
+                else if(qryprop == qrycons.folders.SUBFOLDERS)
+                {
+                    propertys[propertys.length] = this.getSubFolders(folder);
+                }
+                else if(qryprop == qrycons.folders.DOCUMENTS)
+                {
+                    propertys[propertys.length] = this.getDocuments(folder);
+                }
+                else
+                {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property","Value of Unknown Property");
+                }
+            })
+        }
+        return propertys;
+    }
+
+    protected getDocuments(folder : projects.Folder) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+
+        var result : string = "";
+        
+                folder.documents.forEach((doc) => {
+                    result += doc.qualifiedName + ", ";
+                });
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.folders.DOCUMENTS,result);
+       
+        return property;
+    }
+
+    protected getSubFolders(folder : projects.Folder) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+
+        var result : string = "";
+        
+                folder.folders.forEach((fold) => {
+                    result += fold.name + ", ";
+                });
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.folders.SUBFOLDERS,result);
+       
+        return property;
+    }
+
+    protected getName(folder : projects.Folder) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.documents.NAME,folder.name);
+        
+        return property;
+    }
 }

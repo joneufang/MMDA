@@ -49,3 +49,13 @@ export namespace imagecollections {
         export const DOCUMENTATION : string = "DOCUMENTATION";
         export const ALL : string = "ALL";
 }
+
+export namespace folders {
+        export const ID : string = "ID";
+        export const NAME : string = "NAME";
+        export const TYPE : string = "TYPE";
+        export const CONTAINER : string = "CONTAINER";
+        export const DOCUMENTS : string = "DOCUMENTS";
+        export const SUBFOLDERS : string = "SUBFOLDERS";
+        export const ALL : string = "ALL"; 
+}

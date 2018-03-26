@@ -404,6 +404,54 @@ export class MMDAProject {
     protected loadAllImageCollectionsAsPromise(imagecollections : images.IImageCollection[]): when.Promise<images.ImageCollection[]> {
         return when.all<images.ImageCollection[]>(imagecollections.map( img => loadAsPromise(img)));
     }
+
+    protected getProjectFolders(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allFolders();
+        })
+        .then((folders) => { 
+            return folders;
+        })
+        .done((loadedfolders) => {
+            loadedfolders.forEach((folder) => {
+                if(folder instanceof projects.Folder){
+                    var folderadapter : MMDAA.FolderAdapter = new MMDAA.FolderAdapter();
+                    var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                    var MMDAobj : MMDAO.OutputObject;
+                    propertys = folderadapter.getFolderPropertys(folder, qrypropertys);
+                    MMDAobj = new MMDAO.OutputObject(propertys,"Folder");                   //Get filtered Documents
+                    if(folderadapter.filter(MMDAobj,filter))
+                    {
+                        outputobjects.addObject(MMDAobj);                        //filter object
+                    }
+                }
+                else
+                {
+                    console.log("Got Folder which is not instance of projects.Folder");
+                }
+            });
+            outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+            outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+            console.log("Im Done!!!");
+        });
+    }
+
+    public getProjectFoldersAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getProjectFoldersAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getProjectFoldersAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getProjectFoldersAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
 }    
 
 export class Filter {

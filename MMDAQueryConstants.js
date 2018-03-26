@@ -51,3 +51,13 @@ var imagecollections;
     imagecollections.DOCUMENTATION = "DOCUMENTATION";
     imagecollections.ALL = "ALL";
 })(imagecollections = exports.imagecollections || (exports.imagecollections = {}));
+var folders;
+(function (folders) {
+    folders.ID = "ID";
+    folders.NAME = "NAME";
+    folders.TYPE = "TYPE";
+    folders.CONTAINER = "CONTAINER";
+    folders.DOCUMENTS = "DOCUMENTS";
+    folders.SUBFOLDERS = "SUBFOLDERS";
+    folders.ALL = "ALL";
+})(folders = exports.folders || (exports.folders = {}));
