@@ -71,8 +71,6 @@ export class MMDAProject {
     Parameter: qryresulttype : string       Constant which ResultType should be used
     */
     protected getProjectDocuments(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
-        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
-        
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allDocuments();
         })
@@ -101,7 +99,6 @@ export class MMDAProject {
     }
 
     protected getModuleDocuments(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
-        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -130,7 +127,6 @@ export class MMDAProject {
     }
 
     protected getFolderDocuments(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
-        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         var folderfound : boolean = false;
         var searchedfolder : projects.IFolder;
         this.project.createWorkingCopy().then((workingCopy) => {
@@ -199,7 +195,6 @@ export class MMDAProject {
     }
 
     protected getProjectDomainModels(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
-        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allDomainModels();
         })
@@ -231,8 +226,31 @@ export class MMDAProject {
         return when.all<domainmodels.DomainModel[]>(domainmodels.map( dm => loadAsPromise(dm)));
     }
 
-    protected getProjectConstants(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnConstants(loadedcons : constants.Constant[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        loadedcons.forEach((con) => {
+            if(con instanceof constants.Constant){
+                var constantadapter : MMDAA.ConstantAdapter = new MMDAA.ConstantAdapter();
+                var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                var MMDAobj : MMDAO.OutputObject;
+                propertys = constantadapter.getConstantPropertys(con, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys,"Constant");                   //Get filtered Documents
+                if(constantadapter.filter(MMDAobj,filter))
+                {
+                    outputobjects.addObject(MMDAobj);                        //filter object
+                }
+            }
+            else
+            {
+                console.log("Got Constant which is not instance of constants.Constant");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
+    protected getProjectConstants(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allConstants();
         })
@@ -240,26 +258,7 @@ export class MMDAProject {
             return this.loadAllConstantsAsPromise(constants);
         })
         .done((loadedcons) => {
-            loadedcons.forEach((con) => {
-                if(con instanceof constants.Constant){
-                    var constantadapter : MMDAA.ConstantAdapter = new MMDAA.ConstantAdapter();
-                    var propertys : MMDAO.OutputObjectProperty[] = new Array();
-                    var MMDAobj : MMDAO.OutputObject;
-                    propertys = constantadapter.getConstantPropertys(con, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys,"Constant");                   //Get filtered Documents
-                    if(constantadapter.filter(MMDAobj,filter))
-                    {
-                        outputobjects.addObject(MMDAobj);                        //filter object
-                    }
-                }
-                else
-                {
-                    console.log("Got Constant which is not instance of constants.Constant");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
-            outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
-            console.log("Im Done!!!");
+            this.returnConstants(loadedcons, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     }
 

@@ -47,7 +47,6 @@ var MMDAProject = /** @class */ (function () {
     */
     MMDAProject.prototype.getProjectDocuments = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
         var _this = this;
-        var outputobjects = new MMDAO.OutputObjectList();
         this.project.createWorkingCopy().then(function (workingCopy) {
             return workingCopy.model().allDocuments();
         })
@@ -72,7 +71,6 @@ var MMDAProject = /** @class */ (function () {
     };
     MMDAProject.prototype.getModuleDocuments = function (modulename, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
         var _this = this;
-        var outputobjects = new MMDAO.OutputObjectList();
         this.project.createWorkingCopy().then(function (workingCopy) {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -97,7 +95,6 @@ var MMDAProject = /** @class */ (function () {
     };
     MMDAProject.prototype.getFolderDocuments = function (foldername, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
         var _this = this;
-        var outputobjects = new MMDAO.OutputObjectList();
         var folderfound = false;
         var searchedfolder;
         this.project.createWorkingCopy().then(function (workingCopy) {
@@ -157,7 +154,6 @@ var MMDAProject = /** @class */ (function () {
     };
     MMDAProject.prototype.getProjectDomainModels = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
         var _this = this;
-        var outputobjects = new MMDAO.OutputObjectList();
         this.project.createWorkingCopy().then(function (workingCopy) {
             return workingCopy.model().allDomainModels();
         })
@@ -183,9 +179,29 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.loadAllDomainModelsAsPromise = function (domainmodels) {
         return when.all(domainmodels.map(function (dm) { return mendixplatformsdk_1.loadAsPromise(dm); }));
     };
+    MMDAProject.prototype.returnConstants = function (loadedcons, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        loadedcons.forEach(function (con) {
+            if (con instanceof mendixmodelsdk_1.constants.Constant) {
+                var constantadapter = new MMDAA.ConstantAdapter();
+                var propertys = new Array();
+                var MMDAobj;
+                propertys = constantadapter.getConstantPropertys(con, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys, "Constant"); //Get filtered Documents
+                if (constantadapter.filter(MMDAobj, filter)) {
+                    outputobjects.addObject(MMDAobj); //filter object
+                }
+            }
+            else {
+                console.log("Got Constant which is not instance of constants.Constant");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+        outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+        console.log("Im Done!!!");
+    };
     MMDAProject.prototype.getProjectConstants = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
         var _this = this;
-        var outputobjects = new MMDAO.OutputObjectList();
         this.project.createWorkingCopy().then(function (workingCopy) {
             return workingCopy.model().allConstants();
         })
@@ -193,24 +209,7 @@ var MMDAProject = /** @class */ (function () {
             return _this.loadAllConstantsAsPromise(constants);
         })
             .done(function (loadedcons) {
-            loadedcons.forEach(function (con) {
-                if (con instanceof mendixmodelsdk_1.constants.Constant) {
-                    var constantadapter = new MMDAA.ConstantAdapter();
-                    var propertys = new Array();
-                    var MMDAobj;
-                    propertys = constantadapter.getConstantPropertys(con, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys, "Constant"); //Get filtered Documents
-                    if (constantadapter.filter(MMDAobj, filter)) {
-                        outputobjects.addObject(MMDAobj); //filter object
-                    }
-                }
-                else {
-                    console.log("Got Constant which is not instance of constants.Constant");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
-            outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
-            console.log("Im Done!!!");
+            _this.returnConstants(loadedcons, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     };
     MMDAProject.prototype.getProjectConstantsAsHTML = function (propertys, filter, sortcolumn, filename) {
