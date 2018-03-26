@@ -1,0 +1,15 @@
+{
+    "compilerOptions" : {
+        "module" : "commonjs",
+        "target" : "es5",
+        "noImplicitAny": false,
+        "sourceMap": false
+    },
+    "files" : [
+        "MMDAQueryConstants.ts",
+        "MMDAObjectAdapter.ts",
+        "MMDAOutputObject.ts",
+        "test.ts",
+        "MendixMetaDataAPI.ts"
+    ]
+}
