@@ -20,13 +20,13 @@ var StructureAdapter = /** @class */ (function () {
     //Get Id of Mendix Object
     StructureAdapter.prototype.getId = function (structure) {
         var property;
-        property = new MMDAO.OutputObjectProperty("ID", structure.id);
+        property = new MMDAO.OutputObjectProperty(qrycons.documents.ID, structure.id);
         return property;
     };
     //Get Type of Mendix Object
     StructureAdapter.prototype.getType = function (structure) {
         var property;
-        property = new MMDAO.OutputObjectProperty("TYPE", structure.structureTypeName);
+        property = new MMDAO.OutputObjectProperty(qrycons.documents.TYPE, structure.structureTypeName);
         return property;
     };
     //Get Container of Mendix Object
@@ -46,7 +46,7 @@ var StructureAdapter = /** @class */ (function () {
         }
         catch (error) {
         }
-        property = new MMDAO.OutputObjectProperty("CONTAINER", container);
+        property = new MMDAO.OutputObjectProperty(qrycons.documents.CONTAINER, container);
         return property;
     };
     //Filters Output Object
@@ -129,22 +129,22 @@ var DocumentAdapter = /** @class */ (function (_super) {
     //gets Name of a Mendix Document
     DocumentAdapter.prototype.getName = function (document) {
         var property;
-        property = new MMDAO.OutputObjectProperty("NAME", document.qualifiedName);
+        property = new MMDAO.OutputObjectProperty(qrycons.documents.NAME, document.qualifiedName);
         return property;
     };
     //gets Documentation of a Mendix Document
     DocumentAdapter.prototype.getDocumentation = function (document) {
         var property;
-        property = new MMDAO.OutputObjectProperty("DOCUMENTATION", "No Value loaded"); //Muss noch richtig implementiert werden aktuell überall No Value muss mit .load(callback) geladen werden.
+        property = new MMDAO.OutputObjectProperty(qrycons.documents.DOCUMENTATION, "No Value loaded"); //Muss noch richtig implementiert werden aktuell überall No Value muss mit .load(callback) geladen werden.
         if (document.isLoaded) {
             var docu = document.documentation;
             docu = docu.replace(/\r/g, "");
             docu = docu.replace(/\n/g, "\t");
             if (docu == "") {
-                property = new MMDAO.OutputObjectProperty("DOCUMENTATION", "No Documentation");
+                property = new MMDAO.OutputObjectProperty(qrycons.documents.DOCUMENTATION, "No Documentation");
             }
             else {
-                property = new MMDAO.OutputObjectProperty("DOCUMENTATION", docu);
+                property = new MMDAO.OutputObjectProperty(qrycons.documents.DOCUMENTATION, docu);
             }
         }
         return property;
@@ -152,3 +152,63 @@ var DocumentAdapter = /** @class */ (function (_super) {
     return DocumentAdapter;
 }(ModuleDocumentAdapter));
 exports.DocumentAdapter = DocumentAdapter;
+var ConstantAdapter = /** @class */ (function (_super) {
+    __extends(ConstantAdapter, _super);
+    function ConstantAdapter() {
+        return _super.call(this) || this;
+    }
+    ConstantAdapter.prototype.getConstantPropertys = function (constant, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.constants.ALL) {
+            propertys[propertys.length] = this.getId(constant);
+            propertys[propertys.length] = this.getName(constant);
+            propertys[propertys.length] = this.getType(constant);
+            propertys[propertys.length] = this.getContainer(constant);
+            propertys[propertys.length] = this.getDataType(constant);
+            propertys[propertys.length] = this.getDataValue(constant);
+            propertys[propertys.length] = this.getDocumentation(constant);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.constants.ID) {
+                    propertys[propertys.length] = _this.getId(constant);
+                }
+                else if (qryprop == qrycons.constants.NAME) {
+                    propertys[propertys.length] = _this.getName(constant);
+                }
+                else if (qryprop == qrycons.constants.TYPE) {
+                    propertys[propertys.length] = _this.getType(constant);
+                }
+                else if (qryprop == qrycons.constants.CONTAINER) {
+                    propertys[propertys.length] = _this.getContainer(constant);
+                }
+                else if (qryprop == qrycons.constants.DATATYPE) {
+                    propertys[propertys.length] = _this.getDataType(constant);
+                }
+                else if (qryprop == qrycons.constants.DATAVALUE) {
+                    propertys[propertys.length] = _this.getDataValue(constant);
+                }
+                else if (qryprop == qrycons.constants.DOCUMENTATION) {
+                    propertys[propertys.length] = _this.getDocumentation(constant);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    ConstantAdapter.prototype.getDataType = function (constant) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.constants.DATATYPE, constant.dataType);
+        return property;
+    };
+    ConstantAdapter.prototype.getDataValue = function (constant) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.constants.DATAVALUE, constant.defaultValue);
+        return property;
+    };
+    return ConstantAdapter;
+}(DocumentAdapter));
+exports.ConstantAdapter = ConstantAdapter;

@@ -1,4 +1,4 @@
-import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, AbstractElement} from "mendixmodelsdk";
+import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, AbstractElement, constants} from "mendixmodelsdk";
 import * as MMDAO from "./MMDAOutputObject";
 import * as MMDA from "./MendixMetaDataAPI";
 import * as qrycons from "./MMDAQueryConstants";
@@ -15,7 +15,7 @@ export class StructureAdapter {
     protected getId(structure : Structure) : MMDAO.OutputObjectProperty {
         var property : MMDAO.OutputObjectProperty;
 
-        property = new MMDAO.OutputObjectProperty("ID",structure.id);
+        property = new MMDAO.OutputObjectProperty(qrycons.documents.ID,structure.id);
 
         return property; 
     }
@@ -24,7 +24,7 @@ export class StructureAdapter {
     protected getType(structure : Structure) : MMDAO.OutputObjectProperty {
         var property : MMDAO.OutputObjectProperty;
 
-        property = new MMDAO.OutputObjectProperty("TYPE",structure.structureTypeName);
+        property = new MMDAO.OutputObjectProperty(qrycons.documents.TYPE,structure.structureTypeName);
 
         return property; 
     }
@@ -51,7 +51,7 @@ export class StructureAdapter {
         {
 
         }
-        property = new MMDAO.OutputObjectProperty("CONTAINER",container);
+        property = new MMDAO.OutputObjectProperty(qrycons.documents.CONTAINER,container);
 
         return property; 
     }
@@ -146,7 +146,7 @@ export class DocumentAdapter extends ModuleDocumentAdapter {
     protected getName(document : projects.Document) : MMDAO.OutputObjectProperty {
         var property : MMDAO.OutputObjectProperty;
         
-        property = new MMDAO.OutputObjectProperty("NAME",document.qualifiedName);
+        property = new MMDAO.OutputObjectProperty(qrycons.documents.NAME,document.qualifiedName);
         
         return property;
     }
@@ -155,7 +155,7 @@ export class DocumentAdapter extends ModuleDocumentAdapter {
     protected getDocumentation(document : projects.Document) : MMDAO.OutputObjectProperty {
         var property : MMDAO.OutputObjectProperty;
 
-        property = new MMDAO.OutputObjectProperty("DOCUMENTATION","No Value loaded");    //Muss noch richtig implementiert werden aktuell überall No Value muss mit .load(callback) geladen werden.
+        property = new MMDAO.OutputObjectProperty(qrycons.documents.DOCUMENTATION,"No Value loaded");    //Muss noch richtig implementiert werden aktuell überall No Value muss mit .load(callback) geladen werden.
         
         if(document.isLoaded) {
             var docu = document.documentation;
@@ -163,15 +163,91 @@ export class DocumentAdapter extends ModuleDocumentAdapter {
             docu = docu.replace(/\n/g, "\t");
             if(docu == "")
             {
-                property = new MMDAO.OutputObjectProperty("DOCUMENTATION","No Documentation");
+                property = new MMDAO.OutputObjectProperty(qrycons.documents.DOCUMENTATION,"No Documentation");
             }
             else
             {
-                property = new MMDAO.OutputObjectProperty("DOCUMENTATION",docu);
+                property = new MMDAO.OutputObjectProperty(qrycons.documents.DOCUMENTATION,docu);
             }
         }
         
         return property;
     }
+}
+
+export class ConstantAdapter extends DocumentAdapter {
+    
+    constructor() {
+        super();   
+    }
+
+    public getConstantPropertys(constant : constants.Constant, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
+        var propertys : MMDAO.OutputObjectProperty[] = new Array();
+        if(qrypropertys[0] == qrycons.constants.ALL)
+        {
+            propertys[propertys.length] = this.getId(constant);
+            propertys[propertys.length] = this.getName(constant);
+            propertys[propertys.length] = this.getType(constant);
+            propertys[propertys.length] = this.getContainer(constant);
+            propertys[propertys.length] = this.getDataType(constant);
+            propertys[propertys.length] = this.getDataValue(constant);
+            propertys[propertys.length] = this.getDocumentation(constant);   
+        }
+        else
+        {
+            qrypropertys.forEach((qryprop) => {
+                if(qryprop == qrycons.constants.ID)
+                {
+                    propertys[propertys.length] = this.getId(constant);
+                }
+                else if(qryprop == qrycons.constants.NAME)
+                {
+                    propertys[propertys.length] = this.getName(constant);
+                }
+                else if(qryprop == qrycons.constants.TYPE)
+                {
+                    propertys[propertys.length] = this.getType(constant);
+                }
+                else if(qryprop == qrycons.constants.CONTAINER)
+                {
+                    propertys[propertys.length] = this.getContainer(constant);
+                }
+                else if(qryprop == qrycons.constants.DATATYPE)
+                {
+                    propertys[propertys.length] = this.getDataType(constant);
+                }
+                else if(qryprop == qrycons.constants.DATAVALUE)
+                {
+                    propertys[propertys.length] = this.getDataValue(constant);
+                }
+                else if(qryprop == qrycons.constants.DOCUMENTATION)
+                {
+                    propertys[propertys.length] = this.getDocumentation(constant);
+                }
+                else
+                {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property","Value of Unknown Property");
+                }
+            })
+        }
+        return propertys;
+    }
+
+    protected getDataType(constant : constants.Constant) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.constants.DATATYPE,constant.dataType);
+        
+        return property;
+    }
+
+    protected getDataValue(constant : constants.Constant) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.constants.DATAVALUE,constant.defaultValue);
+        
+        return property;
+    }
+
 }
 

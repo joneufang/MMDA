@@ -9,6 +9,15 @@ var documents;
     documents.CONTAINER = "CONTAINER";
     documents.DOCUMENTATION = "DOCUMENTATION";
     documents.ALL = "ALL";
-    //export const CALLLOCATIONS : String = "CALLLOCATIONS";
-    //export const CALLCOUNT : string = "CALLCOUNT"; 
 })(documents = exports.documents || (exports.documents = {}));
+var constants;
+(function (constants) {
+    constants.ID = "ID";
+    constants.NAME = "NAME";
+    constants.TYPE = "TYPE";
+    constants.CONTAINER = "CONTAINER";
+    constants.DATATYPE = "DATATYPE";
+    constants.DATAVALUE = "DATAVALUE";
+    constants.DOCUMENTATION = "DOCUMENTATION";
+    constants.ALL = "ALL";
+})(constants = exports.constants || (exports.constants = {}));

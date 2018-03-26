@@ -154,6 +154,51 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.loadAllDocumentsAsPromise = function (documents) {
         return when.all(documents.map(function (doc) { return mendixplatformsdk_1.loadAsPromise(doc); }));
     };
+    MMDAProject.prototype.getProjectConstants = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        var outputobjects = new MMDAO.OutputObjectList();
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allConstants();
+        })
+            .then(function (constants) {
+            return _this.loadAllConstantsAsPromise(constants);
+        })
+            .done(function (loadedcons) {
+            loadedcons.forEach(function (con) {
+                if (con instanceof mendixmodelsdk_1.constants.Constant) {
+                    var constantadapter = new MMDAA.ConstantAdapter();
+                    var propertys = new Array();
+                    var MMDAobj;
+                    propertys = constantadapter.getConstantPropertys(con, qrypropertys);
+                    MMDAobj = new MMDAO.OutputObject(propertys, "Constant"); //Get filtered Documents
+                    if (constantadapter.filter(MMDAobj, filter)) {
+                        outputobjects.addObject(MMDAobj); //filter object
+                    }
+                }
+                else {
+                    console.log("Got Constant which is not instance of constants.Constant");
+                }
+            });
+            outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+            outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+            console.log("Im Done!!!");
+        });
+    };
+    MMDAProject.prototype.getProjectConstantsAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectConstantsAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectConstantsAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectConstantsAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.loadAllConstantsAsPromise = function (constants) {
+        return when.all(constants.map(function (con) { return mendixplatformsdk_1.loadAsPromise(con); }));
+    };
     //Constants to define output target
     MMDAProject.TEXTFILE = "TEXTFILE";
     MMDAProject.HTMLTABLE = "HTMLTABLE";

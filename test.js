@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //import * as MxAA from "./MxAObjectAdapter";
 var MMDA = require("./MendixMetaDataAPI");
 var MMDAQueryConstants_1 = require("./MMDAQueryConstants");
+var MMDAQueryConstants_2 = require("./MMDAQueryConstants");
 var username = 'jochen.neufang@mansystems.de';
 var apikey = 'e6a890bf-6377-4395-8924-87bfe8da7330';
 var projectId = "01bfc705-81e4-4ffa-8bc9-0c43e7f2b5ba";
@@ -16,11 +17,12 @@ var project = new MMDA.MMDAProject(username, apikey, projectId);
 //let project = new mendixanalytics.MxAToXMLFile(username, apikey, projectId, "./Test.xml");
 //project.getDocumentsFromProject([qrycons.propertys.ALL], [], [], [1]); //All Propertys unfiltered
 //project.getDocumentsFromProject([qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER], [], [], [qrycons.sorting.TYPE,qrycons.sorting.NAME]);  //unfiltered Result with sorting
-//project.getProjectDocumentsAsTXT([qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[new MxA.Filter(qrycons.NAME, "Testapp")], [qrycons.TYPE,qrycons.NAME],  "./Test.txt");  //filtered Result with sorting
+//project.getProjectDocumentsAsTXT([docs.ID,docs.NAME, docs.TYPE, docs.CONTAINER],[new MMDA.Filter(docs.NAME, "Testapp")], [docs.TYPE,docs.NAME],  "./Test.txt");  //filtered Result with sorting
+project.getProjectConstantsAsTXT([MMDAQueryConstants_2.constants.ID, MMDAQueryConstants_2.constants.NAME, MMDAQueryConstants_2.constants.TYPE, MMDAQueryConstants_2.constants.DATATYPE, MMDAQueryConstants_2.constants.DATAVALUE], [new MMDA.Filter(MMDAQueryConstants_1.documents.NAME, "Testapp")], [MMDAQueryConstants_2.constants.DATATYPE], "./Test.txt");
 //project.getDocumentsFromProject([qrycons.propertys.ID,qrycons.propertys.NAME,qrycons.propertys.TYPE], [qrycons.filter.TYPE,qrycons.filter.NAME], ["Microflow","Testapp"], []); //filtered Result
 //project.getDocumentsFromProject([qrycons.documents.propertys.ID,qrycons.documents.propertys.NAME,qrycons.documents.propertys.TYPE], [qrycons.documents.filter.TYPE], ["No Result Entry"], [1]); //No Result
 //project.getModuleDocumentsAsTXT("Testapp",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.txt");
-project.getFolderDocumentsAsTXT("00 Common", [MMDAQueryConstants_1.documents.ID, MMDAQueryConstants_1.documents.NAME, MMDAQueryConstants_1.documents.TYPE, MMDAQueryConstants_1.documents.CONTAINER], [], [MMDAQueryConstants_1.documents.TYPE, MMDAQueryConstants_1.documents.NAME], "./Test.txt");
+//project.getFolderDocumentsAsTXT("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.txt");
 //project.getFolderDocumentsAsJSON("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.json");
 //project.getFolderDocumentsAsHTML("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.html");
 //qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER

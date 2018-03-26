@@ -1,4 +1,4 @@
-import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates} from "mendixmodelsdk";
+import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, constants} from "mendixmodelsdk";
 import {MendixSdkClient, Project, OnlineWorkingCopy, loadAsPromise} from "mendixplatformsdk";
 import when = require("when");
 import fs = require("fs-extra");
@@ -197,7 +197,57 @@ export class MMDAProject {
         return when.all<projects.Document[]>(documents.map( doc => loadAsPromise(doc)));
     }
 
-    
+    protected getProjectConstants(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allConstants();
+        })
+        .then((constants) => { 
+            return this.loadAllConstantsAsPromise(constants);
+        })
+        .done((loadedcons) => {
+            loadedcons.forEach((con) => {
+                if(con instanceof constants.Constant){
+                    var constantadapter : MMDAA.ConstantAdapter = new MMDAA.ConstantAdapter();
+                    var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                    var MMDAobj : MMDAO.OutputObject;
+                    propertys = constantadapter.getConstantPropertys(con, qrypropertys);
+                    MMDAobj = new MMDAO.OutputObject(propertys,"Constant");                   //Get filtered Documents
+                    if(constantadapter.filter(MMDAobj,filter))
+                    {
+                        outputobjects.addObject(MMDAobj);                        //filter object
+                    }
+                }
+                else
+                {
+                    console.log("Got Constant which is not instance of constants.Constant");
+                }
+            });
+            outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+            outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+            console.log("Im Done!!!");
+        });
+    }
+
+    public getProjectConstantsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getProjectConstantsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getProjectConstantsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getProjectConstantsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected loadAllConstantsAsPromise(constants: constants.IConstant[]): when.Promise<constants.Constant[]> {
+        return when.all<constants.Constant[]>(constants.map( con => loadAsPromise(con)));
+    }
 }    
 
 export class Filter {
