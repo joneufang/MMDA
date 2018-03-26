@@ -36,7 +36,7 @@ export class MMDAProject {
         this.project = new Project(this.client, this.id, "");
     }
 
-    public returnDocuments(documents : projects.Document[],qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string)
+    protected returnDocuments(documents : projects.Document[],qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string)
     {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
 
@@ -174,6 +174,30 @@ export class MMDAProject {
         return when.all<projects.Document[]>(documents.map( doc => loadAsPromise(doc)));
     }
 
+    protected returnDomainModels(domainmods : domainmodels.DomainModel[],qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        domainmods.forEach((dm) => {
+            if(dm instanceof domainmodels.DomainModel){
+                var domainmodeladapter : MMDAA.DomainModelAdapter = new MMDAA.DomainModelAdapter();
+                var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                var MMDAobj : MMDAO.OutputObject;
+                propertys = domainmodeladapter.getDomainModelPropertys(dm, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys,"DomainModel");                   //Get filtered Documents
+                if(domainmodeladapter.filter(MMDAobj,filter))
+                {
+                    outputobjects.addObject(MMDAobj);                        //filter object
+                }
+            }
+            else
+            {
+                console.log("Got Constant which is not instance of constants.Constant");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
     protected getProjectDomainModels(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         this.project.createWorkingCopy().then((workingCopy) => {
@@ -183,26 +207,7 @@ export class MMDAProject {
             return this.loadAllDomainModelsAsPromise(domainmodels);
         })
         .done((loadeddms) => {
-            loadeddms.forEach((dm) => {
-                if(dm instanceof domainmodels.DomainModel){
-                    var domainmodeladapter : MMDAA.DomainModelAdapter = new MMDAA.DomainModelAdapter();
-                    var propertys : MMDAO.OutputObjectProperty[] = new Array();
-                    var MMDAobj : MMDAO.OutputObject;
-                    propertys = domainmodeladapter.getDomainModelPropertys(dm, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys,"DomainModel");                   //Get filtered Documents
-                    if(domainmodeladapter.filter(MMDAobj,filter))
-                    {
-                        outputobjects.addObject(MMDAobj);                        //filter object
-                    }
-                }
-                else
-                {
-                    console.log("Got Constant which is not instance of constants.Constant");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
-            outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
-            console.log("Im Done!!!");
+            this.returnDomainModels(loadeddms, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     }
 
