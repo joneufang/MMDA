@@ -36,6 +36,32 @@ export class MMDAProject {
         this.project = new Project(this.client, this.id, "");
     }
 
+    public returnDocuments(documents : projects.Document[],qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string)
+    {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+
+        documents.forEach((doc) => {
+            if(doc instanceof projects.Document){
+                var documentadapter : MMDAA.DocumentAdapter = new MMDAA.DocumentAdapter();
+                var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                var MMDAobj : MMDAO.OutputObject;
+                propertys = documentadapter.getDocumentPropertys(doc, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys,"Document");                   //Get filtered Documents
+                if(documentadapter.filter(MMDAobj,filter))
+                {
+                    outputobjects.addObject(MMDAobj);                        //filter object
+                }
+            }
+            else
+            {
+                console.log("Got Document which is not instance of projects.Document");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
     /*
     Gets Documents from whole Project
     Parameter: qrypropertys : string[]      Array of property constants of wanted propertys
@@ -54,26 +80,7 @@ export class MMDAProject {
             return this.loadAllDocumentsAsPromise(documents);
         })
         .done((loadeddocs) => {
-            loadeddocs.forEach((doc) => {
-                if(doc instanceof projects.Document){
-                    var documentadapter : MMDAA.DocumentAdapter = new MMDAA.DocumentAdapter();
-                    var propertys : MMDAO.OutputObjectProperty[] = new Array();
-                    var MMDAobj : MMDAO.OutputObject;
-                    propertys = documentadapter.getDocumentPropertys(doc, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys,"Document");                   //Get filtered Documents
-                    if(documentadapter.filter(MMDAobj,filter))
-                    {
-                        outputobjects.addObject(MMDAobj);                        //filter object
-                    }
-                }
-                else
-                {
-                    console.log("Got Document which is not instance of projects.Document");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
-            outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
-            console.log("Im Done!!!");
+            this.returnDocuments(loadeddocs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     }
 
@@ -98,27 +105,11 @@ export class MMDAProject {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
-        .done((modul) => {
-            modul.documents.forEach((doc) => {
-                if(doc instanceof projects.Document){
-                    var documentadapter : MMDAA.DocumentAdapter = new MMDAA.DocumentAdapter();
-                    var propertys : MMDAO.OutputObjectProperty[] = new Array();
-                    var MMDAobj : MMDAO.OutputObject;
-                    propertys = documentadapter.getDocumentPropertys(doc, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys,"Document");                   //Get filtered Documents
-                    if(documentadapter.filter(MMDAobj,filter))
-                    {
-                        outputobjects.addObject(MMDAobj);                        //filter object
-                    }
-                }
-                else
-                {
-                    console.log("Got Document which is not instance of projects.Document");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
-            outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
-            console.log("Im Done!!!");
+        .then((modul) => {
+            return this.loadAllDocumentsAsPromise(modul.documents);
+        })
+        .done((loadeddocs) => {
+            this.returnDocuments(loadeddocs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         })
     }
 
@@ -141,39 +132,25 @@ export class MMDAProject {
     protected getFolderDocuments(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         var folderfound : boolean = false;
+        var searchedfolder : projects.IFolder;
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allFolders();
         })
-        .done((folders) => {
+        .then((folders) => {
             folders.forEach((folder) => {
                 if(folder.name == foldername)
                 {
                     folderfound = true;
-                    folder.documents.forEach((doc) => {
-                        if(doc instanceof projects.Document){
-                            var documentadapter : MMDAA.DocumentAdapter = new MMDAA.DocumentAdapter();
-                            var propertys : MMDAO.OutputObjectProperty[] = new Array();
-                            var MMDAobj : MMDAO.OutputObject;
-                            propertys = documentadapter.getDocumentPropertys(doc, qrypropertys);
-                            MMDAobj = new MMDAO.OutputObject(propertys,"Document");                   //Get filtered Documents
-                            if(documentadapter.filter(MMDAobj,filter))
-                            {
-                                outputobjects.addObject(MMDAobj);                        //filter object
-                            }
-                        }
-                        else
-                        {
-                            console.log("Got Document which is not instance of projects.Document");
-                        }
-                    });
-                    outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
-                    outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
-                    console.log("Im Done!!!");
+                    searchedfolder = folder;
                 }
             })
             if(!folderfound){
                 fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
             }
+            return this.loadAllDocumentsAsPromise(searchedfolder.documents);
+        })
+        .done((loadeddocs) => {
+            this.returnDocuments(loadeddocs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         })
     }
 

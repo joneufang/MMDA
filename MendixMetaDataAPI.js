@@ -16,6 +16,27 @@ var MMDAProject = /** @class */ (function () {
         this.client = new mendixplatformsdk_1.MendixSdkClient(this.name, this.key);
         this.project = new mendixplatformsdk_1.Project(this.client, this.id, "");
     }
+    MMDAProject.prototype.returnDocuments = function (documents, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        documents.forEach(function (doc) {
+            if (doc instanceof mendixmodelsdk_1.projects.Document) {
+                var documentadapter = new MMDAA.DocumentAdapter();
+                var propertys = new Array();
+                var MMDAobj;
+                propertys = documentadapter.getDocumentPropertys(doc, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys, "Document"); //Get filtered Documents
+                if (documentadapter.filter(MMDAobj, filter)) {
+                    outputobjects.addObject(MMDAobj); //filter object
+                }
+            }
+            else {
+                console.log("Got Document which is not instance of projects.Document");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+        outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+        console.log("Im Done!!!");
+    };
     /*
     Gets Documents from whole Project
     Parameter: qrypropertys : string[]      Array of property constants of wanted propertys
@@ -34,24 +55,7 @@ var MMDAProject = /** @class */ (function () {
             return _this.loadAllDocumentsAsPromise(documents);
         })
             .done(function (loadeddocs) {
-            loadeddocs.forEach(function (doc) {
-                if (doc instanceof mendixmodelsdk_1.projects.Document) {
-                    var documentadapter = new MMDAA.DocumentAdapter();
-                    var propertys = new Array();
-                    var MMDAobj;
-                    propertys = documentadapter.getDocumentPropertys(doc, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys, "Document"); //Get filtered Documents
-                    if (documentadapter.filter(MMDAobj, filter)) {
-                        outputobjects.addObject(MMDAobj); //filter object
-                    }
-                }
-                else {
-                    console.log("Got Document which is not instance of projects.Document");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
-            outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
-            console.log("Im Done!!!");
+            _this.returnDocuments(loadeddocs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     };
     MMDAProject.prototype.getProjectDocumentsAsHTML = function (propertys, filter, sortcolumn, filename) {
@@ -67,29 +71,16 @@ var MMDAProject = /** @class */ (function () {
         this.getProjectDocuments(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
     MMDAProject.prototype.getModuleDocuments = function (modulename, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
         var outputobjects = new MMDAO.OutputObjectList();
         this.project.createWorkingCopy().then(function (workingCopy) {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
-            .done(function (modul) {
-            modul.documents.forEach(function (doc) {
-                if (doc instanceof mendixmodelsdk_1.projects.Document) {
-                    var documentadapter = new MMDAA.DocumentAdapter();
-                    var propertys = new Array();
-                    var MMDAobj;
-                    propertys = documentadapter.getDocumentPropertys(doc, qrypropertys);
-                    MMDAobj = new MMDAO.OutputObject(propertys, "Document"); //Get filtered Documents
-                    if (documentadapter.filter(MMDAobj, filter)) {
-                        outputobjects.addObject(MMDAobj); //filter object
-                    }
-                }
-                else {
-                    console.log("Got Document which is not instance of projects.Document");
-                }
-            });
-            outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
-            outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
-            console.log("Im Done!!!");
+            .then(function (modul) {
+            return _this.loadAllDocumentsAsPromise(modul.documents);
+        })
+            .done(function (loadeddocs) {
+            _this.returnDocuments(loadeddocs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     };
     MMDAProject.prototype.getModuleDocumentsAsTXT = function (modulename, propertys, filter, sortcolumn, filename) {
@@ -105,38 +96,27 @@ var MMDAProject = /** @class */ (function () {
         this.getModuleDocuments(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
     MMDAProject.prototype.getFolderDocuments = function (foldername, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
         var outputobjects = new MMDAO.OutputObjectList();
         var folderfound = false;
+        var searchedfolder;
         this.project.createWorkingCopy().then(function (workingCopy) {
             return workingCopy.model().allFolders();
         })
-            .done(function (folders) {
+            .then(function (folders) {
             folders.forEach(function (folder) {
                 if (folder.name == foldername) {
                     folderfound = true;
-                    folder.documents.forEach(function (doc) {
-                        if (doc instanceof mendixmodelsdk_1.projects.Document) {
-                            var documentadapter = new MMDAA.DocumentAdapter();
-                            var propertys = new Array();
-                            var MMDAobj;
-                            propertys = documentadapter.getDocumentPropertys(doc, qrypropertys);
-                            MMDAobj = new MMDAO.OutputObject(propertys, "Document"); //Get filtered Documents
-                            if (documentadapter.filter(MMDAobj, filter)) {
-                                outputobjects.addObject(MMDAobj); //filter object
-                            }
-                        }
-                        else {
-                            console.log("Got Document which is not instance of projects.Document");
-                        }
-                    });
-                    outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
-                    outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
-                    console.log("Im Done!!!");
+                    searchedfolder = folder;
                 }
             });
             if (!folderfound) {
                 fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
             }
+            return _this.loadAllDocumentsAsPromise(searchedfolder.documents);
+        })
+            .done(function (loadeddocs) {
+            _this.returnDocuments(loadeddocs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     };
     MMDAProject.prototype.getFolderDocumentsAsHTML = function (foldername, propertys, filter, sortcolumn, filename) {
