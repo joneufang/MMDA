@@ -36,19 +36,32 @@ export class MMDAProject {
         this.project = new Project(this.client, this.id, "");
     }
 
-    protected traverseFolders(folders : projects.IFolder[]) : projects.IDocument[] {
+    protected traverseFoldersForDocuments(folders : projects.IFolder[]) : projects.IDocument[] {
         var documents : projects.IDocument[] = new Array();
         folders.forEach((folder) => {
             folder.documents.forEach((doc) => {
                 documents[documents.length] = doc;
             })
             var subdocuments : projects.IDocument[] = new Array();
-            subdocuments = this.traverseFolders(folder.folders)
+            subdocuments = this.traverseFoldersForDocuments(folder.folders)
             subdocuments.forEach((subdoc) => {
                 documents[documents.length] = subdoc;
             })
         })
         return documents;
+    }
+
+    protected traverseFoldersForFolders(folders : projects.IFolder[]) : projects.IFolder[] {
+        var foundfolders : projects.IFolder[] = new Array();
+        folders.forEach((folder) => {
+            foundfolders[foundfolders.length] = folder;
+            var subfolders : projects.IFolder[] = new Array();
+            subfolders = this.traverseFoldersForFolders(folder.folders)
+            subfolders.forEach((subfold) => {
+                foundfolders[foundfolders.length] = subfold;
+            })
+        })
+        return foundfolders;
     }
 
     protected returnDocuments(documents : projects.Document[],qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string)
@@ -119,7 +132,7 @@ export class MMDAProject {
         })
         .then((modul) => {
             var documents : projects.IDocument[];
-            documents = this.traverseFolders(modul.folders);
+            documents = this.traverseFoldersForDocuments(modul.folders);
             modul.documents.forEach((doc) => {
                 documents[documents.length] = doc;
             })
@@ -164,7 +177,7 @@ export class MMDAProject {
                 fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
             }
             var documents : projects.IDocument[];
-            documents = this.traverseFolders(searchedfolder.folders);
+            documents = this.traverseFoldersForDocuments(searchedfolder.folders);
             searchedfolder.documents.forEach((doc) => {
                 documents[documents.length] = doc;
             })
@@ -337,7 +350,7 @@ export class MMDAProject {
         })
         .then((modul) => {
             var documents : projects.IDocument[];
-            documents = this.traverseFolders(modul.folders);
+            documents = this.traverseFoldersForDocuments(modul.folders);
             modul.documents.forEach((doc) => {
                 documents[documents.length] = doc;
             })
@@ -389,7 +402,7 @@ export class MMDAProject {
                 fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
             }
             var documents : projects.IDocument[] = new Array();
-            documents = this.traverseFolders(searchedfolder.folders);
+            documents = this.traverseFoldersForDocuments(searchedfolder.folders);
             searchedfolder.documents.forEach((doc) => {
                 documents[documents.length] = doc;
             })
@@ -486,7 +499,7 @@ export class MMDAProject {
         })
         .then((modul) => {
             var documents : projects.IDocument[];
-            documents = this.traverseFolders(modul.folders);
+            documents = this.traverseFoldersForDocuments(modul.folders);
             modul.documents.forEach((doc) => {
                 documents[documents.length] = doc;
             })
@@ -538,7 +551,7 @@ export class MMDAProject {
                 fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
             }
             var documents : projects.IDocument[] = new Array();
-            documents = this.traverseFolders(searchedfolder.folders);
+            documents = this.traverseFoldersForDocuments(searchedfolder.folders);
             searchedfolder.documents.forEach((doc) => {
                 documents[documents.length] = doc;
             })
@@ -634,7 +647,7 @@ export class MMDAProject {
         })
         .then((modul) => {
             var documents : projects.IDocument[];
-            documents = this.traverseFolders(modul.folders);
+            documents = this.traverseFoldersForDocuments(modul.folders);
             modul.documents.forEach((doc) => {
                 documents[documents.length] = doc;
             })
@@ -686,7 +699,7 @@ export class MMDAProject {
                 fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
             }
             var documents : projects.IDocument[] = new Array();
-            documents = this.traverseFolders(searchedfolder.folders);
+            documents = this.traverseFoldersForDocuments(searchedfolder.folders);
             searchedfolder.documents.forEach((doc) => {
                 documents[documents.length] = doc;
             })

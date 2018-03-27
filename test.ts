@@ -35,7 +35,7 @@ let project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getProjectDomainModelsAsXML([dms.ID, dms.TYPE, dms.ENTITIES, dms.ASSOCIATIONS],[],[],"./domainmodels.xml");
 //project.getProjectEnumerationsAsXML([enums.ID, enums.NAME, enums.TYPE, enums.CONTAINER, enums.VALUES],[],[],"./enumerations.xml");
 //project.getProjectImageCollectionsAsXML([imgcol.ID, imgcol.NAME, imgcol.TYPE, imgcol.CONTAINER, imgcol.IMAGES],[],[],"./imagecollections.xml");
-//project.getProjectFoldersAsXML([fold.ID, fold.NAME, fold.TYPE, fold.SUBFOLDERS, fold.DOCUMENTS],[],[],"./folders.xml");
+project.getProjectFoldersAsXML([fold.ID, fold.NAME, fold.TYPE, fold.CONTAINER, fold.SUBFOLDERS, fold.DOCUMENTS],[],[],"./folders.xml");
 //project.getProjectLayoutsAsXML([lay.ID, lay.NAME, lay.TYPE, lay.LAYOUTTYPE],[],[],"./layouts.xml");
 //project.getProjectMicroflowsAsXML([mf.ID, mf.NAME, mf.TYPE, mf.RETURNTYPE],[],[],"./microflows.xml");
 //project.getProjectModulesAsXML([mod.ID, mod.NAME, mod.TYPE, mod.FOLDERS, mod.DOCUMENTS],[],[],"./modules.xml");
