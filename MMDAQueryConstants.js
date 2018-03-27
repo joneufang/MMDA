@@ -61,6 +61,16 @@ var folders;
     folders.SUBFOLDERS = "SUBFOLDERS";
     folders.ALL = "ALL";
 })(folders = exports.folders || (exports.folders = {}));
+var modules;
+(function (modules) {
+    modules.ID = "ID";
+    modules.NAME = "NAME";
+    modules.TYPE = "TYPE";
+    modules.CONTAINER = "CONTAINER";
+    modules.DOCUMENTS = "DOCUMENTS";
+    modules.FOLDERS = "FOLDERS";
+    modules.ALL = "ALL";
+})(modules = exports.modules || (exports.modules = {}));
 var layouts;
 (function (layouts) {
     layouts.ID = "ID";

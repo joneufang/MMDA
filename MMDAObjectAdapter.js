@@ -623,3 +623,72 @@ var MicroflowAdapter = /** @class */ (function (_super) {
     return MicroflowAdapter;
 }(ServersideMicroflowAdapter));
 exports.MicroflowAdapter = MicroflowAdapter;
+var ModuleAdapter = /** @class */ (function (_super) {
+    __extends(ModuleAdapter, _super);
+    function ModuleAdapter() {
+        return _super.call(this) || this;
+    }
+    ModuleAdapter.prototype.getModulePropertys = function (modul, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.modules.ALL) {
+            propertys[propertys.length] = this.getId(modul);
+            propertys[propertys.length] = this.getName(modul);
+            propertys[propertys.length] = this.getType(modul);
+            propertys[propertys.length] = this.getContainer(modul);
+            propertys[propertys.length] = this.getDocuments(modul);
+            propertys[propertys.length] = this.getFolders(modul);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.modules.ID) {
+                    propertys[propertys.length] = _this.getId(modul);
+                }
+                else if (qryprop == qrycons.modules.NAME) {
+                    propertys[propertys.length] = _this.getName(modul);
+                }
+                else if (qryprop == qrycons.modules.TYPE) {
+                    propertys[propertys.length] = _this.getType(modul);
+                }
+                else if (qryprop == qrycons.modules.CONTAINER) {
+                    propertys[propertys.length] = _this.getContainer(modul);
+                }
+                else if (qryprop == qrycons.modules.FOLDERS) {
+                    propertys[propertys.length] = _this.getFolders(modul);
+                }
+                else if (qryprop == qrycons.modules.DOCUMENTS) {
+                    propertys[propertys.length] = _this.getDocuments(modul);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    ModuleAdapter.prototype.getDocuments = function (modul) {
+        var property;
+        var result = "";
+        modul.documents.forEach(function (doc) {
+            result += doc.qualifiedName + ", ";
+        });
+        property = new MMDAO.OutputObjectProperty(qrycons.modules.DOCUMENTS, result);
+        return property;
+    };
+    ModuleAdapter.prototype.getFolders = function (modul) {
+        var property;
+        var result = "";
+        modul.folders.forEach(function (fold) {
+            result += fold.name + ", ";
+        });
+        property = new MMDAO.OutputObjectProperty(qrycons.modules.FOLDERS, result);
+        return property;
+    };
+    ModuleAdapter.prototype.getName = function (modul) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.modules.NAME, modul.name);
+        return property;
+    };
+    return ModuleAdapter;
+}(FolderBaseAdapter));
+exports.ModuleAdapter = ModuleAdapter;

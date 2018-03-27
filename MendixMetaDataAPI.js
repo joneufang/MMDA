@@ -489,6 +489,51 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.loadAllMicroflowsAsPromise = function (microflows) {
         return when.all(microflows.map(function (mic) { return mendixplatformsdk_1.loadAsPromise(mic); }));
     };
+    MMDAProject.prototype.returnModules = function (loadedmodules, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        loadedmodules.forEach(function (modul) {
+            if (modul instanceof mendixmodelsdk_1.projects.Module) {
+                var moduleadapter = new MMDAA.ModuleAdapter();
+                var propertys = new Array();
+                var MMDAobj;
+                propertys = moduleadapter.getModulePropertys(modul, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys, "Module"); //Get filtered Documents
+                if (moduleadapter.filter(MMDAobj, filter)) {
+                    outputobjects.addObject(MMDAobj); //filter object
+                }
+            }
+            else {
+                console.log("Got Folder which is not instance of projects.Folder");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+        outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+        console.log("Im Done!!!");
+    };
+    MMDAProject.prototype.getProjectModules = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allModules();
+        })
+            .then(function (modules) {
+            return modules;
+        })
+            .done(function (loadedmodules) {
+            _this.returnModules(loadedmodules, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getProjectModulesAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectModulesAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectModulesAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectModulesAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
     //Constants to define output target
     MMDAProject.TEXTFILE = "TEXTFILE";
     MMDAProject.HTMLTABLE = "HTMLTABLE";

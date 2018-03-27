@@ -583,6 +583,58 @@ export class MMDAProject {
     protected loadAllMicroflowsAsPromise(microflows : microflows.IMicroflow[]): when.Promise<microflows.Microflow[]> {
         return when.all<microflows.Microflow[]>(microflows.map( mic => loadAsPromise(mic)));
     }
+
+    protected returnModules(loadedmodules : projects.IModule[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        loadedmodules.forEach((modul) => {
+            if(modul instanceof projects.Module){
+                var moduleadapter : MMDAA.ModuleAdapter = new MMDAA.ModuleAdapter();
+                var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                var MMDAobj : MMDAO.OutputObject;
+                propertys = moduleadapter.getModulePropertys(modul, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys,"Module");                   //Get filtered Documents
+                if(moduleadapter.filter(MMDAobj,filter))
+                {
+                    outputobjects.addObject(MMDAobj);                        //filter object
+                }
+            }
+            else
+            {
+                console.log("Got Folder which is not instance of projects.Folder");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
+    protected getProjectModules(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allModules();
+        })
+        .then((modules) => { 
+            return modules;
+        })
+        .done((loadedmodules) => {
+            this.returnModules(loadedmodules, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    }
+
+    public getProjectModulesAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getProjectModulesAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getProjectModulesAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getProjectModulesAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
 }    
 
 export class Filter {
