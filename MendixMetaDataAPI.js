@@ -16,6 +16,21 @@ var MMDAProject = /** @class */ (function () {
         this.client = new mendixplatformsdk_1.MendixSdkClient(this.name, this.key);
         this.project = new mendixplatformsdk_1.Project(this.client, this.id, "");
     }
+    MMDAProject.prototype.traverseFolders = function (folders) {
+        var _this = this;
+        var documents = new Array();
+        folders.forEach(function (folder) {
+            folder.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var subdocuments = new Array();
+            subdocuments = _this.traverseFolders(folder.folders);
+            subdocuments.forEach(function (subdoc) {
+                documents[documents.length] = subdoc;
+            });
+        });
+        return documents;
+    };
     MMDAProject.prototype.returnDocuments = function (documents, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
         var outputobjects = new MMDAO.OutputObjectList();
         documents.forEach(function (doc) {
@@ -75,7 +90,12 @@ var MMDAProject = /** @class */ (function () {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
             .then(function (modul) {
-            return _this.loadAllDocumentsAsPromise(modul.documents);
+            var documents;
+            documents = _this.traverseFolders(modul.folders);
+            modul.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            return _this.loadAllDocumentsAsPromise(documents);
         })
             .done(function (loadeddocs) {
             _this.returnDocuments(loadeddocs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
@@ -110,7 +130,12 @@ var MMDAProject = /** @class */ (function () {
             if (!folderfound) {
                 fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
             }
-            return _this.loadAllDocumentsAsPromise(searchedfolder.documents);
+            var documents;
+            documents = _this.traverseFolders(searchedfolder.folders);
+            searchedfolder.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            return _this.loadAllDocumentsAsPromise(documents);
         })
             .done(function (loadeddocs) {
             _this.returnDocuments(loadeddocs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);

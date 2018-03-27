@@ -36,6 +36,21 @@ export class MMDAProject {
         this.project = new Project(this.client, this.id, "");
     }
 
+    protected traverseFolders(folders : projects.IFolder[]) : projects.IDocument[] {
+        var documents : projects.IDocument[] = new Array();
+        folders.forEach((folder) => {
+            folder.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            var subdocuments : projects.IDocument[] = new Array();
+            subdocuments = this.traverseFolders(folder.folders)
+            subdocuments.forEach((subdoc) => {
+                documents[documents.length] = subdoc;
+            })
+        })
+        return documents;
+    }
+
     protected returnDocuments(documents : projects.Document[],qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string)
     {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
@@ -103,7 +118,12 @@ export class MMDAProject {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
         .then((modul) => {
-            return this.loadAllDocumentsAsPromise(modul.documents);
+            var documents : projects.IDocument[];
+            documents = this.traverseFolders(modul.folders);
+            modul.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            return this.loadAllDocumentsAsPromise(documents);
         })
         .done((loadeddocs) => {
             this.returnDocuments(loadeddocs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
@@ -143,7 +163,12 @@ export class MMDAProject {
             if(!folderfound){
                 fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
             }
-            return this.loadAllDocumentsAsPromise(searchedfolder.documents);
+            var documents : projects.IDocument[];
+            documents = this.traverseFolders(searchedfolder.folders);
+            searchedfolder.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            return this.loadAllDocumentsAsPromise(documents);
         })
         .done((loadeddocs) => {
             this.returnDocuments(loadeddocs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
