@@ -1261,6 +1261,98 @@ export class MMDAProject {
         this.getProjectPages(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
+    protected getModulePages(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+        .then((modul) => {
+            var documents : projects.IDocument[];
+            documents = this.traverseFoldersForDocuments(modul.folders);
+            modul.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            var pags : pages.IPage[] = new Array();
+            documents.forEach((doc) => {
+                if(doc instanceof pages.Page)
+                {
+                    pags[pags.length] = doc;
+                }
+            })
+            return this.loadAllPagesAsPromise(pags);
+        })
+        .done((loadedpags) => {
+            this.returnPages(loadedpags, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getModulePagesAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModulePages(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getModulePagesAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModulePages(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getModulePagesAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModulePages(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getModulePagesAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModulePages(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected getFolderPages(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var folderfound : boolean = false;
+        var searchedfolder : projects.IFolder;
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allFolders();
+        })
+        .then((folders) => {
+            folders.forEach((folder) => {
+                if(folder.name == foldername)
+                {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            })
+            if(!folderfound){
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var documents : projects.IDocument[] = new Array();
+            documents = this.traverseFoldersForDocuments(searchedfolder.folders);
+            searchedfolder.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            var pags : pages.IPage[] = new Array();
+            documents.forEach((doc) => {
+                if(doc instanceof pages.Page)
+                {
+                    pags[pags.length] = doc;
+                }
+            })
+            return this.loadAllPagesAsPromise(pags);
+        })
+        .done((loadedpags) => {
+            this.returnPages(loadedpags, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getFolderPagesAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderPages(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getFolderPagesAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderPages(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getFolderPagesAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderPages(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getFolderPagesAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderPages(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
     protected loadAllPagesAsPromise(pages : pages.IPage[]): when.Promise<pages.Page[]> {
         return when.all<pages.Page[]>(pages.map( page => loadAsPromise(page)));
     }

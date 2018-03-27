@@ -1084,6 +1084,87 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.getProjectPagesAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectPages(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
+    MMDAProject.prototype.getModulePages = function (modulename, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+            .then(function (modul) {
+            var documents;
+            documents = _this.traverseFoldersForDocuments(modul.folders);
+            modul.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var pags = new Array();
+            documents.forEach(function (doc) {
+                if (doc instanceof mendixmodelsdk_1.pages.Page) {
+                    pags[pags.length] = doc;
+                }
+            });
+            return _this.loadAllPagesAsPromise(pags);
+        })
+            .done(function (loadedpags) {
+            _this.returnPages(loadedpags, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getModulePagesAsTXT = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModulePages(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getModulePagesAsHTML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModulePages(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getModulePagesAsXML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModulePages(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getModulePagesAsJSON = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModulePages(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.getFolderPages = function (foldername, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        var folderfound = false;
+        var searchedfolder;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allFolders();
+        })
+            .then(function (folders) {
+            folders.forEach(function (folder) {
+                if (folder.name == foldername) {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            });
+            if (!folderfound) {
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var documents = new Array();
+            documents = _this.traverseFoldersForDocuments(searchedfolder.folders);
+            searchedfolder.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var pags = new Array();
+            documents.forEach(function (doc) {
+                if (doc instanceof mendixmodelsdk_1.pages.Page) {
+                    pags[pags.length] = doc;
+                }
+            });
+            return _this.loadAllPagesAsPromise(pags);
+        })
+            .done(function (loadedpags) {
+            _this.returnPages(loadedpags, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getFolderPagesAsHTML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderPages(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getFolderPagesAsTXT = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderPages(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getFolderPagesAsXML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderPages(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getFolderPagesAsJSON = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderPages(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
     MMDAProject.prototype.loadAllPagesAsPromise = function (pages) {
         return when.all(pages.map(function (page) { return mendixplatformsdk_1.loadAsPromise(page); }));
     };
