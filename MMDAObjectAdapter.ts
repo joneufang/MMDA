@@ -1,4 +1,4 @@
-import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, AbstractElement, constants, enumerations, images} from "mendixmodelsdk";
+import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, AbstractElement, constants, enumerations, images, microflows} from "mendixmodelsdk";
 import * as MMDAO from "./MMDAOutputObject";
 import * as MMDA from "./MendixMetaDataAPI";
 import * as qrycons from "./MMDAQueryConstants";
@@ -299,6 +299,18 @@ export class DocumentAdapter extends ModuleDocumentAdapter {
 }
 
 export class FormBaseAdapter extends DocumentAdapter {
+    constructor() {
+        super();   
+    }
+}
+
+export class MicroflowBaseAdapter extends DocumentAdapter {
+    constructor() {
+        super();   
+    }
+}
+
+export class ServersideMicroflowAdapter extends MicroflowBaseAdapter {
     constructor() {
         super();   
     }
@@ -665,6 +677,69 @@ export class LayoutAdapter extends DocumentAdapter {
         var property : MMDAO.OutputObjectProperty;
         
         property = new MMDAO.OutputObjectProperty(qrycons.layouts.LAYOUTTYPE,layout.layoutType.name);
+        
+        return property;
+    }
+
+}
+
+export class MicroflowAdapter extends ServersideMicroflowAdapter {
+    
+    constructor() {
+        super();   
+    }
+
+    public getMicroflowPropertys(microflow : microflows.Microflow, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
+        var propertys : MMDAO.OutputObjectProperty[] = new Array();
+        if(qrypropertys[0] == qrycons.microflows.ALL)
+        {
+            propertys[propertys.length] = this.getId(microflow);
+            propertys[propertys.length] = this.getName(microflow);
+            propertys[propertys.length] = this.getType(microflow);
+            propertys[propertys.length] = this.getContainer(microflow);
+            propertys[propertys.length] = this.getReturnType(microflow);
+            propertys[propertys.length] = this.getDocumentation(microflow);   
+        }
+        else
+        {
+            qrypropertys.forEach((qryprop) => {
+                if(qryprop == qrycons.microflows.ID)
+                {
+                    propertys[propertys.length] = this.getId(microflow);
+                }
+                else if(qryprop == qrycons.microflows.NAME)
+                {
+                    propertys[propertys.length] = this.getName(microflow);
+                }
+                else if(qryprop == qrycons.microflows.TYPE)
+                {
+                    propertys[propertys.length] = this.getType(microflow);
+                }
+                else if(qryprop == qrycons.microflows.CONTAINER)
+                {
+                    propertys[propertys.length] = this.getContainer(microflow);
+                }
+                else if(qryprop == qrycons.microflows.RETURNTYPE)
+                {
+                    propertys[propertys.length] = this.getReturnType(microflow);
+                }
+                else if(qryprop == qrycons.microflows.DOCUMENTATION)
+                {
+                    propertys[propertys.length] = this.getDocumentation(microflow);
+                }
+                else
+                {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property","Value of Unknown Property");
+                }
+            })
+        }
+        return propertys;
+    }
+
+    protected getReturnType(microflow : microflows.Microflow) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.microflows.RETURNTYPE,microflow.returnType);
         
         return property;
     }

@@ -69,3 +69,13 @@ export namespace layouts {
         export const LAYOUTTYPE : string = "LAYOUTTYPE"; 
         export const ALL : string = "ALL"; 
 }
+
+export namespace microflows {
+        export const ID : string = "ID";
+        export const NAME : string = "NAME";
+        export const TYPE : string = "TYPE";
+        export const CONTAINER : string = "CONTAINER";
+        export const DOCUMENTATION : string = "DOCUMENTATION";
+        export const RETURNTYPE : string = "RETURNTYPE"; 
+        export const ALL : string = "ALL"; 
+}

@@ -435,11 +435,59 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.getProjectLayoutsAsTXT = function (propertys, filter, sortcolumn, filename) {
         this.getProjectLayouts(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     };
-    MMDAProject.prototype.getProjectLayoutssAsJSON = function (propertys, filter, sortcolumn, filename) {
+    MMDAProject.prototype.getProjectLayoutsAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectLayouts(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
     MMDAProject.prototype.loadAllLayoutsAsPromise = function (layouts) {
         return when.all(layouts.map(function (lay) { return mendixplatformsdk_1.loadAsPromise(lay); }));
+    };
+    MMDAProject.prototype.returnMicroflows = function (loadedmicroflows, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        loadedmicroflows.forEach(function (microflow) {
+            if (microflow instanceof mendixmodelsdk_1.microflows.Microflow) {
+                var microflowadapter = new MMDAA.MicroflowAdapter();
+                var propertys = new Array();
+                var MMDAobj;
+                propertys = microflowadapter.getMicroflowPropertys(microflow, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys, "Microflow");
+                if (microflowadapter.filter(MMDAobj, filter)) {
+                    outputobjects.addObject(MMDAobj);
+                }
+            }
+            else {
+                console.log("Got Layout which is not instance of pages.Layout");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+        outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+        console.log("Im Done!!!");
+    };
+    MMDAProject.prototype.getProjectMicroflows = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allMicroflows();
+        })
+            .then(function (microflows) {
+            return _this.loadAllMicroflowsAsPromise(microflows);
+        })
+            .done(function (loadedmicroflows) {
+            _this.returnMicroflows(loadedmicroflows, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getProjectMicroflowsAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectMicroflowsAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectMicroflowsAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectMicroflowsAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.loadAllMicroflowsAsPromise = function (microflows) {
+        return when.all(microflows.map(function (mic) { return mendixplatformsdk_1.loadAsPromise(mic); }));
     };
     //Constants to define output target
     MMDAProject.TEXTFILE = "TEXTFILE";

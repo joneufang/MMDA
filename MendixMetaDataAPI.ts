@@ -1,4 +1,4 @@
-import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, constants, enumerations, images} from "mendixmodelsdk";
+import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, constants, enumerations, images, microflows} from "mendixmodelsdk";
 import {MendixSdkClient, Project, OnlineWorkingCopy, loadAsPromise} from "mendixplatformsdk";
 import when = require("when");
 import fs = require("fs-extra");
@@ -520,12 +520,68 @@ export class MMDAProject {
         this.getProjectLayouts(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectLayoutssAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectLayoutsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
         this.getProjectLayouts(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
     protected loadAllLayoutsAsPromise(layouts : pages.ILayout[]): when.Promise<pages.Layout[]> {
         return when.all<pages.Layout[]>(layouts.map( lay => loadAsPromise(lay)));
+    }
+
+    protected returnMicroflows(loadedmicroflows : microflows.Microflow[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        loadedmicroflows.forEach((microflow) => {
+            if(microflow instanceof microflows.Microflow){
+                var microflowadapter : MMDAA.MicroflowAdapter = new MMDAA.MicroflowAdapter();
+                var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                var MMDAobj : MMDAO.OutputObject;
+                propertys = microflowadapter.getMicroflowPropertys(microflow, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys,"Microflow");                   
+                if(microflowadapter.filter(MMDAobj,filter))
+                {
+                    outputobjects.addObject(MMDAobj);                       
+                }
+            }
+            else
+            {
+                console.log("Got Layout which is not instance of pages.Layout");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
+    protected getProjectMicroflows(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allMicroflows();
+        })
+        .then((microflows) => { 
+            return this.loadAllMicroflowsAsPromise(microflows);
+        })
+        .done((loadedmicroflows) => {
+            this.returnMicroflows(loadedmicroflows, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    }
+
+    public getProjectMicroflowsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getProjectMicroflowsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getProjectMicroflowsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getProjectMicroflowsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected loadAllMicroflowsAsPromise(microflows : microflows.IMicroflow[]): when.Promise<microflows.Microflow[]> {
+        return when.all<microflows.Microflow[]>(microflows.map( mic => loadAsPromise(mic)));
     }
 }    
 

@@ -266,6 +266,22 @@ var FormBaseAdapter = /** @class */ (function (_super) {
     return FormBaseAdapter;
 }(DocumentAdapter));
 exports.FormBaseAdapter = FormBaseAdapter;
+var MicroflowBaseAdapter = /** @class */ (function (_super) {
+    __extends(MicroflowBaseAdapter, _super);
+    function MicroflowBaseAdapter() {
+        return _super.call(this) || this;
+    }
+    return MicroflowBaseAdapter;
+}(DocumentAdapter));
+exports.MicroflowBaseAdapter = MicroflowBaseAdapter;
+var ServersideMicroflowAdapter = /** @class */ (function (_super) {
+    __extends(ServersideMicroflowAdapter, _super);
+    function ServersideMicroflowAdapter() {
+        return _super.call(this) || this;
+    }
+    return ServersideMicroflowAdapter;
+}(MicroflowBaseAdapter));
+exports.ServersideMicroflowAdapter = ServersideMicroflowAdapter;
 var ConstantAdapter = /** @class */ (function (_super) {
     __extends(ConstantAdapter, _super);
     function ConstantAdapter() {
@@ -556,3 +572,54 @@ var LayoutAdapter = /** @class */ (function (_super) {
     return LayoutAdapter;
 }(DocumentAdapter));
 exports.LayoutAdapter = LayoutAdapter;
+var MicroflowAdapter = /** @class */ (function (_super) {
+    __extends(MicroflowAdapter, _super);
+    function MicroflowAdapter() {
+        return _super.call(this) || this;
+    }
+    MicroflowAdapter.prototype.getMicroflowPropertys = function (microflow, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.microflows.ALL) {
+            propertys[propertys.length] = this.getId(microflow);
+            propertys[propertys.length] = this.getName(microflow);
+            propertys[propertys.length] = this.getType(microflow);
+            propertys[propertys.length] = this.getContainer(microflow);
+            propertys[propertys.length] = this.getReturnType(microflow);
+            propertys[propertys.length] = this.getDocumentation(microflow);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.microflows.ID) {
+                    propertys[propertys.length] = _this.getId(microflow);
+                }
+                else if (qryprop == qrycons.microflows.NAME) {
+                    propertys[propertys.length] = _this.getName(microflow);
+                }
+                else if (qryprop == qrycons.microflows.TYPE) {
+                    propertys[propertys.length] = _this.getType(microflow);
+                }
+                else if (qryprop == qrycons.microflows.CONTAINER) {
+                    propertys[propertys.length] = _this.getContainer(microflow);
+                }
+                else if (qryprop == qrycons.microflows.RETURNTYPE) {
+                    propertys[propertys.length] = _this.getReturnType(microflow);
+                }
+                else if (qryprop == qrycons.microflows.DOCUMENTATION) {
+                    propertys[propertys.length] = _this.getDocumentation(microflow);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    MicroflowAdapter.prototype.getReturnType = function (microflow) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.microflows.RETURNTYPE, microflow.returnType);
+        return property;
+    };
+    return MicroflowAdapter;
+}(ServersideMicroflowAdapter));
+exports.MicroflowAdapter = MicroflowAdapter;

@@ -71,3 +71,13 @@ var layouts;
     layouts.LAYOUTTYPE = "LAYOUTTYPE";
     layouts.ALL = "ALL";
 })(layouts = exports.layouts || (exports.layouts = {}));
+var microflows;
+(function (microflows) {
+    microflows.ID = "ID";
+    microflows.NAME = "NAME";
+    microflows.TYPE = "TYPE";
+    microflows.CONTAINER = "CONTAINER";
+    microflows.DOCUMENTATION = "DOCUMENTATION";
+    microflows.RETURNTYPE = "RETURNTYPE";
+    microflows.ALL = "ALL";
+})(microflows = exports.microflows || (exports.microflows = {}));
