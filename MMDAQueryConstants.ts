@@ -60,6 +60,16 @@ export namespace folders {
         export const ALL : string = "ALL"; 
 }
 
+export namespace modules {
+        export const ID : string = "ID";
+        export const NAME : string = "NAME";
+        export const TYPE : string = "TYPE";
+        export const CONTAINER : string = "CONTAINER";
+        export const DOCUMENTS : string = "DOCUMENTS";
+        export const FOLDERS : string = "FOLDERS";
+        export const ALL : string = "ALL"; 
+}
+
 export namespace layouts {
         export const ID : string = "ID";
         export const NAME : string = "NAME";

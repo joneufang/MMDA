@@ -745,3 +745,93 @@ export class MicroflowAdapter extends ServersideMicroflowAdapter {
     }
 
 }
+
+export class ModuleAdapter extends FolderBaseAdapter {
+    
+    constructor() {
+        super();   
+    }
+
+    public getModulePropertys(modul : projects.Module, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
+        var propertys : MMDAO.OutputObjectProperty[] = new Array();
+        if(qrypropertys[0] == qrycons.modules.ALL)
+        {
+            propertys[propertys.length] = this.getId(modul);
+            propertys[propertys.length] = this.getName(modul);
+            propertys[propertys.length] = this.getType(modul);
+            propertys[propertys.length] = this.getContainer(modul);
+            propertys[propertys.length] = this.getDocuments(modul); 
+            propertys[propertys.length] = this.getFolders(modul);  
+        }
+        else
+        {
+            qrypropertys.forEach((qryprop) => {
+                if(qryprop == qrycons.modules.ID)
+                {
+                    propertys[propertys.length] = this.getId(modul);
+                }
+                else if(qryprop == qrycons.modules.NAME)
+                {
+                    propertys[propertys.length] = this.getName(modul);
+                }
+                else if(qryprop == qrycons.modules.TYPE)
+                {
+                    propertys[propertys.length] = this.getType(modul);
+                }
+                else if(qryprop == qrycons.modules.CONTAINER)
+                {
+                    propertys[propertys.length] = this.getContainer(modul);
+                }
+                else if(qryprop == qrycons.modules.FOLDERS)
+                {
+                    propertys[propertys.length] = this.getFolders(modul);
+                }
+                else if(qryprop == qrycons.modules.DOCUMENTS)
+                {
+                    propertys[propertys.length] = this.getDocuments(modul);
+                }
+                else
+                {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property","Value of Unknown Property");
+                }
+            })
+        }
+        return propertys;
+    }
+
+    protected getDocuments(modul : projects.Module) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+
+        var result : string = "";
+        
+                modul.documents.forEach((doc) => {
+                    result += doc.qualifiedName + ", ";
+                });
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.modules.DOCUMENTS, result);
+       
+        return property;
+    }
+
+    protected getFolders(modul : projects.Module) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+
+        var result : string = "";
+        
+                modul.folders.forEach((fold) => {
+                    result += fold.name + ", ";
+                });
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.modules.FOLDERS, result);
+       
+        return property;
+    }
+
+    protected getName(modul : projects.Module) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.modules.NAME, modul.name);
+        
+        return property;
+    }
+}
