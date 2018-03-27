@@ -273,6 +273,87 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.getProjectConstantsAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
+    MMDAProject.prototype.getModuleConstants = function (modulename, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+            .then(function (modul) {
+            var documents;
+            documents = _this.traverseFolders(modul.folders);
+            modul.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var cons = new Array();
+            documents.forEach(function (doc) {
+                if (doc instanceof mendixmodelsdk_1.constants.Constant) {
+                    cons[cons.length] = doc;
+                }
+            });
+            return _this.loadAllConstantsAsPromise(cons);
+        })
+            .done(function (loadedcons) {
+            _this.returnConstants(loadedcons, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getModuleConstantsAsTXT = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleConstants(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getModuleConstantsAsHTML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleConstants(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getModuleConstantsAsXML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleConstants(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getModuleConstantsAsJSON = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleConstants(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.getFolderConstants = function (foldername, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        var folderfound = false;
+        var searchedfolder;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allFolders();
+        })
+            .then(function (folders) {
+            folders.forEach(function (folder) {
+                if (folder.name == foldername) {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            });
+            if (!folderfound) {
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var documents = new Array();
+            documents = _this.traverseFolders(searchedfolder.folders);
+            searchedfolder.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var cons = new Array();
+            documents.forEach(function (doc) {
+                if (doc instanceof mendixmodelsdk_1.constants.Constant) {
+                    cons[cons.length] = doc;
+                }
+            });
+            return _this.loadAllConstantsAsPromise(cons);
+        })
+            .done(function (loadedcons) {
+            _this.returnConstants(loadedcons, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getFolderConstantsAsHTML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderConstants(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getFolderConstantsAsTXT = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderConstants(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getFolderConstantsAsXML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderConstants(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getFolderConstantsAsJSON = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderConstants(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
     MMDAProject.prototype.loadAllConstantsAsPromise = function (constants) {
         return when.all(constants.map(function (con) { return mendixplatformsdk_1.loadAsPromise(con); }));
     };
