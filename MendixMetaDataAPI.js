@@ -630,6 +630,54 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.loadAllRegularExpressionsAsPromise = function (regex) {
         return when.all(regex.map(function (reg) { return mendixplatformsdk_1.loadAsPromise(reg); }));
     };
+    MMDAProject.prototype.returnSnippets = function (loadedsnippets, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        loadedsnippets.forEach(function (snippet) {
+            if (snippet instanceof mendixmodelsdk_1.pages.Snippet) {
+                var snippetadapter = new MMDAA.SnippetAdapter();
+                var propertys = new Array();
+                var MMDAobj;
+                propertys = snippetadapter.getSnippetPropertys(snippet, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys, "Snippet");
+                if (snippetadapter.filter(MMDAobj, filter)) {
+                    outputobjects.addObject(MMDAobj);
+                }
+            }
+            else {
+                console.log("Got Snippet which is not instance of pages.Snippet");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+        outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+        console.log("Im Done!!!");
+    };
+    MMDAProject.prototype.getProjectSnippets = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allSnippets();
+        })
+            .then(function (snippets) {
+            return _this.loadAllSnippetsAsPromise(snippets);
+        })
+            .done(function (loadedsnippets) {
+            _this.returnSnippets(loadedsnippets, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getProjectSnippetsAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectSnippetsAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectSnippetsAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectSnippetsAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.loadAllSnippetsAsPromise = function (snippet) {
+        return when.all(snippet.map(function (snip) { return mendixplatformsdk_1.loadAsPromise(snip); }));
+    };
     //Constants to define output target
     MMDAProject.TEXTFILE = "TEXTFILE";
     MMDAProject.HTMLTABLE = "HTMLTABLE";

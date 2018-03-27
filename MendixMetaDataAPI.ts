@@ -747,6 +747,62 @@ export class MMDAProject {
     protected loadAllRegularExpressionsAsPromise(regex : regularexpressions.IRegularExpression[]): when.Promise<regularexpressions.RegularExpression[]> {
         return when.all<regularexpressions.RegularExpression[]>(regex.map( reg => loadAsPromise(reg)));
     }
+
+    protected returnSnippets(loadedsnippets : pages.Snippet[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        loadedsnippets.forEach((snippet) => {
+            if(snippet instanceof pages.Snippet){
+                var snippetadapter : MMDAA.SnippetAdapter = new MMDAA.SnippetAdapter();
+                var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                var MMDAobj : MMDAO.OutputObject;
+                propertys = snippetadapter.getSnippetPropertys(snippet, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys,"Snippet");                   
+                if(snippetadapter.filter(MMDAobj,filter))
+                {
+                    outputobjects.addObject(MMDAobj);                       
+                }
+            }
+            else
+            {
+                console.log("Got Snippet which is not instance of pages.Snippet");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
+    protected getProjectSnippets(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allSnippets();
+        })
+        .then((snippets) => { 
+            return this.loadAllSnippetsAsPromise(snippets);
+        })
+        .done((loadedsnippets) => {
+            this.returnSnippets(loadedsnippets, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    }
+
+    public getProjectSnippetsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getProjectSnippetsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getProjectSnippetsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getProjectSnippetsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected loadAllSnippetsAsPromise(snippet : pages.ISnippet[]): when.Promise<pages.Snippet[]> {
+        return when.all<pages.Snippet[]>(snippet.map( snip => loadAsPromise(snip)));
+    }
 }    
 
 export class Filter {

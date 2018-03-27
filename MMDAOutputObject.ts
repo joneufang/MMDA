@@ -198,7 +198,15 @@ export class OutputObject {
         this.propertys.forEach((prop) => {
             if(prop.getName() == name)
             {
-                value = prop.toString();
+                if(prop.toString() == null)
+                {
+                    value = "";
+                }
+                else
+                {
+                    value = prop.toString();
+                }
+               
             }
         });
         return value; 
@@ -222,7 +230,15 @@ export class OutputObject {
     public toXMLString(xml : XMLWriter) {
         this.propertys.forEach((prop) => {
             xml.startElement(prop.getName());
-            xml.text(prop.toString());
+            if(prop.toString() == null)
+            {
+                xml.text("");
+            }
+            else
+            {
+                xml.text(prop.toString());
+            }
+            
             xml.endElement();
         });
         return xml;

@@ -163,7 +163,12 @@ var OutputObject = /** @class */ (function () {
         var value = "Property not found";
         this.propertys.forEach(function (prop) {
             if (prop.getName() == name) {
-                value = prop.toString();
+                if (prop.toString() == null) {
+                    value = "";
+                }
+                else {
+                    value = prop.toString();
+                }
             }
         });
         return value;
@@ -183,7 +188,12 @@ var OutputObject = /** @class */ (function () {
     OutputObject.prototype.toXMLString = function (xml) {
         this.propertys.forEach(function (prop) {
             xml.startElement(prop.getName());
-            xml.text(prop.toString());
+            if (prop.toString() == null) {
+                xml.text("");
+            }
+            else {
+                xml.text(prop.toString());
+            }
             xml.endElement();
         });
         return xml;
