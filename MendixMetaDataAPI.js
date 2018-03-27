@@ -201,6 +201,30 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.getProjectDomainModelsAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectDomainModels(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
+    MMDAProject.prototype.getModuleDomainModels = function (modulename, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+            .then(function (modul) {
+            return _this.loadAllDomainModelsAsPromise([modul.domainModel]);
+        })
+            .done(function (loadeddomainmodels) {
+            _this.returnDomainModels(loadeddomainmodels, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getModuleDomainModelsAsTXT = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleDomainModels(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getModuleDomainModelsAsHTML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleDomainModels(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getModuleDomainModelsAsXML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleDomainModels(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getModuleDomainModelsAsJSON = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleDomainModels(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
     MMDAProject.prototype.loadAllDomainModelsAsPromise = function (domainmodels) {
         return when.all(domainmodels.map(function (dm) { return mendixplatformsdk_1.loadAsPromise(dm); }));
     };

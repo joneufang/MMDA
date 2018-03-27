@@ -247,6 +247,34 @@ export class MMDAProject {
         this.getProjectDomainModels(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
+    protected getModuleDomainModels(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+        .then((modul) => {
+            return this.loadAllDomainModelsAsPromise([modul.domainModel]);
+        })
+        .done((loadeddomainmodels) => {
+            this.returnDomainModels(loadeddomainmodels, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getModuleDomainModelsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleDomainModels(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getModuleDomainModelsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleDomainModels(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getModuleDomainModelsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleDomainModels(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getModuleDomainModelsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleDomainModels(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
     protected loadAllDomainModelsAsPromise(domainmodels: domainmodels.IDomainModel[]): when.Promise<domainmodels.DomainModel[]> {
         return when.all<domainmodels.DomainModel[]>(domainmodels.map( dm => loadAsPromise(dm)));
     }

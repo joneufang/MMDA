@@ -42,10 +42,11 @@ let project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getProjectPagesAsTXT([pag.ID, pag.NAME, pag.TYPE, pag.LAYOUT, pag.ALLOWEDROLES, pag.URL],[],[],"./pages.txt");
 //project.getProjectPagesAsXML([pag.ID, pag.NAME, pag.TYPE, pag.LAYOUT, pag.ALLOWEDROLES, pag.URL],[],[],"./pages.xml");
 //project.getProjectRegularExpressionsAsXML([regex.ID, regex.NAME, regex.TYPE, regex.REGEX],[],[],"./regularexpressions.xml");
-project.getProjectSnippetsAsXML([snip.ID, snip.NAME, snip.TYPE, snip.ENTITY],[],[],"./snippets.xml");
+//project.getProjectSnippetsAsXML([snip.ID, snip.NAME, snip.TYPE, snip.ENTITY],[],[],"./snippets.xml");
 //project.getDocumentsFromProject([qrycons.propertys.ID,qrycons.propertys.NAME,qrycons.propertys.TYPE], [qrycons.filter.TYPE,qrycons.filter.NAME], ["Microflow","Testapp"], []); //filtered Result
 //project.getDocumentsFromProject([qrycons.documents.propertys.ID,qrycons.documents.propertys.NAME,qrycons.documents.propertys.TYPE], [qrycons.documents.filter.TYPE], ["No Result Entry"], [1]); //No Result
 //project.getModuleDocumentsAsTXT("Testapp",[docs.ID,docs.NAME, docs.TYPE, docs.CONTAINER],[], [],  "./ModuleDocuments.txt");
+project.getModuleDomainModelsAsXML("Testapp",[dms.ID, dms.TYPE, dms.ENTITIES, dms.ASSOCIATIONS],[], [],  "./ModuleDomainModels.xml");
 //project.getFolderDocumentsAsXML("00 Common",[docs.ID,docs.NAME, docs.TYPE, docs.CONTAINER],[], [],  "./FolderDocuments.xml");
 //project.getFolderDocumentsAsJSON("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.json");
 //project.getFolderDocumentsAsHTML("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.html");
