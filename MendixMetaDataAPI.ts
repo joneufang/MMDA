@@ -789,6 +789,78 @@ export class MMDAProject {
         this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
+    protected getModuleFolders(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+        .then((modul) => {
+            var folders : projects.IFolder[];
+            folders = this.traverseFoldersForFolders(modul.folders);
+            return folders;
+        })
+        .done((loadedfolders) => {
+            this.returnFolders(loadedfolders, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getModuleFoldersAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleFolders(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getModuleFoldersAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleFolders(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getModuleFoldersAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleFolders(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getModuleFoldersAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleFolders(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected getFolderFolders(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var folderfound : boolean = false;
+        var searchedfolder : projects.IFolder;
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allFolders();
+        })
+        .then((folders) => {
+            folders.forEach((folder) => {
+                if(folder.name == foldername)
+                {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            })
+            if(!folderfound){
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var folders : projects.IFolder[];
+            folders = this.traverseFoldersForFolders(searchedfolder.folders);
+            return folders;
+        })
+        .done((loadedfolders) => {
+            this.returnFolders(loadedfolders, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getFolderFoldersAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderFolders(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getFolderFoldersAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderFolders(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getFolderFoldersAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderFolders(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getFolderFoldersAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderFolders(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
     protected returnLayouts(loadedlayouts : pages.Layout[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         loadedlayouts.forEach((layout) => {

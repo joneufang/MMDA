@@ -35,7 +35,7 @@ let project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getProjectDomainModelsAsXML([dms.ID, dms.TYPE, dms.ENTITIES, dms.ASSOCIATIONS],[],[],"./domainmodels.xml");
 //project.getProjectEnumerationsAsXML([enums.ID, enums.NAME, enums.TYPE, enums.CONTAINER, enums.VALUES],[],[],"./enumerations.xml");
 //project.getProjectImageCollectionsAsXML([imgcol.ID, imgcol.NAME, imgcol.TYPE, imgcol.CONTAINER, imgcol.IMAGES],[],[],"./imagecollections.xml");
-project.getProjectFoldersAsXML([fold.ID, fold.NAME, fold.TYPE, fold.CONTAINER, fold.SUBFOLDERS, fold.DOCUMENTS],[],[],"./folders.xml");
+//project.getProjectFoldersAsXML([fold.ID, fold.NAME, fold.TYPE, fold.CONTAINER, fold.SUBFOLDERS, fold.DOCUMENTS],[],[],"./folders.xml");
 //project.getProjectLayoutsAsXML([lay.ID, lay.NAME, lay.TYPE, lay.LAYOUTTYPE],[],[],"./layouts.xml");
 //project.getProjectMicroflowsAsXML([mf.ID, mf.NAME, mf.TYPE, mf.RETURNTYPE],[],[],"./microflows.xml");
 //project.getProjectModulesAsXML([mod.ID, mod.NAME, mod.TYPE, mod.FOLDERS, mod.DOCUMENTS],[],[],"./modules.xml");
@@ -52,6 +52,8 @@ project.getProjectFoldersAsXML([fold.ID, fold.NAME, fold.TYPE, fold.CONTAINER, f
 //project.getModuleEnumerationsAsXML("Testapp",[enums.ID, enums.NAME, enums.TYPE, enums.CONTAINER, enums.VALUES],[],[],"./Moduleenumerations.xml");
 //project.getFolderEnumerationsAsXML("00 Common",[enums.ID, enums.NAME, enums.TYPE, enums.CONTAINER, enums.VALUES],[],[],"./Folderenumerations.xml");
 //project.getModuleImageCollectionsAsXML("Testapp", [imgcol.ID, imgcol.NAME, imgcol.TYPE, imgcol.CONTAINER, imgcol.IMAGES],[],[],"./Moduleimagecollections.xml");
+project.getFolderFoldersAsTXT("14 Textbox and Textarea",[fold.ID, fold.NAME, fold.TYPE, fold.CONTAINER, fold.SUBFOLDERS, fold.DOCUMENTS],[],[],"./Folderfolders.txt");
+project.getModuleFoldersAsTXT("Testapp", [fold.ID, fold.NAME, fold.TYPE, fold.CONTAINER, fold.SUBFOLDERS, fold.DOCUMENTS],[],[],"./Modulefolders.txt");
 //project.getFolderDocumentsAsXML("00 Common",[docs.ID,docs.NAME, docs.TYPE, docs.CONTAINER],[], [],  "./FolderDocuments.xml");
 //project.getFolderDocumentsAsJSON("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.json");
 //project.getFolderDocumentsAsHTML("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.html");

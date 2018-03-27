@@ -16,7 +16,7 @@ var MMDAProject = /** @class */ (function () {
         this.client = new mendixplatformsdk_1.MendixSdkClient(this.name, this.key);
         this.project = new mendixplatformsdk_1.Project(this.client, this.id, "");
     }
-    MMDAProject.prototype.traverseFolders = function (folders) {
+    MMDAProject.prototype.traverseFoldersForDocuments = function (folders) {
         var _this = this;
         var documents = new Array();
         folders.forEach(function (folder) {
@@ -24,12 +24,25 @@ var MMDAProject = /** @class */ (function () {
                 documents[documents.length] = doc;
             });
             var subdocuments = new Array();
-            subdocuments = _this.traverseFolders(folder.folders);
+            subdocuments = _this.traverseFoldersForDocuments(folder.folders);
             subdocuments.forEach(function (subdoc) {
                 documents[documents.length] = subdoc;
             });
         });
         return documents;
+    };
+    MMDAProject.prototype.traverseFoldersForFolders = function (folders) {
+        var _this = this;
+        var foundfolders = new Array();
+        folders.forEach(function (folder) {
+            foundfolders[foundfolders.length] = folder;
+            var subfolders = new Array();
+            subfolders = _this.traverseFoldersForFolders(folder.folders);
+            subfolders.forEach(function (subfold) {
+                foundfolders[foundfolders.length] = subfold;
+            });
+        });
+        return foundfolders;
     };
     MMDAProject.prototype.returnDocuments = function (documents, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
         var outputobjects = new MMDAO.OutputObjectList();
@@ -91,7 +104,7 @@ var MMDAProject = /** @class */ (function () {
         })
             .then(function (modul) {
             var documents;
-            documents = _this.traverseFolders(modul.folders);
+            documents = _this.traverseFoldersForDocuments(modul.folders);
             modul.documents.forEach(function (doc) {
                 documents[documents.length] = doc;
             });
@@ -131,7 +144,7 @@ var MMDAProject = /** @class */ (function () {
                 fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
             }
             var documents;
-            documents = _this.traverseFolders(searchedfolder.folders);
+            documents = _this.traverseFoldersForDocuments(searchedfolder.folders);
             searchedfolder.documents.forEach(function (doc) {
                 documents[documents.length] = doc;
             });
@@ -280,7 +293,7 @@ var MMDAProject = /** @class */ (function () {
         })
             .then(function (modul) {
             var documents;
-            documents = _this.traverseFolders(modul.folders);
+            documents = _this.traverseFoldersForDocuments(modul.folders);
             modul.documents.forEach(function (doc) {
                 documents[documents.length] = doc;
             });
@@ -326,7 +339,7 @@ var MMDAProject = /** @class */ (function () {
                 fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
             }
             var documents = new Array();
-            documents = _this.traverseFolders(searchedfolder.folders);
+            documents = _this.traverseFoldersForDocuments(searchedfolder.folders);
             searchedfolder.documents.forEach(function (doc) {
                 documents[documents.length] = doc;
             });
@@ -409,7 +422,7 @@ var MMDAProject = /** @class */ (function () {
         })
             .then(function (modul) {
             var documents;
-            documents = _this.traverseFolders(modul.folders);
+            documents = _this.traverseFoldersForDocuments(modul.folders);
             modul.documents.forEach(function (doc) {
                 documents[documents.length] = doc;
             });
@@ -455,7 +468,7 @@ var MMDAProject = /** @class */ (function () {
                 fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
             }
             var documents = new Array();
-            documents = _this.traverseFolders(searchedfolder.folders);
+            documents = _this.traverseFoldersForDocuments(searchedfolder.folders);
             searchedfolder.documents.forEach(function (doc) {
                 documents[documents.length] = doc;
             });
@@ -538,7 +551,7 @@ var MMDAProject = /** @class */ (function () {
         })
             .then(function (modul) {
             var documents;
-            documents = _this.traverseFolders(modul.folders);
+            documents = _this.traverseFoldersForDocuments(modul.folders);
             modul.documents.forEach(function (doc) {
                 documents[documents.length] = doc;
             });
@@ -584,7 +597,7 @@ var MMDAProject = /** @class */ (function () {
                 fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
             }
             var documents = new Array();
-            documents = _this.traverseFolders(searchedfolder.folders);
+            documents = _this.traverseFoldersForDocuments(searchedfolder.folders);
             searchedfolder.documents.forEach(function (doc) {
                 documents[documents.length] = doc;
             });
@@ -659,6 +672,69 @@ var MMDAProject = /** @class */ (function () {
     };
     MMDAProject.prototype.getProjectFoldersAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.getModuleFolders = function (modulename, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+            .then(function (modul) {
+            var folders;
+            folders = _this.traverseFoldersForFolders(modul.folders);
+            return folders;
+        })
+            .done(function (loadedfolders) {
+            _this.returnFolders(loadedfolders, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getModuleFoldersAsTXT = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleFolders(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getModuleFoldersAsHTML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleFolders(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getModuleFoldersAsXML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleFolders(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getModuleFoldersAsJSON = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleFolders(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.getFolderFolders = function (foldername, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        var folderfound = false;
+        var searchedfolder;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allFolders();
+        })
+            .then(function (folders) {
+            folders.forEach(function (folder) {
+                if (folder.name == foldername) {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            });
+            if (!folderfound) {
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var folders;
+            folders = _this.traverseFoldersForFolders(searchedfolder.folders);
+            return folders;
+        })
+            .done(function (loadedfolders) {
+            _this.returnFolders(loadedfolders, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getFolderFoldersAsHTML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderFolders(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getFolderFoldersAsTXT = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderFolders(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getFolderFoldersAsXML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderFolders(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getFolderFoldersAsJSON = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderFolders(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
     MMDAProject.prototype.returnLayouts = function (loadedlayouts, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
         var outputobjects = new MMDAO.OutputObjectList();
