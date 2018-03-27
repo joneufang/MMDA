@@ -33,7 +33,7 @@ let project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getProjectDocumentsAsXML([docs.ID,docs.NAME, docs.TYPE, docs.CONTAINER],[new MMDA.Filter(docs.NAME, "Testapp")], [docs.TYPE,docs.NAME],  "./Documents.xml");  //filtered Result with sorting
 //project.getProjectConstantsAsXML([cons.ID, cons.NAME, cons.TYPE, cons.CONTAINER, cons.DATATYPE, cons.DATAVALUE],[],[],"./Constants.xml");
 //project.getProjectDomainModelsAsXML([dms.ID, dms.TYPE, dms.ENTITIES, dms.ASSOCIATIONS],[],[],"./domainmodels.xml");
-//project.getProjectEnumerationsAsXML([enums.ID, enums.NAME, enums.TYPE, enums.VALUES],[],[],"./enumerations.xml");
+//project.getProjectEnumerationsAsXML([enums.ID, enums.NAME, enums.TYPE, enums.CONTAINER, enums.VALUES],[],[],"./enumerations.xml");
 //project.getProjectImageCollectionsAsXML([imgcol.ID, imgcol.NAME, imgcol.TYPE, imgcol.IMAGES],[],[],"./imagecollections.xml");
 //project.getProjectFoldersAsXML([fold.ID, fold.NAME, fold.TYPE, fold.SUBFOLDERS, fold.DOCUMENTS],[],[],"./folders.xml");
 //project.getProjectLayoutsAsXML([lay.ID, lay.NAME, lay.TYPE, lay.LAYOUTTYPE],[],[],"./layouts.xml");
@@ -47,8 +47,10 @@ let project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getDocumentsFromProject([qrycons.documents.propertys.ID,qrycons.documents.propertys.NAME,qrycons.documents.propertys.TYPE], [qrycons.documents.filter.TYPE], ["No Result Entry"], [1]); //No Result
 //project.getModuleDocumentsAsTXT("Testapp",[docs.ID,docs.NAME, docs.TYPE, docs.CONTAINER],[], [],  "./ModuleDocuments.txt");
 //project.getModuleDomainModelsAsXML("Testapp",[dms.ID, dms.TYPE, dms.ENTITIES, dms.ASSOCIATIONS],[], [],  "./ModuleDomainModels.xml");
-project.getFolderConstantsAsXML("0 Test Constants",[cons.ID, cons.NAME, cons.TYPE, cons.DATATYPE, cons.DATAVALUE],[],[],"./FolderConstants.xml");
+//project.getFolderConstantsAsXML("0 Test Constants",[cons.ID, cons.NAME, cons.TYPE, cons.DATATYPE, cons.DATAVALUE],[],[],"./FolderConstants.xml");
 //project.getModuleConstantsAsXML("Testapp",[cons.ID, cons.NAME, cons.TYPE, cons.DATATYPE, cons.DATAVALUE],[],[],"./ModuleConstants.xml");
+project.getModuleEnumerationsAsXML("Testapp",[enums.ID, enums.NAME, enums.TYPE, enums.CONTAINER, enums.VALUES],[],[],"./Moduleenumerations.xml");
+project.getFolderEnumerationsAsXML("00 Common",[enums.ID, enums.NAME, enums.TYPE, enums.CONTAINER, enums.VALUES],[],[],"./Folderenumerations.xml");
 //project.getFolderDocumentsAsXML("00 Common",[docs.ID,docs.NAME, docs.TYPE, docs.CONTAINER],[], [],  "./FolderDocuments.xml");
 //project.getFolderDocumentsAsJSON("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.json");
 //project.getFolderDocumentsAsHTML("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.html");

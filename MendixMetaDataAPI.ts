@@ -480,6 +480,98 @@ export class MMDAProject {
         this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
+    protected getModuleEnumerations(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+        .then((modul) => {
+            var documents : projects.IDocument[];
+            documents = this.traverseFolders(modul.folders);
+            modul.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            var enums : enumerations.IEnumeration[] = new Array();
+            documents.forEach((doc) => {
+                if(doc instanceof enumerations.Enumeration)
+                {
+                    enums[enums.length] = doc;
+                }
+            })
+            return this.loadAllEnumerationsAsPromise(enums);
+        })
+        .done((loadedenums) => {
+            this.returnEnumerations(loadedenums, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getModuleEnumerationsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleEnumerations(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getModuleEnumerationsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleEnumerations(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getModuleEnumerationsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleEnumerations(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getModuleEnumerationsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleEnumerations(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected getFolderEnumerations(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var folderfound : boolean = false;
+        var searchedfolder : projects.IFolder;
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allFolders();
+        })
+        .then((folders) => {
+            folders.forEach((folder) => {
+                if(folder.name == foldername)
+                {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            })
+            if(!folderfound){
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var documents : projects.IDocument[] = new Array();
+            documents = this.traverseFolders(searchedfolder.folders);
+            searchedfolder.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            var enums : enumerations.IEnumeration[] = new Array();
+            documents.forEach((doc) => {
+                if(doc instanceof enumerations.Enumeration)
+                {
+                    enums[enums.length] = doc;
+                }
+            })
+            return this.loadAllEnumerationsAsPromise(enums);
+        })
+        .done((loadedenums) => {
+            this.returnEnumerations(loadedenums, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getFolderEnumerationsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderEnumerations(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getFolderEnumerationsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderEnumerations(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getFolderEnumerationsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderEnumerations(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getFolderEnumerationsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderEnumerations(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
     protected loadAllEnumerationsAsPromise(enumerations: enumerations.IEnumeration[]): when.Promise<enumerations.Enumeration[]> {
         return when.all<enumerations.Enumeration[]>(enumerations.map( num => loadAsPromise(num)));
     }
