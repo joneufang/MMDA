@@ -1213,6 +1213,87 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.getProjectRegularExpressionsAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
+    MMDAProject.prototype.getModuleRegularExpressions = function (modulename, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+            .then(function (modul) {
+            var documents;
+            documents = _this.traverseFoldersForDocuments(modul.folders);
+            modul.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var regexes = new Array();
+            documents.forEach(function (doc) {
+                if (doc instanceof mendixmodelsdk_1.regularexpressions.RegularExpression) {
+                    regexes[regexes.length] = doc;
+                }
+            });
+            return _this.loadAllRegularExpressionsAsPromise(regexes);
+        })
+            .done(function (loadedregexes) {
+            _this.returnRegularExpressions(loadedregexes, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getModuleRegularExpressionsAsTXT = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleRegularExpressions(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getModuleRegularExpressionsAsHTML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleRegularExpressions(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getModuleRegularExpressionsAsXML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleRegularExpressions(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getModuleRegularExpressionsAsJSON = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleRegularExpressions(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.getFolderRegularExpressions = function (foldername, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        var folderfound = false;
+        var searchedfolder;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allFolders();
+        })
+            .then(function (folders) {
+            folders.forEach(function (folder) {
+                if (folder.name == foldername) {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            });
+            if (!folderfound) {
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var documents = new Array();
+            documents = _this.traverseFoldersForDocuments(searchedfolder.folders);
+            searchedfolder.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var regexes = new Array();
+            documents.forEach(function (doc) {
+                if (doc instanceof mendixmodelsdk_1.regularexpressions.RegularExpression) {
+                    regexes[regexes.length] = doc;
+                }
+            });
+            return _this.loadAllRegularExpressionsAsPromise(regexes);
+        })
+            .done(function (loadedregexes) {
+            _this.returnRegularExpressions(loadedregexes, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getFolderRegularExpressionsAsHTML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderRegularExpressions(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getFolderRegularExpressionsAsTXT = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderRegularExpressions(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getFolderRegularExpressionsAsXML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderRegularExpressions(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getFolderRegularExpressionsAsJSON = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderRegularExpressions(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
     MMDAProject.prototype.loadAllRegularExpressionsAsPromise = function (regex) {
         return when.all(regex.map(function (reg) { return mendixplatformsdk_1.loadAsPromise(reg); }));
     };
@@ -1260,6 +1341,87 @@ var MMDAProject = /** @class */ (function () {
     };
     MMDAProject.prototype.getProjectSnippetsAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.getModuleSnippets = function (modulename, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+            .then(function (modul) {
+            var documents;
+            documents = _this.traverseFoldersForDocuments(modul.folders);
+            modul.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var snips = new Array();
+            documents.forEach(function (doc) {
+                if (doc instanceof mendixmodelsdk_1.pages.Snippet) {
+                    snips[snips.length] = doc;
+                }
+            });
+            return _this.loadAllSnippetsAsPromise(snips);
+        })
+            .done(function (loadedsnips) {
+            _this.returnSnippets(loadedsnips, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getModuleSnippetsAsTXT = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleSnippets(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getModuleSnippetsAsHTML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleSnippets(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getModuleSnippetsAsXML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleSnippets(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getModuleSnippetsAsJSON = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleSnippets(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.getFolderSnippets = function (foldername, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        var folderfound = false;
+        var searchedfolder;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allFolders();
+        })
+            .then(function (folders) {
+            folders.forEach(function (folder) {
+                if (folder.name == foldername) {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            });
+            if (!folderfound) {
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var documents = new Array();
+            documents = _this.traverseFoldersForDocuments(searchedfolder.folders);
+            searchedfolder.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var snips = new Array();
+            documents.forEach(function (doc) {
+                if (doc instanceof mendixmodelsdk_1.pages.Snippet) {
+                    snips[snips.length] = doc;
+                }
+            });
+            return _this.loadAllSnippetsAsPromise(snips);
+        })
+            .done(function (loadedsnips) {
+            _this.returnSnippets(loadedsnips, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getFolderSnippetsAsHTML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderSnippets(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getFolderSnippetsAsTXT = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderSnippets(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getFolderSnippetsAsXML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderSnippets(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getFolderSnippetsAsJSON = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderSnippets(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
     MMDAProject.prototype.loadAllSnippetsAsPromise = function (snippet) {
         return when.all(snippet.map(function (snip) { return mendixplatformsdk_1.loadAsPromise(snip); }));

@@ -1409,6 +1409,98 @@ export class MMDAProject {
         this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
+    protected getModuleRegularExpressions(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+        .then((modul) => {
+            var documents : projects.IDocument[];
+            documents = this.traverseFoldersForDocuments(modul.folders);
+            modul.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            var regexes : regularexpressions.IRegularExpression[] = new Array();
+            documents.forEach((doc) => {
+                if(doc instanceof regularexpressions.RegularExpression)
+                {
+                    regexes[regexes.length] = doc;
+                }
+            })
+            return this.loadAllRegularExpressionsAsPromise(regexes);
+        })
+        .done((loadedregexes) => {
+            this.returnRegularExpressions(loadedregexes, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getModuleRegularExpressionsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleRegularExpressions(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getModuleRegularExpressionsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleRegularExpressions(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getModuleRegularExpressionsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleRegularExpressions(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getModuleRegularExpressionsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleRegularExpressions(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected getFolderRegularExpressions(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var folderfound : boolean = false;
+        var searchedfolder : projects.IFolder;
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allFolders();
+        })
+        .then((folders) => {
+            folders.forEach((folder) => {
+                if(folder.name == foldername)
+                {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            })
+            if(!folderfound){
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var documents : projects.IDocument[] = new Array();
+            documents = this.traverseFoldersForDocuments(searchedfolder.folders);
+            searchedfolder.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            var regexes : regularexpressions.IRegularExpression[] = new Array();
+            documents.forEach((doc) => {
+                if(doc instanceof regularexpressions.RegularExpression)
+                {
+                    regexes[regexes.length] = doc;
+                }
+            })
+            return this.loadAllRegularExpressionsAsPromise(regexes);
+        })
+        .done((loadedregexes) => {
+            this.returnRegularExpressions(loadedregexes, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getFolderRegularExpressionsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderRegularExpressions(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getFolderRegularExpressionsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderRegularExpressions(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getFolderRegularExpressionsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderRegularExpressions(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getFolderRegularExpressionsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderRegularExpressions(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
     protected loadAllRegularExpressionsAsPromise(regex : regularexpressions.IRegularExpression[]): when.Promise<regularexpressions.RegularExpression[]> {
         return when.all<regularexpressions.RegularExpression[]>(regex.map( reg => loadAsPromise(reg)));
     }
@@ -1463,6 +1555,98 @@ export class MMDAProject {
 
     public getProjectSnippetsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
         this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected getModuleSnippets(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+        .then((modul) => {
+            var documents : projects.IDocument[];
+            documents = this.traverseFoldersForDocuments(modul.folders);
+            modul.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            var snips : pages.ISnippet[] = new Array();
+            documents.forEach((doc) => {
+                if(doc instanceof pages.Snippet)
+                {
+                    snips[snips.length] = doc;
+                }
+            })
+            return this.loadAllSnippetsAsPromise(snips);
+        })
+        .done((loadedsnips) => {
+            this.returnSnippets(loadedsnips, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getModuleSnippetsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleSnippets(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getModuleSnippetsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleSnippets(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getModuleSnippetsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleSnippets(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getModuleSnippetsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleSnippets(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected getFolderSnippets(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var folderfound : boolean = false;
+        var searchedfolder : projects.IFolder;
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allFolders();
+        })
+        .then((folders) => {
+            folders.forEach((folder) => {
+                if(folder.name == foldername)
+                {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            })
+            if(!folderfound){
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var documents : projects.IDocument[] = new Array();
+            documents = this.traverseFoldersForDocuments(searchedfolder.folders);
+            searchedfolder.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            var snips : pages.ISnippet[] = new Array();
+            documents.forEach((doc) => {
+                if(doc instanceof pages.Snippet)
+                {
+                    snips[snips.length] = doc;
+                }
+            })
+            return this.loadAllSnippetsAsPromise(snips);
+        })
+        .done((loadedsnips) => {
+            this.returnSnippets(loadedsnips, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getFolderSnippetsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderSnippets(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getFolderSnippetsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderSnippets(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getFolderSnippetsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderSnippets(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getFolderSnippetsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderSnippets(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
     protected loadAllSnippetsAsPromise(snippet : pages.ISnippet[]): when.Promise<pages.Snippet[]> {
