@@ -497,7 +497,7 @@ export class ImageCollectionAdapter extends DocumentAdapter {
                 {
                     propertys[propertys.length] = this.getImages(imagecollection);
                 }
-                else if(qryprop == qrycons.imagecollections.IMAGES)
+                else if(qryprop == qrycons.imagecollections.CONTAINER)
                 {
                     propertys[propertys.length] = this.getContainer(imagecollection);
                 }

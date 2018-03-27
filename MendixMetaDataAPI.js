@@ -531,6 +531,87 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.getProjectImageCollectionsAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
+    MMDAProject.prototype.getModuleImageCollections = function (modulename, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+            .then(function (modul) {
+            var documents;
+            documents = _this.traverseFolders(modul.folders);
+            modul.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var imgcols = new Array();
+            documents.forEach(function (doc) {
+                if (doc instanceof mendixmodelsdk_1.images.ImageCollection) {
+                    imgcols[imgcols.length] = doc;
+                }
+            });
+            return _this.loadAllImageCollectionsAsPromise(imgcols);
+        })
+            .done(function (loadedimgcols) {
+            _this.returnImageCollections(loadedimgcols, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getModuleImageCollectionsAsTXT = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleImageCollections(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getModuleImageCollectionsAsHTML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleImageCollections(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getModuleImageCollectionsAsXML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleImageCollections(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getModuleImageCollectionsAsJSON = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleImageCollections(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.getFolderImageCollections = function (foldername, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        var folderfound = false;
+        var searchedfolder;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allFolders();
+        })
+            .then(function (folders) {
+            folders.forEach(function (folder) {
+                if (folder.name == foldername) {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            });
+            if (!folderfound) {
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var documents = new Array();
+            documents = _this.traverseFolders(searchedfolder.folders);
+            searchedfolder.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var imgcols = new Array();
+            documents.forEach(function (doc) {
+                if (doc instanceof mendixmodelsdk_1.images.ImageCollection) {
+                    imgcols[imgcols.length] = doc;
+                }
+            });
+            return _this.loadAllImageCollectionsAsPromise(imgcols);
+        })
+            .done(function (loadedimgcols) {
+            _this.returnImageCollections(loadedimgcols, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getFolderImageCollectionsAsHTML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderImageCollections(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getFolderImageCollectionsAsTXT = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderImageCollections(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getFolderImageCollectionsAsXML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderImageCollections(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getFolderImageCollectionsAsJSON = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderImageCollections(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
     MMDAProject.prototype.loadAllImageCollectionsAsPromise = function (imagecollections) {
         return when.all(imagecollections.map(function (img) { return mendixplatformsdk_1.loadAsPromise(img); }));
     };

@@ -427,7 +427,7 @@ var ImageCollectionAdapter = /** @class */ (function (_super) {
                 else if (qryprop == qrycons.imagecollections.IMAGES) {
                     propertys[propertys.length] = _this.getImages(imagecollection);
                 }
-                else if (qryprop == qrycons.imagecollections.IMAGES) {
+                else if (qryprop == qrycons.imagecollections.CONTAINER) {
                     propertys[propertys.length] = _this.getContainer(imagecollection);
                 }
                 else if (qryprop == qrycons.imagecollections.DOCUMENTATION) {
