@@ -103,3 +103,13 @@ var pages;
     pages.URL = "URL";
     pages.ALL = "ALL";
 })(pages = exports.pages || (exports.pages = {}));
+var regularexpressions;
+(function (regularexpressions) {
+    regularexpressions.ID = "ID";
+    regularexpressions.NAME = "NAME";
+    regularexpressions.TYPE = "TYPE";
+    regularexpressions.CONTAINER = "CONTAINER";
+    regularexpressions.DOCUMENTATION = "DOCUMENTATION";
+    regularexpressions.REGEX = "REGEX";
+    regularexpressions.ALL = "ALL";
+})(regularexpressions = exports.regularexpressions || (exports.regularexpressions = {}));

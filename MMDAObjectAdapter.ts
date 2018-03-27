@@ -1,4 +1,4 @@
-import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, AbstractElement, constants, enumerations, images, microflows} from "mendixmodelsdk";
+import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, AbstractElement, constants, enumerations, images, microflows, regularexpressions} from "mendixmodelsdk";
 import * as MMDAO from "./MMDAOutputObject";
 import * as MMDA from "./MendixMetaDataAPI";
 import * as qrycons from "./MMDAQueryConstants";
@@ -925,6 +925,71 @@ export class PageAdapter extends DocumentAdapter {
         var property : MMDAO.OutputObjectProperty;
         
         property = new MMDAO.OutputObjectProperty(qrycons.pages.URL,page.url);
+        
+        return property;
+    }
+
+    
+
+}
+
+export class RegExAdapter extends DocumentAdapter {
+    
+    constructor() {
+        super();   
+    }
+
+    public getRegExPropertys(regex : regularexpressions.RegularExpression, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
+        var propertys : MMDAO.OutputObjectProperty[] = new Array();
+        if(qrypropertys[0] == qrycons.constants.ALL)
+        {
+            propertys[propertys.length] = this.getId(regex);
+            propertys[propertys.length] = this.getName(regex);
+            propertys[propertys.length] = this.getType(regex);
+            propertys[propertys.length] = this.getContainer(regex);
+            propertys[propertys.length] = this.getRegEx(regex);
+            propertys[propertys.length] = this.getDocumentation(regex);   
+        }
+        else
+        {
+            qrypropertys.forEach((qryprop) => {
+                if(qryprop == qrycons.regularexpressions.ID)
+                {
+                    propertys[propertys.length] = this.getId(regex);
+                }
+                else if(qryprop == qrycons.regularexpressions.NAME)
+                {
+                    propertys[propertys.length] = this.getName(regex);
+                }
+                else if(qryprop == qrycons.regularexpressions.TYPE)
+                {
+                    propertys[propertys.length] = this.getType(regex);
+                }
+                else if(qryprop == qrycons.regularexpressions.CONTAINER)
+                {
+                    propertys[propertys.length] = this.getContainer(regex);
+                }
+                else if(qryprop == qrycons.regularexpressions.REGEX)
+                {
+                    propertys[propertys.length] = this.getRegEx(regex);
+                }
+                else if(qryprop == qrycons.regularexpressions.DOCUMENTATION)
+                {
+                    propertys[propertys.length] = this.getDocumentation(regex);
+                }
+                else
+                {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property","Value of Unknown Property");
+                }
+            })
+        }
+        return propertys;
+    }
+
+    protected getRegEx(regex : regularexpressions.RegularExpression) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.regularexpressions.REGEX,regex.regEx);
         
         return property;
     }

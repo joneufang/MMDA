@@ -765,3 +765,54 @@ var PageAdapter = /** @class */ (function (_super) {
     return PageAdapter;
 }(DocumentAdapter));
 exports.PageAdapter = PageAdapter;
+var RegExAdapter = /** @class */ (function (_super) {
+    __extends(RegExAdapter, _super);
+    function RegExAdapter() {
+        return _super.call(this) || this;
+    }
+    RegExAdapter.prototype.getRegExPropertys = function (regex, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.constants.ALL) {
+            propertys[propertys.length] = this.getId(regex);
+            propertys[propertys.length] = this.getName(regex);
+            propertys[propertys.length] = this.getType(regex);
+            propertys[propertys.length] = this.getContainer(regex);
+            propertys[propertys.length] = this.getRegEx(regex);
+            propertys[propertys.length] = this.getDocumentation(regex);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.regularexpressions.ID) {
+                    propertys[propertys.length] = _this.getId(regex);
+                }
+                else if (qryprop == qrycons.regularexpressions.NAME) {
+                    propertys[propertys.length] = _this.getName(regex);
+                }
+                else if (qryprop == qrycons.regularexpressions.TYPE) {
+                    propertys[propertys.length] = _this.getType(regex);
+                }
+                else if (qryprop == qrycons.regularexpressions.CONTAINER) {
+                    propertys[propertys.length] = _this.getContainer(regex);
+                }
+                else if (qryprop == qrycons.regularexpressions.REGEX) {
+                    propertys[propertys.length] = _this.getRegEx(regex);
+                }
+                else if (qryprop == qrycons.regularexpressions.DOCUMENTATION) {
+                    propertys[propertys.length] = _this.getDocumentation(regex);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    RegExAdapter.prototype.getRegEx = function (regex) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.regularexpressions.REGEX, regex.regEx);
+        return property;
+    };
+    return RegExAdapter;
+}(DocumentAdapter));
+exports.RegExAdapter = RegExAdapter;

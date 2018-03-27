@@ -101,3 +101,13 @@ export namespace pages {
         export const URL : string = "URL";
         export const ALL : string = "ALL"; 
 }
+
+export namespace regularexpressions {
+        export const ID : string = "ID";
+        export const NAME : string = "NAME";
+        export const TYPE : string = "TYPE";
+        export const CONTAINER : string = "CONTAINER";
+        export const DOCUMENTATION : string = "DOCUMENTATION";
+        export const REGEX : string = "REGEX"; 
+        export const ALL : string = "ALL"; 
+}
