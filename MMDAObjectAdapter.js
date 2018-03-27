@@ -697,7 +697,7 @@ var PageAdapter = /** @class */ (function (_super) {
     function PageAdapter() {
         return _super.call(this) || this;
     }
-    PageAdapter.prototype.getLayoutPropertys = function (page, qrypropertys) {
+    PageAdapter.prototype.getPagePropertys = function (page, qrypropertys) {
         var _this = this;
         var propertys = new Array();
         if (qrypropertys[0] == qrycons.pages.ALL) {

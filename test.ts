@@ -15,6 +15,7 @@ import { folders as fold } from "./MMDAQueryConstants";
 import { layouts as lay } from "./MMDAQueryConstants";
 import { microflows as mf } from "./MMDAQueryConstants";
 import { modules as mod } from "./MMDAQueryConstants";
+import { pages as pag } from "./MMDAQueryConstants";
 
 
 
@@ -35,7 +36,9 @@ let project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getProjectFoldersAsXML([fold.ID, fold.NAME, fold.TYPE, fold.SUBFOLDERS, fold.DOCUMENTS],[],[],"./folders.xml");
 //project.getProjectLayoutsAsXML([lay.ID, lay.NAME, lay.TYPE, lay.LAYOUTTYPE],[],[],"./layouts.xml");
 //project.getProjectMicroflowsAsXML([mf.ID, mf.NAME, mf.TYPE, mf.RETURNTYPE],[],[],"./microflows.xml");
-project.getProjectModulesAsXML([mod.ID, mod.NAME, mod.TYPE, mod.FOLDERS, mod.DOCUMENTS],[],[],"./modules.xml");
+//project.getProjectModulesAsXML([mod.ID, mod.NAME, mod.TYPE, mod.FOLDERS, mod.DOCUMENTS],[],[],"./modules.xml");
+project.getProjectPagesAsTXT([pag.ID, pag.NAME, pag.TYPE, pag.LAYOUT, pag.ALLOWEDROLES, pag.URL],[],[],"./pages.txt");
+//project.getProjectPagesAsXML([pag.ID, pag.NAME, pag.TYPE, pag.LAYOUT, pag.ALLOWEDROLES, pag.URL],[],[],"./pages.xml");
 //project.getDocumentsFromProject([qrycons.propertys.ID,qrycons.propertys.NAME,qrycons.propertys.TYPE], [qrycons.filter.TYPE,qrycons.filter.NAME], ["Microflow","Testapp"], []); //filtered Result
 //project.getDocumentsFromProject([qrycons.documents.propertys.ID,qrycons.documents.propertys.NAME,qrycons.documents.propertys.TYPE], [qrycons.documents.filter.TYPE], ["No Result Entry"], [1]); //No Result
 //project.getModuleDocumentsAsTXT("Testapp",[docs.ID,docs.NAME, docs.TYPE, docs.CONTAINER],[], [],  "./ModuleDocuments.txt");

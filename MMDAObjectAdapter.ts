@@ -842,7 +842,7 @@ export class PageAdapter extends DocumentAdapter {
         super();   
     }
 
-    public getLayoutPropertys(page : pages.Page, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
+    public getPagePropertys(page : pages.Page, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
         var propertys : MMDAO.OutputObjectProperty[] = new Array();
         if(qrypropertys[0] == qrycons.pages.ALL)
         {

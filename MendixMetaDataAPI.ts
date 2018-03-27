@@ -544,7 +544,7 @@ export class MMDAProject {
             }
             else
             {
-                console.log("Got Layout which is not instance of pages.Layout");
+                console.log("Got Microflow which is not instance of microflows.Microflow");
             }
         });
         outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
@@ -600,7 +600,7 @@ export class MMDAProject {
             }
             else
             {
-                console.log("Got Folder which is not instance of projects.Folder");
+                console.log("Got Module which is not instance of projects.Module");
             }
         });
         outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
@@ -634,6 +634,62 @@ export class MMDAProject {
 
     public getProjectModulesAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
         this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected returnPages(loadedpages : pages.Page[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        loadedpages.forEach((page) => {
+            if(page instanceof pages.Page){
+                var pageadapter : MMDAA.PageAdapter = new MMDAA.PageAdapter();
+                var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                var MMDAobj : MMDAO.OutputObject;
+                propertys = pageadapter.getPagePropertys(page, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys,"Page");                   
+                if(pageadapter.filter(MMDAobj,filter))
+                {
+                    outputobjects.addObject(MMDAobj);                       
+                }
+            }
+            else
+            {
+                console.log("Got Page which is not instance of pages.Page");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
+    protected getProjectPages(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allPages();
+        })
+        .then((pages) => { 
+            return this.loadAllPagesAsPromise(pages);
+        })
+        .done((loadedpages) => {
+            this.returnPages(loadedpages, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    }
+
+    public getProjectPagesAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectPages(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getProjectPagesAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectPages(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getProjectPagesAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectPages(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getProjectPagesAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectPages(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected loadAllPagesAsPromise(pages : pages.IPage[]): when.Promise<pages.Page[]> {
+        return when.all<pages.Page[]>(pages.map( page => loadAsPromise(page)));
     }
 }    
 
