@@ -89,3 +89,15 @@ export namespace microflows {
         export const RETURNTYPE : string = "RETURNTYPE"; 
         export const ALL : string = "ALL"; 
 }
+
+export namespace pages {
+        export const ID : string = "ID";
+        export const NAME : string = "NAME";
+        export const TYPE : string = "TYPE";
+        export const CONTAINER : string = "CONTAINER";
+        export const DOCUMENTATION : string = "DOCUMENTATION";
+        export const LAYOUT : string = "LAYOUT"; 
+        export const ALLOWEDROLES : string = "ALLOWEDROLES";
+        export const URL : string = "URL";
+        export const ALL : string = "ALL"; 
+}

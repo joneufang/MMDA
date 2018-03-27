@@ -91,3 +91,15 @@ var microflows;
     microflows.RETURNTYPE = "RETURNTYPE";
     microflows.ALL = "ALL";
 })(microflows = exports.microflows || (exports.microflows = {}));
+var pages;
+(function (pages) {
+    pages.ID = "ID";
+    pages.NAME = "NAME";
+    pages.TYPE = "TYPE";
+    pages.CONTAINER = "CONTAINER";
+    pages.DOCUMENTATION = "DOCUMENTATION";
+    pages.LAYOUT = "LAYOUT";
+    pages.ALLOWEDROLES = "ALLOWEDROLES";
+    pages.URL = "URL";
+    pages.ALL = "ALL";
+})(pages = exports.pages || (exports.pages = {}));

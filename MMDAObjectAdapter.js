@@ -692,3 +692,76 @@ var ModuleAdapter = /** @class */ (function (_super) {
     return ModuleAdapter;
 }(FolderBaseAdapter));
 exports.ModuleAdapter = ModuleAdapter;
+var PageAdapter = /** @class */ (function (_super) {
+    __extends(PageAdapter, _super);
+    function PageAdapter() {
+        return _super.call(this) || this;
+    }
+    PageAdapter.prototype.getLayoutPropertys = function (page, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.pages.ALL) {
+            propertys[propertys.length] = this.getId(page);
+            propertys[propertys.length] = this.getName(page);
+            propertys[propertys.length] = this.getType(page);
+            propertys[propertys.length] = this.getContainer(page);
+            propertys[propertys.length] = this.getLayout(page);
+            propertys[propertys.length] = this.getAllowedRoles(page);
+            propertys[propertys.length] = this.getURL(page);
+            propertys[propertys.length] = this.getDocumentation(page);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.pages.ID) {
+                    propertys[propertys.length] = _this.getId(page);
+                }
+                else if (qryprop == qrycons.pages.NAME) {
+                    propertys[propertys.length] = _this.getName(page);
+                }
+                else if (qryprop == qrycons.pages.TYPE) {
+                    propertys[propertys.length] = _this.getType(page);
+                }
+                else if (qryprop == qrycons.pages.CONTAINER) {
+                    propertys[propertys.length] = _this.getContainer(page);
+                }
+                else if (qryprop == qrycons.pages.LAYOUT) {
+                    propertys[propertys.length] = _this.getLayout(page);
+                }
+                else if (qryprop == qrycons.pages.ALLOWEDROLES) {
+                    propertys[propertys.length] = _this.getAllowedRoles(page);
+                }
+                else if (qryprop == qrycons.pages.URL) {
+                    propertys[propertys.length] = _this.getURL(page);
+                }
+                else if (qryprop == qrycons.pages.DOCUMENTATION) {
+                    propertys[propertys.length] = _this.getDocumentation(page);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    PageAdapter.prototype.getLayout = function (page) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.pages.LAYOUT, page.layoutCall.layoutQualifiedName);
+        return property;
+    };
+    PageAdapter.prototype.getAllowedRoles = function (page) {
+        var property;
+        var result = "";
+        page.allowedRoles.forEach(function (role) {
+            result += role.qualifiedName + ", ";
+        });
+        property = new MMDAO.OutputObjectProperty(qrycons.pages.ALLOWEDROLES, result);
+        return property;
+    };
+    PageAdapter.prototype.getURL = function (page) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.pages.URL, page.url);
+        return property;
+    };
+    return PageAdapter;
+}(DocumentAdapter));
+exports.PageAdapter = PageAdapter;

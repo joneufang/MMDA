@@ -804,9 +804,9 @@ export class ModuleAdapter extends FolderBaseAdapter {
 
         var result : string = "";
         
-                modul.documents.forEach((doc) => {
-                    result += doc.qualifiedName + ", ";
-                });
+        modul.documents.forEach((doc) => {
+            result += doc.qualifiedName + ", ";
+        });
         
         property = new MMDAO.OutputObjectProperty(qrycons.modules.DOCUMENTS, result);
        
@@ -818,9 +818,9 @@ export class ModuleAdapter extends FolderBaseAdapter {
 
         var result : string = "";
         
-                modul.folders.forEach((fold) => {
-                    result += fold.name + ", ";
-                });
+        modul.folders.forEach((fold) => {
+            result += fold.name + ", ";
+        });
         
         property = new MMDAO.OutputObjectProperty(qrycons.modules.FOLDERS, result);
        
@@ -834,4 +834,99 @@ export class ModuleAdapter extends FolderBaseAdapter {
         
         return property;
     }
+}
+
+export class PageAdapter extends DocumentAdapter {
+    
+    constructor() {
+        super();   
+    }
+
+    public getLayoutPropertys(page : pages.Page, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
+        var propertys : MMDAO.OutputObjectProperty[] = new Array();
+        if(qrypropertys[0] == qrycons.pages.ALL)
+        {
+            propertys[propertys.length] = this.getId(page);
+            propertys[propertys.length] = this.getName(page);
+            propertys[propertys.length] = this.getType(page);
+            propertys[propertys.length] = this.getContainer(page);
+            propertys[propertys.length] = this.getLayout(page);
+            propertys[propertys.length] = this.getAllowedRoles(page);
+            propertys[propertys.length] = this.getURL(page);
+            propertys[propertys.length] = this.getDocumentation(page);   
+        }
+        else
+        {
+            qrypropertys.forEach((qryprop) => {
+                if(qryprop == qrycons.pages.ID)
+                {
+                    propertys[propertys.length] = this.getId(page);
+                }
+                else if(qryprop == qrycons.pages.NAME)
+                {
+                    propertys[propertys.length] = this.getName(page);
+                }
+                else if(qryprop == qrycons.pages.TYPE)
+                {
+                    propertys[propertys.length] = this.getType(page);
+                }
+                else if(qryprop == qrycons.pages.CONTAINER)
+                {
+                    propertys[propertys.length] = this.getContainer(page);
+                }
+                else if(qryprop == qrycons.pages.LAYOUT)
+                {
+                    propertys[propertys.length] = this.getLayout(page);
+                }
+                else if(qryprop == qrycons.pages.ALLOWEDROLES)
+                {
+                    propertys[propertys.length] = this.getAllowedRoles(page);
+                }
+                else if(qryprop == qrycons.pages.URL)
+                {
+                    propertys[propertys.length] = this.getURL(page);
+                }
+                else if(qryprop == qrycons.pages.DOCUMENTATION)
+                {
+                    propertys[propertys.length] = this.getDocumentation(page);
+                }
+                else
+                {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property","Value of Unknown Property");
+                }
+            })
+        }
+        return propertys;
+    }
+
+    protected getLayout(page : pages.Page) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.pages.LAYOUT,page.layoutCall.layoutQualifiedName);
+        
+        return property;
+    }
+
+    protected getAllowedRoles(page : pages.Page) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+
+        var result : string = "";
+        
+        page.allowedRoles.forEach((role) => {
+            result += role.qualifiedName + ", ";
+        });
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.pages.ALLOWEDROLES,result);
+        
+        return property;
+    }
+
+    protected getURL(page : pages.Page) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.pages.URL,page.url);
+        
+        return property;
+    }
+
 }
