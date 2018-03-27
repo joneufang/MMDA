@@ -1,4 +1,4 @@
-import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, constants, enumerations, images, microflows} from "mendixmodelsdk";
+import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, constants, enumerations, images, microflows, regularexpressions} from "mendixmodelsdk";
 import {MendixSdkClient, Project, OnlineWorkingCopy, loadAsPromise} from "mendixplatformsdk";
 import when = require("when");
 import fs = require("fs-extra");
@@ -690,6 +690,62 @@ export class MMDAProject {
 
     protected loadAllPagesAsPromise(pages : pages.IPage[]): when.Promise<pages.Page[]> {
         return when.all<pages.Page[]>(pages.map( page => loadAsPromise(page)));
+    }
+
+    protected returnRegularExpressions(loadedregexes : regularexpressions.RegularExpression[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+        loadedregexes.forEach((regex) => {
+            if(regex instanceof regularexpressions.RegularExpression){
+                var regexadapter : MMDAA.RegExAdapter = new MMDAA.RegExAdapter();
+                var propertys : MMDAO.OutputObjectProperty[] = new Array();
+                var MMDAobj : MMDAO.OutputObject;
+                propertys = regexadapter.getRegExPropertys(regex, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys,"RegularExpression");                   
+                if(regexadapter.filter(MMDAobj,filter))
+                {
+                    outputobjects.addObject(MMDAobj);                       
+                }
+            }
+            else
+            {
+                console.log("Got RegularExpression which is not instance of regularexpressions.RegularExpression");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
+    protected getProjectRegularExpressions(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allRegularExpressions();
+        })
+        .then((regexes) => { 
+            return this.loadAllRegularExpressionsAsPromise(regexes);
+        })
+        .done((loadedregexes) => {
+            this.returnRegularExpressions(loadedregexes, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    }
+
+    public getProjectRegularExpressionsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getProjectRegularExpressionsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getProjectRegularExpressionsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getProjectRegularExpressionsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected loadAllRegularExpressionsAsPromise(regex : regularexpressions.IRegularExpression[]): when.Promise<regularexpressions.RegularExpression[]> {
+        return when.all<regularexpressions.RegularExpression[]>(regex.map( reg => loadAsPromise(reg)));
     }
 }    
 

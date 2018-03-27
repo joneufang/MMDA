@@ -995,3 +995,66 @@ export class RegExAdapter extends DocumentAdapter {
     }
 
 }
+
+export class SnippetAdapter extends DocumentAdapter {
+    
+    constructor() {
+        super();   
+    }
+
+    public getSnippetPropertys(snippet : pages.Snippet, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
+        var propertys : MMDAO.OutputObjectProperty[] = new Array();
+        if(qrypropertys[0] == qrycons.snippets.ALL)
+        {
+            propertys[propertys.length] = this.getId(snippet);
+            propertys[propertys.length] = this.getName(snippet);
+            propertys[propertys.length] = this.getType(snippet);
+            propertys[propertys.length] = this.getContainer(snippet);
+            propertys[propertys.length] = this.getEntity(snippet);
+            propertys[propertys.length] = this.getDocumentation(snippet);   
+        }
+        else
+        {
+            qrypropertys.forEach((qryprop) => {
+                if(qryprop == qrycons.snippets.ID)
+                {
+                    propertys[propertys.length] = this.getId(snippet);
+                }
+                else if(qryprop == qrycons.snippets.NAME)
+                {
+                    propertys[propertys.length] = this.getName(snippet);
+                }
+                else if(qryprop == qrycons.snippets.TYPE)
+                {
+                    propertys[propertys.length] = this.getType(snippet);
+                }
+                else if(qryprop == qrycons.snippets.CONTAINER)
+                {
+                    propertys[propertys.length] = this.getContainer(snippet);
+                }
+                else if(qryprop == qrycons.snippets.ENTITY)
+                {
+                    propertys[propertys.length] = this.getEntity(snippet);
+                }
+                else if(qryprop == qrycons.snippets.DOCUMENTATION)
+                {
+                    propertys[propertys.length] = this.getDocumentation(snippet);
+                }
+                else
+                {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property","Value of Unknown Property");
+                }
+            })
+        }
+        return propertys;
+    }
+
+    protected getEntity(snippet : pages.Snippet) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.snippets.ENTITY,snippet.entityQualifiedName);
+        
+        return property;
+    }
+
+}

@@ -113,3 +113,13 @@ var regularexpressions;
     regularexpressions.REGEX = "REGEX";
     regularexpressions.ALL = "ALL";
 })(regularexpressions = exports.regularexpressions || (exports.regularexpressions = {}));
+var snippets;
+(function (snippets) {
+    snippets.ID = "ID";
+    snippets.NAME = "NAME";
+    snippets.TYPE = "TYPE";
+    snippets.CONTAINER = "CONTAINER";
+    snippets.DOCUMENTATION = "DOCUMENTATION";
+    snippets.ENTITY = "ENTITY";
+    snippets.ALL = "ALL";
+})(snippets = exports.snippets || (exports.snippets = {}));

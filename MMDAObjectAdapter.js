@@ -816,3 +816,54 @@ var RegExAdapter = /** @class */ (function (_super) {
     return RegExAdapter;
 }(DocumentAdapter));
 exports.RegExAdapter = RegExAdapter;
+var SnippetAdapter = /** @class */ (function (_super) {
+    __extends(SnippetAdapter, _super);
+    function SnippetAdapter() {
+        return _super.call(this) || this;
+    }
+    SnippetAdapter.prototype.getSnippetPropertys = function (snippet, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.snippets.ALL) {
+            propertys[propertys.length] = this.getId(snippet);
+            propertys[propertys.length] = this.getName(snippet);
+            propertys[propertys.length] = this.getType(snippet);
+            propertys[propertys.length] = this.getContainer(snippet);
+            propertys[propertys.length] = this.getEntity(snippet);
+            propertys[propertys.length] = this.getDocumentation(snippet);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.snippets.ID) {
+                    propertys[propertys.length] = _this.getId(snippet);
+                }
+                else if (qryprop == qrycons.snippets.NAME) {
+                    propertys[propertys.length] = _this.getName(snippet);
+                }
+                else if (qryprop == qrycons.snippets.TYPE) {
+                    propertys[propertys.length] = _this.getType(snippet);
+                }
+                else if (qryprop == qrycons.snippets.CONTAINER) {
+                    propertys[propertys.length] = _this.getContainer(snippet);
+                }
+                else if (qryprop == qrycons.snippets.ENTITY) {
+                    propertys[propertys.length] = _this.getEntity(snippet);
+                }
+                else if (qryprop == qrycons.snippets.DOCUMENTATION) {
+                    propertys[propertys.length] = _this.getDocumentation(snippet);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    SnippetAdapter.prototype.getEntity = function (snippet) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.snippets.ENTITY, snippet.entityQualifiedName);
+        return property;
+    };
+    return SnippetAdapter;
+}(DocumentAdapter));
+exports.SnippetAdapter = SnippetAdapter;

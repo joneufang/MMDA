@@ -582,6 +582,54 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.loadAllPagesAsPromise = function (pages) {
         return when.all(pages.map(function (page) { return mendixplatformsdk_1.loadAsPromise(page); }));
     };
+    MMDAProject.prototype.returnRegularExpressions = function (loadedregexes, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        loadedregexes.forEach(function (regex) {
+            if (regex instanceof mendixmodelsdk_1.regularexpressions.RegularExpression) {
+                var regexadapter = new MMDAA.RegExAdapter();
+                var propertys = new Array();
+                var MMDAobj;
+                propertys = regexadapter.getRegExPropertys(regex, qrypropertys);
+                MMDAobj = new MMDAO.OutputObject(propertys, "RegularExpression");
+                if (regexadapter.filter(MMDAobj, filter)) {
+                    outputobjects.addObject(MMDAobj);
+                }
+            }
+            else {
+                console.log("Got RegularExpression which is not instance of regularexpressions.RegularExpression");
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+        outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+        console.log("Im Done!!!");
+    };
+    MMDAProject.prototype.getProjectRegularExpressions = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allRegularExpressions();
+        })
+            .then(function (regexes) {
+            return _this.loadAllRegularExpressionsAsPromise(regexes);
+        })
+            .done(function (loadedregexes) {
+            _this.returnRegularExpressions(loadedregexes, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getProjectRegularExpressionsAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectRegularExpressionsAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectRegularExpressionsAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectRegularExpressionsAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.loadAllRegularExpressionsAsPromise = function (regex) {
+        return when.all(regex.map(function (reg) { return mendixplatformsdk_1.loadAsPromise(reg); }));
+    };
     //Constants to define output target
     MMDAProject.TEXTFILE = "TEXTFILE";
     MMDAProject.HTMLTABLE = "HTMLTABLE";

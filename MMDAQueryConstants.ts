@@ -111,3 +111,13 @@ export namespace regularexpressions {
         export const REGEX : string = "REGEX"; 
         export const ALL : string = "ALL"; 
 }
+
+export namespace snippets {
+        export const ID : string = "ID";
+        export const NAME : string = "NAME";
+        export const TYPE : string = "TYPE";
+        export const CONTAINER : string = "CONTAINER";
+        export const DOCUMENTATION : string = "DOCUMENTATION";
+        export const ENTITY : string = "ENTITY"; 
+        export const ALL : string = "ALL"; 
+}
