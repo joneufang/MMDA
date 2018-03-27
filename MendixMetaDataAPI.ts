@@ -1061,6 +1061,98 @@ export class MMDAProject {
         this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
+    protected getModuleMicroflows(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+        .then((modul) => {
+            var documents : projects.IDocument[];
+            documents = this.traverseFoldersForDocuments(modul.folders);
+            modul.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            var mfs : microflows.IMicroflow[] = new Array();
+            documents.forEach((doc) => {
+                if(doc instanceof microflows.Microflow)
+                {
+                    mfs[mfs.length] = doc;
+                }
+            })
+            return this.loadAllMicroflowsAsPromise(mfs);
+        })
+        .done((loadedmfs) => {
+            this.returnMicroflows(loadedmfs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getModuleMicroflowsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleLayouts(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getModuleMicroflowsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleMicroflows(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getModuleMicroflowsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleMicroflows(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getModuleMicroflowsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getModuleMicroflows(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
+    protected getFolderMicroflows(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+        var folderfound : boolean = false;
+        var searchedfolder : projects.IFolder;
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allFolders();
+        })
+        .then((folders) => {
+            folders.forEach((folder) => {
+                if(folder.name == foldername)
+                {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            })
+            if(!folderfound){
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var documents : projects.IDocument[] = new Array();
+            documents = this.traverseFoldersForDocuments(searchedfolder.folders);
+            searchedfolder.documents.forEach((doc) => {
+                documents[documents.length] = doc;
+            })
+            var mfs : microflows.IMicroflow[] = new Array();
+            documents.forEach((doc) => {
+                if(doc instanceof microflows.Microflow)
+                {
+                    mfs[mfs.length] = doc;
+                }
+            })
+            return this.loadAllMicroflowsAsPromise(mfs);
+        })
+        .done((loadedmfs) => {
+            this.returnMicroflows(loadedmfs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        })
+    }
+
+    public getFolderMicroflowsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderMicroflows(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getFolderMicroflowsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderMicroflows(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getFolderMicroflowsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderMicroflows(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getFolderMicroflowsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+        this.getFolderMicroflows(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
+
     protected loadAllMicroflowsAsPromise(microflows : microflows.IMicroflow[]): when.Promise<microflows.Microflow[]> {
         return when.all<microflows.Microflow[]>(microflows.map( mic => loadAsPromise(mic)));
     }

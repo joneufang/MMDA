@@ -910,6 +910,87 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.getProjectMicroflowsAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
+    MMDAProject.prototype.getModuleMicroflows = function (modulename, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().findModuleByQualifiedName(modulename);
+        })
+            .then(function (modul) {
+            var documents;
+            documents = _this.traverseFoldersForDocuments(modul.folders);
+            modul.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var mfs = new Array();
+            documents.forEach(function (doc) {
+                if (doc instanceof mendixmodelsdk_1.microflows.Microflow) {
+                    mfs[mfs.length] = doc;
+                }
+            });
+            return _this.loadAllMicroflowsAsPromise(mfs);
+        })
+            .done(function (loadedmfs) {
+            _this.returnMicroflows(loadedmfs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getModuleMicroflowsAsTXT = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleLayouts(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getModuleMicroflowsAsHTML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleMicroflows(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getModuleMicroflowsAsXML = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleMicroflows(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getModuleMicroflowsAsJSON = function (modulename, propertys, filter, sortcolumn, filename) {
+        this.getModuleMicroflows(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.getFolderMicroflows = function (foldername, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        var folderfound = false;
+        var searchedfolder;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allFolders();
+        })
+            .then(function (folders) {
+            folders.forEach(function (folder) {
+                if (folder.name == foldername) {
+                    folderfound = true;
+                    searchedfolder = folder;
+                }
+            });
+            if (!folderfound) {
+                fs.outputFile(filename, "Ordner mit dem Namen " + foldername + " wurde nicht gefunden");
+            }
+            var documents = new Array();
+            documents = _this.traverseFoldersForDocuments(searchedfolder.folders);
+            searchedfolder.documents.forEach(function (doc) {
+                documents[documents.length] = doc;
+            });
+            var mfs = new Array();
+            documents.forEach(function (doc) {
+                if (doc instanceof mendixmodelsdk_1.microflows.Microflow) {
+                    mfs[mfs.length] = doc;
+                }
+            });
+            return _this.loadAllMicroflowsAsPromise(mfs);
+        })
+            .done(function (loadedmfs) {
+            _this.returnMicroflows(loadedmfs, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getFolderMicroflowsAsHTML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderMicroflows(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getFolderMicroflowsAsTXT = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderMicroflows(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getFolderMicroflowsAsXML = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderMicroflows(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getFolderMicroflowsAsJSON = function (foldername, propertys, filter, sortcolumn, filename) {
+        this.getFolderMicroflows(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
     MMDAProject.prototype.loadAllMicroflowsAsPromise = function (microflows) {
         return when.all(microflows.map(function (mic) { return mendixplatformsdk_1.loadAsPromise(mic); }));
     };
