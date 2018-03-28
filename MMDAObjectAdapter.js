@@ -650,9 +650,6 @@ var ModuleAdapter = /** @class */ (function (_super) {
                 else if (qryprop == qrycons.modules.TYPE) {
                     propertys[propertys.length] = _this.getType(modul);
                 }
-                else if (qryprop == qrycons.modules.CONTAINER) {
-                    propertys[propertys.length] = _this.getContainer(modul);
-                }
                 else if (qryprop == qrycons.modules.FOLDERS) {
                     propertys[propertys.length] = _this.getFolders(modul);
                 }

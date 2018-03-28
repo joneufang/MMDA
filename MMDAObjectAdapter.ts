@@ -778,10 +778,6 @@ export class ModuleAdapter extends FolderBaseAdapter {
                 {
                     propertys[propertys.length] = this.getType(modul);
                 }
-                else if(qryprop == qrycons.modules.CONTAINER)
-                {
-                    propertys[propertys.length] = this.getContainer(modul);
-                }
                 else if(qryprop == qrycons.modules.FOLDERS)
                 {
                     propertys[propertys.length] = this.getFolders(modul);

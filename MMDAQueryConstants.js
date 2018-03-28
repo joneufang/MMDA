@@ -66,7 +66,6 @@ var modules;
     modules.ID = "ID";
     modules.NAME = "NAME";
     modules.TYPE = "TYPE";
-    modules.CONTAINER = "CONTAINER";
     modules.DOCUMENTS = "DOCUMENTS";
     modules.FOLDERS = "FOLDERS";
     modules.ALL = "ALL";
