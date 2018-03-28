@@ -64,7 +64,7 @@ export class MMDAProject {
         return foundfolders;
     }
 
-    protected returnDocuments(documents : projects.Document[],qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string)
+    protected returnDocuments(documents : projects.Document[],qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string)
     {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
 
@@ -98,7 +98,7 @@ export class MMDAProject {
     Parameter: qrysortcolumns : number[]    Array of Columnnumbers for sorting
     Parameter: qryresulttype : string       Constant which ResultType should be used
     */
-    protected getProjectDocuments(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getProjectDocuments(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allDocuments();
         })
@@ -110,23 +110,23 @@ export class MMDAProject {
         });
     }
 
-    public getProjectDocumentsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectDocumentsAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectDocuments(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getProjectDocumentsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectDocumentsAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectDocuments(propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getProjectDocumentsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectDocumentsAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectDocuments(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectDocumentsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectDocumentsAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectDocuments(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getModuleDocuments(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getModuleDocuments(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -143,23 +143,23 @@ export class MMDAProject {
         })
     }
 
-    public getModuleDocumentsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleDocumentsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleDocuments(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getModuleDocumentsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleDocumentsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleDocuments(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getModuleDocumentsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleDocumentsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleDocuments(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getModuleDocumentsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleDocumentsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleDocuments(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getFolderDocuments(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getFolderDocuments(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var folderfound : boolean = false;
         var searchedfolder : projects.IFolder;
         this.project.createWorkingCopy().then((workingCopy) => {
@@ -188,19 +188,19 @@ export class MMDAProject {
         })
     }
 
-    public getFolderDocumentsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderDocumentsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderDocuments(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getFolderDocumentsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderDocumentsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderDocuments(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getFolderDocumentsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderDocumentsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderDocuments(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getFolderDocumentsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderDocumentsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderDocuments(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
@@ -208,7 +208,7 @@ export class MMDAProject {
         return when.all<projects.Document[]>(documents.map( doc => loadAsPromise(doc)));
     }
 
-    protected returnDomainModels(domainmods : domainmodels.DomainModel[],qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnDomainModels(domainmods : domainmodels.DomainModel[],qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         domainmods.forEach((dm) => {
             if(dm instanceof domainmodels.DomainModel){
@@ -232,7 +232,7 @@ export class MMDAProject {
         console.log("Im Done!!!");
     }
 
-    protected getProjectDomainModels(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getProjectDomainModels(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allDomainModels();
         })
@@ -244,23 +244,23 @@ export class MMDAProject {
         });
     }
 
-    public getProjectDomainModelsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectDomainModelsAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectDomainModels(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getProjectDomainModelsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectDomainModelsAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectDomainModels(propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getProjectDomainModelsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectDomainModelsAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectDomainModels(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectDomainModelsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectDomainModelsAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectDomainModels(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getModuleDomainModels(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getModuleDomainModels(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -272,19 +272,19 @@ export class MMDAProject {
         })
     }
 
-    public getModuleDomainModelsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleDomainModelsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleDomainModels(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getModuleDomainModelsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleDomainModelsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleDomainModels(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getModuleDomainModelsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleDomainModelsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleDomainModels(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getModuleDomainModelsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleDomainModelsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleDomainModels(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
@@ -292,7 +292,7 @@ export class MMDAProject {
         return when.all<domainmodels.DomainModel[]>(domainmodels.map( dm => loadAsPromise(dm)));
     }
 
-    protected returnConstants(loadedcons : constants.Constant[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnConstants(loadedcons : constants.Constant[], qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         loadedcons.forEach((con) => {
             if(con instanceof constants.Constant){
@@ -316,7 +316,7 @@ export class MMDAProject {
         console.log("Im Done!!!");
     }
 
-    protected getProjectConstants(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getProjectConstants(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allConstants();
         })
@@ -328,23 +328,23 @@ export class MMDAProject {
         });
     }
 
-    public getProjectConstantsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectConstantsAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getProjectConstantsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectConstantsAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getProjectConstantsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectConstantsAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectConstantsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectConstantsAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectConstants(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getModuleConstants(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getModuleConstants(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -368,23 +368,23 @@ export class MMDAProject {
         })
     }
 
-    public getModuleConstantsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleConstantsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleConstants(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getModuleConstantsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleConstantsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleConstants(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getModuleConstantsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleConstantsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleConstants(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getModuleConstantsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleConstantsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleConstants(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getFolderConstants(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getFolderConstants(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var folderfound : boolean = false;
         var searchedfolder : projects.IFolder;
         this.project.createWorkingCopy().then((workingCopy) => {
@@ -420,19 +420,19 @@ export class MMDAProject {
         })
     }
 
-    public getFolderConstantsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderConstantsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderConstants(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getFolderConstantsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderConstantsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderConstants(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getFolderConstantsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderConstantsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderConstants(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getFolderConstantsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderConstantsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderConstants(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
@@ -440,7 +440,7 @@ export class MMDAProject {
         return when.all<constants.Constant[]>(constants.map( con => loadAsPromise(con)));
     }
 
-    protected returnEnumerations(loadedenums : enumerations.Enumeration[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnEnumerations(loadedenums : enumerations.Enumeration[], qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         loadedenums.forEach((num) => {
             if(num instanceof enumerations.Enumeration){
@@ -464,7 +464,7 @@ export class MMDAProject {
         console.log("Im Done!!!");
     }
 
-    protected getProjectEnumerations(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getProjectEnumerations(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allEnumerations();
@@ -477,23 +477,23 @@ export class MMDAProject {
         });
     }
 
-    public getProjectEnumerationsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectEnumerationsAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getProjectEnumerationsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectEnumerationsAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getProjectEnumerationsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectEnumerationsAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectEnumerationsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectEnumerationsAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectEnumerations(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getModuleEnumerations(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getModuleEnumerations(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -517,23 +517,23 @@ export class MMDAProject {
         })
     }
 
-    public getModuleEnumerationsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleEnumerationsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleEnumerations(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getModuleEnumerationsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleEnumerationsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleEnumerations(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getModuleEnumerationsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleEnumerationsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleEnumerations(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getModuleEnumerationsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleEnumerationsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleEnumerations(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getFolderEnumerations(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getFolderEnumerations(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var folderfound : boolean = false;
         var searchedfolder : projects.IFolder;
         this.project.createWorkingCopy().then((workingCopy) => {
@@ -569,19 +569,19 @@ export class MMDAProject {
         })
     }
 
-    public getFolderEnumerationsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderEnumerationsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderEnumerations(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getFolderEnumerationsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderEnumerationsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderEnumerations(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getFolderEnumerationsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderEnumerationsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderEnumerations(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getFolderEnumerationsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderEnumerationsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderEnumerations(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
@@ -589,7 +589,7 @@ export class MMDAProject {
         return when.all<enumerations.Enumeration[]>(enumerations.map( num => loadAsPromise(num)));
     }
 
-    protected returnImageCollections(loadedimgcol : images.ImageCollection[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnImageCollections(loadedimgcol : images.ImageCollection[], qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         loadedimgcol.forEach((imgcol) => {
             if(imgcol instanceof images.ImageCollection){
@@ -613,7 +613,7 @@ export class MMDAProject {
         console.log("Im Done!!!");
     }
 
-    protected getProjectImageCollections(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getProjectImageCollections(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allImageCollections();
         })
@@ -625,23 +625,23 @@ export class MMDAProject {
         });
     }
 
-    public getProjectImageCollectionsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectImageCollectionsAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getProjectImageCollectionsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectImageCollectionsAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getProjectImageCollectionsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectImageCollectionsAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectImageCollectionsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectImageCollectionsAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectImageCollections(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getModuleImageCollections(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getModuleImageCollections(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -665,23 +665,23 @@ export class MMDAProject {
         })
     }
 
-    public getModuleImageCollectionsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleImageCollectionsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleImageCollections(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getModuleImageCollectionsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleImageCollectionsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleImageCollections(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getModuleImageCollectionsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleImageCollectionsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleImageCollections(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getModuleImageCollectionsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleImageCollectionsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleImageCollections(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getFolderImageCollections(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getFolderImageCollections(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var folderfound : boolean = false;
         var searchedfolder : projects.IFolder;
         this.project.createWorkingCopy().then((workingCopy) => {
@@ -717,19 +717,19 @@ export class MMDAProject {
         })
     }
 
-    public getFolderImageCollectionsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderImageCollectionsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderImageCollections(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getFolderImageCollectionsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderImageCollectionsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderImageCollections(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getFolderImageCollectionsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderImageCollectionsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderImageCollections(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getFolderImageCollectionsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderImageCollectionsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderImageCollections(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
@@ -737,7 +737,7 @@ export class MMDAProject {
         return when.all<images.ImageCollection[]>(imagecollections.map( img => loadAsPromise(img)));
     }
 
-    protected returnFolders(loadedfolders : projects.IFolder[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnFolders(loadedfolders : projects.IFolder[], qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         loadedfolders.forEach((folder) => {
             if(folder instanceof projects.Folder){
@@ -761,7 +761,7 @@ export class MMDAProject {
         console.log("Im Done!!!");
     }
 
-    protected getProjectFolders(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getProjectFolders(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allFolders();
         })
@@ -773,23 +773,23 @@ export class MMDAProject {
         });
     }
 
-    public getProjectFoldersAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectFoldersAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getProjectFoldersAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectFoldersAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getProjectFoldersAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectFoldersAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectFoldersAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectFoldersAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectFolders(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getModuleFolders(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getModuleFolders(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -803,23 +803,23 @@ export class MMDAProject {
         })
     }
 
-    public getModuleFoldersAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleFoldersAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleFolders(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getModuleFoldersAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleFoldersAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleFolders(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getModuleFoldersAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleFoldersAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleFolders(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getModuleFoldersAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleFoldersAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleFolders(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getFolderFolders(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getFolderFolders(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var folderfound : boolean = false;
         var searchedfolder : projects.IFolder;
         this.project.createWorkingCopy().then((workingCopy) => {
@@ -845,23 +845,23 @@ export class MMDAProject {
         })
     }
 
-    public getFolderFoldersAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderFoldersAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderFolders(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getFolderFoldersAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderFoldersAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderFolders(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getFolderFoldersAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderFoldersAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderFolders(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getFolderFoldersAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderFoldersAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderFolders(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected returnLayouts(loadedlayouts : pages.Layout[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnLayouts(loadedlayouts : pages.Layout[], qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         loadedlayouts.forEach((layout) => {
             if(layout instanceof pages.Layout){
@@ -885,7 +885,7 @@ export class MMDAProject {
         console.log("Im Done!!!");
     }
 
-    protected getProjectLayouts(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getProjectLayouts(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allLayouts();
         })
@@ -897,23 +897,23 @@ export class MMDAProject {
         });
     }
 
-    public getProjectLayoutsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectLayoutsAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectLayouts(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getProjectLayoutsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectLayoutsAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectLayouts(propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getProjectLayoutsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectLayoutsAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectLayouts(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectLayoutsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectLayoutsAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectLayouts(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getModuleLayouts(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getModuleLayouts(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -937,23 +937,23 @@ export class MMDAProject {
         })
     }
 
-    public getModuleLayoutsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleLayoutsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleLayouts(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getModuleLayoutsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleLayoutsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleLayouts(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getModuleLayoutsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleLayoutsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleLayouts(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getModuleLayoutsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleLayoutsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleLayouts(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getFolderLayouts(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getFolderLayouts(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var folderfound : boolean = false;
         var searchedfolder : projects.IFolder;
         this.project.createWorkingCopy().then((workingCopy) => {
@@ -989,19 +989,19 @@ export class MMDAProject {
         })
     }
 
-    public getFolderLayoutsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderLayoutsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderLayouts(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getFolderLayoutsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderLayoutsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderLayouts(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getFolderLayoutsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderLayoutsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderLayouts(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getFolderLayoutsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderLayoutsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderLayouts(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
@@ -1009,7 +1009,7 @@ export class MMDAProject {
         return when.all<pages.Layout[]>(layouts.map( lay => loadAsPromise(lay)));
     }
 
-    protected returnMicroflows(loadedmicroflows : microflows.Microflow[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnMicroflows(loadedmicroflows : microflows.Microflow[], qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         loadedmicroflows.forEach((microflow) => {
             if(microflow instanceof microflows.Microflow){
@@ -1033,7 +1033,7 @@ export class MMDAProject {
         console.log("Im Done!!!");
     }
 
-    protected getProjectMicroflows(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getProjectMicroflows(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allMicroflows();
         })
@@ -1045,23 +1045,23 @@ export class MMDAProject {
         });
     }
 
-    public getProjectMicroflowsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectMicroflowsAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getProjectMicroflowsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectMicroflowsAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getProjectMicroflowsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectMicroflowsAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectMicroflowsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectMicroflowsAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectMicroflows(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getModuleMicroflows(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getModuleMicroflows(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -1085,23 +1085,23 @@ export class MMDAProject {
         })
     }
 
-    public getModuleMicroflowsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleMicroflowsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleLayouts(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getModuleMicroflowsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleMicroflowsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleMicroflows(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getModuleMicroflowsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleMicroflowsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleMicroflows(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getModuleMicroflowsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleMicroflowsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleMicroflows(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getFolderMicroflows(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getFolderMicroflows(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var folderfound : boolean = false;
         var searchedfolder : projects.IFolder;
         this.project.createWorkingCopy().then((workingCopy) => {
@@ -1137,19 +1137,19 @@ export class MMDAProject {
         })
     }
 
-    public getFolderMicroflowsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderMicroflowsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderMicroflows(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getFolderMicroflowsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderMicroflowsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderMicroflows(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getFolderMicroflowsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderMicroflowsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderMicroflows(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getFolderMicroflowsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderMicroflowsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderMicroflows(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
@@ -1157,7 +1157,7 @@ export class MMDAProject {
         return when.all<microflows.Microflow[]>(microflows.map( mic => loadAsPromise(mic)));
     }
 
-    protected returnModules(loadedmodules : projects.IModule[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnModules(loadedmodules : projects.IModule[], qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         loadedmodules.forEach((modul) => {
             if(modul instanceof projects.Module){
@@ -1181,7 +1181,7 @@ export class MMDAProject {
         console.log("Im Done!!!");
     }
 
-    protected getProjectModules(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getProjectModules(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allModules();
         })
@@ -1193,23 +1193,23 @@ export class MMDAProject {
         });
     }
 
-    public getProjectModulesAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectModulesAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getProjectModulesAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectModulesAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getProjectModulesAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectModulesAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectModulesAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectModulesAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectModules(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected returnPages(loadedpages : pages.Page[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnPages(loadedpages : pages.Page[], qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         loadedpages.forEach((page) => {
             if(page instanceof pages.Page){
@@ -1233,7 +1233,7 @@ export class MMDAProject {
         console.log("Im Done!!!");
     }
 
-    protected getProjectPages(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getProjectPages(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allPages();
         })
@@ -1245,23 +1245,23 @@ export class MMDAProject {
         });
     }
 
-    public getProjectPagesAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectPagesAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectPages(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getProjectPagesAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectPagesAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectPages(propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getProjectPagesAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectPagesAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectPages(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectPagesAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectPagesAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectPages(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getModulePages(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getModulePages(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -1285,23 +1285,23 @@ export class MMDAProject {
         })
     }
 
-    public getModulePagesAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModulePagesAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModulePages(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getModulePagesAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModulePagesAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModulePages(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getModulePagesAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModulePagesAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModulePages(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getModulePagesAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModulePagesAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModulePages(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getFolderPages(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getFolderPages(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var folderfound : boolean = false;
         var searchedfolder : projects.IFolder;
         this.project.createWorkingCopy().then((workingCopy) => {
@@ -1337,19 +1337,19 @@ export class MMDAProject {
         })
     }
 
-    public getFolderPagesAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderPagesAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderPages(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getFolderPagesAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderPagesAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderPages(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getFolderPagesAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderPagesAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderPages(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getFolderPagesAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderPagesAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderPages(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
@@ -1357,7 +1357,7 @@ export class MMDAProject {
         return when.all<pages.Page[]>(pages.map( page => loadAsPromise(page)));
     }
 
-    protected returnRegularExpressions(loadedregexes : regularexpressions.RegularExpression[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnRegularExpressions(loadedregexes : regularexpressions.RegularExpression[], qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         loadedregexes.forEach((regex) => {
             if(regex instanceof regularexpressions.RegularExpression){
@@ -1381,7 +1381,7 @@ export class MMDAProject {
         console.log("Im Done!!!");
     }
 
-    protected getProjectRegularExpressions(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getProjectRegularExpressions(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allRegularExpressions();
         })
@@ -1393,23 +1393,23 @@ export class MMDAProject {
         });
     }
 
-    public getProjectRegularExpressionsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectRegularExpressionsAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getProjectRegularExpressionsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectRegularExpressionsAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getProjectRegularExpressionsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectRegularExpressionsAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectRegularExpressionsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectRegularExpressionsAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectRegularExpressions(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getModuleRegularExpressions(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getModuleRegularExpressions(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -1433,23 +1433,23 @@ export class MMDAProject {
         })
     }
 
-    public getModuleRegularExpressionsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleRegularExpressionsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleRegularExpressions(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getModuleRegularExpressionsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleRegularExpressionsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleRegularExpressions(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getModuleRegularExpressionsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleRegularExpressionsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleRegularExpressions(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getModuleRegularExpressionsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleRegularExpressionsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleRegularExpressions(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getFolderRegularExpressions(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getFolderRegularExpressions(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var folderfound : boolean = false;
         var searchedfolder : projects.IFolder;
         this.project.createWorkingCopy().then((workingCopy) => {
@@ -1485,19 +1485,19 @@ export class MMDAProject {
         })
     }
 
-    public getFolderRegularExpressionsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderRegularExpressionsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderRegularExpressions(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getFolderRegularExpressionsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderRegularExpressionsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderRegularExpressions(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getFolderRegularExpressionsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderRegularExpressionsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderRegularExpressions(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getFolderRegularExpressionsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderRegularExpressionsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderRegularExpressions(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
@@ -1505,7 +1505,7 @@ export class MMDAProject {
         return when.all<regularexpressions.RegularExpression[]>(regex.map( reg => loadAsPromise(reg)));
     }
 
-    protected returnSnippets(loadedsnippets : pages.Snippet[], qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected returnSnippets(loadedsnippets : pages.Snippet[], qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
         loadedsnippets.forEach((snippet) => {
             if(snippet instanceof pages.Snippet){
@@ -1529,7 +1529,7 @@ export class MMDAProject {
         console.log("Im Done!!!");
     }
 
-    protected getProjectSnippets(qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getProjectSnippets(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().allSnippets();
         })
@@ -1541,23 +1541,23 @@ export class MMDAProject {
         });
     }
 
-    public getProjectSnippetsAsHTML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectSnippetsAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getProjectSnippetsAsXML(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectSnippetsAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getProjectSnippetsAsTXT(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectSnippetsAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getProjectSnippetsAsJSON(propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getProjectSnippetsAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectSnippets(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getModuleSnippets(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getModuleSnippets(modulename : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         this.project.createWorkingCopy().then((workingCopy) => {
             return workingCopy.model().findModuleByQualifiedName(modulename);
         })
@@ -1581,23 +1581,23 @@ export class MMDAProject {
         })
     }
 
-    public getModuleSnippetsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleSnippetsAsTXT(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleSnippets(modulename, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getModuleSnippetsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleSnippetsAsHTML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleSnippets(modulename, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getModuleSnippetsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleSnippetsAsXML(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleSnippets(modulename, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getModuleSnippetsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getModuleSnippetsAsJSON(modulename : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getModuleSnippets(modulename, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
-    protected getFolderSnippets(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : string[], qryresulttype : string, filename: string) {
+    protected getFolderSnippets(foldername : string, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
         var folderfound : boolean = false;
         var searchedfolder : projects.IFolder;
         this.project.createWorkingCopy().then((workingCopy) => {
@@ -1633,19 +1633,19 @@ export class MMDAProject {
         })
     }
 
-    public getFolderSnippetsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderSnippetsAsHTML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderSnippets(foldername, propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
     }
 
-    public getFolderSnippetsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderSnippetsAsTXT(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderSnippets(foldername, propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
     }
 
-    public getFolderSnippetsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderSnippetsAsXML(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderSnippets(foldername, propertys, filter, sortcolumn, MMDAProject.XML, filename);
     }
 
-    public getFolderSnippetsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : string[], filename : string) {
+    public getFolderSnippetsAsJSON(foldername : string, propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getFolderSnippets(foldername, propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
 
@@ -1669,6 +1669,24 @@ export class Filter {
 
     public getValue() {
         return this.filtervalue;
+    }
+}
+
+export class Sorter {
+    private sortertype : string;
+    private isascending : boolean;
+
+    public constructor(sortertype : string, isascending : boolean) {
+        this.sortertype = sortertype;
+        this.isascending = isascending;
+    }
+
+    public getType() {
+        return this.sortertype;
+    }
+
+    public isAscending() {
+        return this.isascending;
     }
 }
 

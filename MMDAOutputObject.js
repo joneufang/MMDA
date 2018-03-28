@@ -22,22 +22,34 @@ var OutputObjectList = /** @class */ (function () {
         //console.log("Sort got " + sortcolumns);
         var sortingscount = sortcolumns.length;
         for (var i = (sortingscount - 1); i >= 0; i--) {
-            var column = sortcolumns[i];
-            this.sortColumn(column);
+            var column = sortcolumns[i].getType();
+            ;
+            var isascending = sortcolumns[i].isAscending();
+            this.sortColumn(column, isascending);
         }
         //Sorting need to be implemented !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         return this;
     };
-    OutputObjectList.prototype.sortColumn = function (column) {
+    OutputObjectList.prototype.sortColumn = function (column, isascending) {
         //console.log("Sort Columns got " + column);
         for (var i = 0; i < this.objects.length; i++) {
             //console.log(this.objects[i].getPropertyValue(column));
             for (var j = 1; j < this.objects.length; j++) {
-                if (this.objects[j - 1].getPropertyValue(column) > this.objects[j].getPropertyValue(column)) {
-                    //Tausch
-                    var temp = this.objects[j];
-                    this.objects[j] = this.objects[j - 1];
-                    this.objects[j - 1] = temp;
+                if (isascending) {
+                    if (this.objects[j - 1].getPropertyValue(column) > this.objects[j].getPropertyValue(column)) {
+                        //Tausch
+                        var temp = this.objects[j];
+                        this.objects[j] = this.objects[j - 1];
+                        this.objects[j - 1] = temp;
+                    }
+                }
+                else {
+                    if (this.objects[j - 1].getPropertyValue(column) < this.objects[j].getPropertyValue(column)) {
+                        //Tausch
+                        var temp = this.objects[j];
+                        this.objects[j] = this.objects[j - 1];
+                        this.objects[j - 1] = temp;
+                    }
                 }
             }
         }

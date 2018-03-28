@@ -1448,3 +1448,17 @@ var Filter = /** @class */ (function () {
     return Filter;
 }());
 exports.Filter = Filter;
+var Sorter = /** @class */ (function () {
+    function Sorter(sortertype, isascending) {
+        this.sortertype = sortertype;
+        this.isascending = isascending;
+    }
+    Sorter.prototype.getType = function () {
+        return this.sortertype;
+    };
+    Sorter.prototype.isAscending = function () {
+        return this.isascending;
+    };
+    return Sorter;
+}());
+exports.Sorter = Sorter;
