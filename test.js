@@ -50,7 +50,7 @@ var project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getFolderDocumentsAsHTML("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.html");
 //qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER
 //project.getProjectCustomWidgetsAsXML([cw.NAME, cw.TYPE, cw.CALLCOUNT, cw.CALLLOCATIONS],[],[],"./customwidgets.xml");
-project.getProjectWidgetsAsXML([MMDAQueryConstants_1.customwidgetscalls.NAME, MMDAQueryConstants_1.customwidgetscalls.TYPE, MMDAQueryConstants_1.customwidgetscalls.CALLCOUNT, MMDAQueryConstants_1.customwidgetscalls.CALLLOCATIONS], [], [], "./widgets.xml");
+project.getProjectWidgetsAsXML([MMDAQueryConstants_1.widgetcalls.NAME, MMDAQueryConstants_1.widgetcalls.TYPE, MMDAQueryConstants_1.widgetcalls.CALLCOUNT, MMDAQueryConstants_1.widgetcalls.CALLLOCATIONS], [], [], "./widgets.xml");
 /* //WidgetType test
 
 var client = new MendixSdkClient(username, apikey);

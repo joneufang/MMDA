@@ -1069,7 +1069,7 @@ export class WidgetAdapter extends ElementAdapter {
 
     public getWidgetPropertys(customwidget : MMDAO.OutputObjectCounter, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
         var propertys : MMDAO.OutputObjectProperty[] = new Array();
-        if(qrypropertys[0] == qrycons.widgetscalls.ALL)
+        if(qrypropertys[0] == qrycons.widgetcalls.ALL)
         {
             propertys[propertys.length] = this.getName(customwidget);
             propertys[propertys.length] = this.getCallType(customwidget);
@@ -1079,19 +1079,19 @@ export class WidgetAdapter extends ElementAdapter {
         else
         {
             qrypropertys.forEach((qryprop) => {
-                if(qryprop == qrycons.widgetscalls.NAME)
+                if(qryprop == qrycons.widgetcalls.NAME)
                 {
                     propertys[propertys.length] = this.getName(customwidget);
                 }
-                else if(qryprop == qrycons.widgetscalls.TYPE)
+                else if(qryprop == qrycons.widgetcalls.TYPE)
                 {
                     propertys[propertys.length] = this.getCallType(customwidget);
                 }
-                else if(qryprop == qrycons.widgetscalls.CALLCOUNT)
+                else if(qryprop == qrycons.widgetcalls.CALLCOUNT)
                 {
                     propertys[propertys.length] = this.getCallCount(customwidget);
                 }
-                else if(qryprop == qrycons.widgetscalls.CALLLOCATIONS)
+                else if(qryprop == qrycons.widgetcalls.CALLLOCATIONS)
                 {
                     propertys[propertys.length] = this.getCallLocations(customwidget);
                 }
@@ -1107,7 +1107,7 @@ export class WidgetAdapter extends ElementAdapter {
     public getName(cw : MMDAO.OutputObjectCounter) : MMDAO.OutputObjectProperty {
         var property : MMDAO.OutputObjectProperty;
         
-        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.NAME,cw.getPropertyValue(qrycons.customwidgetscalls.NAME));
+        property = new MMDAO.OutputObjectProperty(qrycons.widgetcalls.NAME,cw.getPropertyValue(qrycons.widgetcalls.NAME));
 
         return property;
     }
@@ -1115,7 +1115,7 @@ export class WidgetAdapter extends ElementAdapter {
     public getCallType(cw : MMDAO.OutputObjectCounter) : MMDAO.OutputObjectProperty {
         var property : MMDAO.OutputObjectProperty;
         
-        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.TYPE,cw.getPropertyValue(qrycons.customwidgetscalls.TYPE));
+        property = new MMDAO.OutputObjectProperty(qrycons.widgetcalls.TYPE,cw.getPropertyValue(qrycons.widgetcalls.TYPE));
 
         return property;
     }
@@ -1123,7 +1123,7 @@ export class WidgetAdapter extends ElementAdapter {
     public getCallCount(cw : MMDAO.OutputObjectCounter) : MMDAO.OutputObjectProperty {
         var property : MMDAO.OutputObjectProperty;
         
-        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.CALLCOUNT,cw.getCount().toString());
+        property = new MMDAO.OutputObjectProperty(qrycons.widgetcalls.CALLCOUNT,cw.getCount().toString());
 
         return property;
     }
@@ -1131,7 +1131,7 @@ export class WidgetAdapter extends ElementAdapter {
     public getCallLocations(cw : MMDAO.OutputObjectCounter) : MMDAO.OutputObjectProperty {
         var property : MMDAO.OutputObjectProperty;
         
-        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.CALLLOCATIONS,cw.getLocations());
+        property = new MMDAO.OutputObjectProperty(qrycons.widgetcalls.CALLLOCATIONS,cw.getLocations());
 
         return property;
     }
@@ -1205,7 +1205,7 @@ export class CustomWidgetAdapter extends WidgetAdapter {
 
     public getCustomWidgetPropertys(customwidget : MMDAO.OutputObjectCounter, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
         var propertys : MMDAO.OutputObjectProperty[] = new Array();
-        if(qrypropertys[0] == qrycons.customwidgetscalls.ALL)
+        if(qrypropertys[0] == qrycons.customwidgetcalls.ALL)
         {
             propertys[propertys.length] = this.getName(customwidget);
             propertys[propertys.length] = this.getCallType(customwidget);
@@ -1215,19 +1215,19 @@ export class CustomWidgetAdapter extends WidgetAdapter {
         else
         {
             qrypropertys.forEach((qryprop) => {
-                if(qryprop == qrycons.customwidgetscalls.NAME)
+                if(qryprop == qrycons.customwidgetcalls.NAME)
                 {
                     propertys[propertys.length] = this.getName(customwidget);
                 }
-                else if(qryprop == qrycons.customwidgetscalls.TYPE)
+                else if(qryprop == qrycons.customwidgetcalls.TYPE)
                 {
                     propertys[propertys.length] = this.getCallType(customwidget);
                 }
-                else if(qryprop == qrycons.customwidgetscalls.CALLCOUNT)
+                else if(qryprop == qrycons.customwidgetcalls.CALLCOUNT)
                 {
                     propertys[propertys.length] = this.getCallCount(customwidget);
                 }
-                else if(qryprop == qrycons.customwidgetscalls.CALLLOCATIONS)
+                else if(qryprop == qrycons.customwidgetcalls.CALLLOCATIONS)
                 {
                     propertys[propertys.length] = this.getCallLocations(customwidget);
                 }

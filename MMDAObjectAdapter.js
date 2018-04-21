@@ -880,7 +880,7 @@ var WidgetAdapter = /** @class */ (function (_super) {
     WidgetAdapter.prototype.getWidgetPropertys = function (customwidget, qrypropertys) {
         var _this = this;
         var propertys = new Array();
-        if (qrypropertys[0] == qrycons.widgetscalls.ALL) {
+        if (qrypropertys[0] == qrycons.widgetcalls.ALL) {
             propertys[propertys.length] = this.getName(customwidget);
             propertys[propertys.length] = this.getCallType(customwidget);
             propertys[propertys.length] = this.getCallCount(customwidget);
@@ -888,16 +888,16 @@ var WidgetAdapter = /** @class */ (function (_super) {
         }
         else {
             qrypropertys.forEach(function (qryprop) {
-                if (qryprop == qrycons.widgetscalls.NAME) {
+                if (qryprop == qrycons.widgetcalls.NAME) {
                     propertys[propertys.length] = _this.getName(customwidget);
                 }
-                else if (qryprop == qrycons.widgetscalls.TYPE) {
+                else if (qryprop == qrycons.widgetcalls.TYPE) {
                     propertys[propertys.length] = _this.getCallType(customwidget);
                 }
-                else if (qryprop == qrycons.widgetscalls.CALLCOUNT) {
+                else if (qryprop == qrycons.widgetcalls.CALLCOUNT) {
                     propertys[propertys.length] = _this.getCallCount(customwidget);
                 }
-                else if (qryprop == qrycons.widgetscalls.CALLLOCATIONS) {
+                else if (qryprop == qrycons.widgetcalls.CALLLOCATIONS) {
                     propertys[propertys.length] = _this.getCallLocations(customwidget);
                 }
                 else {
@@ -909,22 +909,22 @@ var WidgetAdapter = /** @class */ (function (_super) {
     };
     WidgetAdapter.prototype.getName = function (cw) {
         var property;
-        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.NAME, cw.getPropertyValue(qrycons.customwidgetscalls.NAME));
+        property = new MMDAO.OutputObjectProperty(qrycons.widgetcalls.NAME, cw.getPropertyValue(qrycons.widgetcalls.NAME));
         return property;
     };
     WidgetAdapter.prototype.getCallType = function (cw) {
         var property;
-        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.TYPE, cw.getPropertyValue(qrycons.customwidgetscalls.TYPE));
+        property = new MMDAO.OutputObjectProperty(qrycons.widgetcalls.TYPE, cw.getPropertyValue(qrycons.widgetcalls.TYPE));
         return property;
     };
     WidgetAdapter.prototype.getCallCount = function (cw) {
         var property;
-        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.CALLCOUNT, cw.getCount().toString());
+        property = new MMDAO.OutputObjectProperty(qrycons.widgetcalls.CALLCOUNT, cw.getCount().toString());
         return property;
     };
     WidgetAdapter.prototype.getCallLocations = function (cw) {
         var property;
-        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.CALLLOCATIONS, cw.getLocations());
+        property = new MMDAO.OutputObjectProperty(qrycons.widgetcalls.CALLLOCATIONS, cw.getLocations());
         return property;
     };
     WidgetAdapter.prototype.getWidgetCounter = function (docs) {
@@ -995,7 +995,7 @@ var CustomWidgetAdapter = /** @class */ (function (_super) {
     CustomWidgetAdapter.prototype.getCustomWidgetPropertys = function (customwidget, qrypropertys) {
         var _this = this;
         var propertys = new Array();
-        if (qrypropertys[0] == qrycons.customwidgetscalls.ALL) {
+        if (qrypropertys[0] == qrycons.customwidgetcalls.ALL) {
             propertys[propertys.length] = this.getName(customwidget);
             propertys[propertys.length] = this.getCallType(customwidget);
             propertys[propertys.length] = this.getCallCount(customwidget);
@@ -1003,16 +1003,16 @@ var CustomWidgetAdapter = /** @class */ (function (_super) {
         }
         else {
             qrypropertys.forEach(function (qryprop) {
-                if (qryprop == qrycons.customwidgetscalls.NAME) {
+                if (qryprop == qrycons.customwidgetcalls.NAME) {
                     propertys[propertys.length] = _this.getName(customwidget);
                 }
-                else if (qryprop == qrycons.customwidgetscalls.TYPE) {
+                else if (qryprop == qrycons.customwidgetcalls.TYPE) {
                     propertys[propertys.length] = _this.getCallType(customwidget);
                 }
-                else if (qryprop == qrycons.customwidgetscalls.CALLCOUNT) {
+                else if (qryprop == qrycons.customwidgetcalls.CALLCOUNT) {
                     propertys[propertys.length] = _this.getCallCount(customwidget);
                 }
-                else if (qryprop == qrycons.customwidgetscalls.CALLLOCATIONS) {
+                else if (qryprop == qrycons.customwidgetcalls.CALLLOCATIONS) {
                     propertys[propertys.length] = _this.getCallLocations(customwidget);
                 }
                 else {

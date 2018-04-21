@@ -122,19 +122,19 @@ var snippets;
     snippets.ENTITY = "ENTITY";
     snippets.ALL = "ALL";
 })(snippets = exports.snippets || (exports.snippets = {}));
-var customwidgetscalls;
-(function (customwidgetscalls) {
-    customwidgetscalls.NAME = "NAME";
-    customwidgetscalls.TYPE = "TYPE";
-    customwidgetscalls.CALLCOUNT = "CALLCOUNT";
-    customwidgetscalls.CALLLOCATIONS = "CALLLOCATIONS";
-    customwidgetscalls.ALL = "ALL";
-})(customwidgetscalls = exports.customwidgetscalls || (exports.customwidgetscalls = {}));
-var widgetscalls;
-(function (widgetscalls) {
-    widgetscalls.NAME = "NAME";
-    widgetscalls.TYPE = "TYPE";
-    widgetscalls.CALLCOUNT = "CALLCOUNT";
-    widgetscalls.CALLLOCATIONS = "CALLLOCATIONS";
-    widgetscalls.ALL = "ALL";
-})(widgetscalls = exports.widgetscalls || (exports.widgetscalls = {}));
+var customwidgetcalls;
+(function (customwidgetcalls) {
+    customwidgetcalls.NAME = "NAME";
+    customwidgetcalls.TYPE = "TYPE";
+    customwidgetcalls.CALLCOUNT = "CALLCOUNT";
+    customwidgetcalls.CALLLOCATIONS = "CALLLOCATIONS";
+    customwidgetcalls.ALL = "ALL";
+})(customwidgetcalls = exports.customwidgetcalls || (exports.customwidgetcalls = {}));
+var widgetcalls;
+(function (widgetcalls) {
+    widgetcalls.NAME = "NAME";
+    widgetcalls.TYPE = "TYPE";
+    widgetcalls.CALLCOUNT = "CALLCOUNT";
+    widgetcalls.CALLLOCATIONS = "CALLLOCATIONS";
+    widgetcalls.ALL = "ALL";
+})(widgetcalls = exports.widgetcalls || (exports.widgetcalls = {}));

@@ -121,7 +121,7 @@ export namespace snippets {
         export const ALL : string = "ALL"; 
 }
 
-export namespace customwidgetscalls {
+export namespace customwidgetcalls {
         export const NAME : string = "NAME";
         export const TYPE : string = "TYPE";
         export const CALLCOUNT : string = "CALLCOUNT"; 
@@ -129,7 +129,7 @@ export namespace customwidgetscalls {
         export const ALL : string = "ALL"; 
 }
 
-export namespace widgetscalls {
+export namespace widgetcalls {
         export const NAME : string = "NAME";
         export const TYPE : string = "TYPE";
         export const CALLCOUNT : string = "CALLCOUNT"; 

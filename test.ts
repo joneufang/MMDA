@@ -18,7 +18,8 @@ import { modules as mod } from "./MMDAQueryConstants";
 import { pages as pag } from "./MMDAQueryConstants";
 import { regularexpressions as regex } from "./MMDAQueryConstants";
 import { snippets as snip } from "./MMDAQueryConstants";
-import { customwidgetscalls as cw } from "./MMDAQueryConstants";
+import { customwidgetcalls as cw } from "./MMDAQueryConstants";
+import { widgetcalls as w } from "./MMDAQueryConstants";
 
 
 
@@ -71,7 +72,7 @@ let project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getFolderDocumentsAsHTML("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.html");
 //qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER
 //project.getProjectCustomWidgetsAsXML([cw.NAME, cw.TYPE, cw.CALLCOUNT, cw.CALLLOCATIONS],[],[],"./customwidgets.xml");
-project.getProjectWidgetsAsXML([cw.NAME, cw.TYPE, cw.CALLCOUNT, cw.CALLLOCATIONS],[],[],"./widgets.xml");
+project.getProjectWidgetsAsXML([w.NAME, w.TYPE, w.CALLCOUNT, w.CALLLOCATIONS],[],[],"./widgets.xml");
 
 
 /* //WidgetType test
