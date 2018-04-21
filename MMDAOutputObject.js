@@ -285,6 +285,121 @@ var OutputObject = /** @class */ (function () {
     return OutputObject;
 }());
 exports.OutputObject = OutputObject;
+var OutputObjectCounter = /** @class */ (function () {
+    function OutputObjectCounter(propertys, location) {
+        this.propertys = propertys;
+        this.locations = location;
+        this.count = 1;
+    }
+    //Add Property to Object
+    OutputObjectCounter.prototype.addProperty = function (name, value) {
+        var prop = new OutputObjectProperty(name, value);
+        this.propertys[this.propertys.length] = prop;
+    };
+    //Get Value of given property
+    OutputObjectCounter.prototype.getPropertyValue = function (name) {
+        var value = "Property not found";
+        this.propertys.forEach(function (prop) {
+            if (prop.getName() == name) {
+                if (prop.toString() == null) {
+                    value = "";
+                }
+                else {
+                    value = prop.toString();
+                }
+            }
+        });
+        return value;
+    };
+    OutputObjectCounter.prototype.countAndLocation = function (location) {
+        this.count++;
+        if (!this.locations.match(location)) {
+            this.locations = this.locations + ", " + location;
+        }
+    };
+    OutputObjectCounter.prototype.getLocations = function () {
+        return this.locations;
+    };
+    OutputObjectCounter.prototype.getCount = function () {
+        return this.count;
+    };
+    //Serialize ObjectData
+    OutputObjectCounter.prototype.toString = function () {
+        var result = "";
+        this.propertys.forEach(function (prop) {
+            result += prop.toString() + "\t";
+        });
+        result += this.count + "\t";
+        result += this.locations + "\t";
+        return result;
+    };
+    //Serialize Object Property Names
+    OutputObjectCounter.prototype.getHeader = function () {
+        var result = "";
+        this.propertys.forEach(function (prop) {
+            result += prop.getName() + "\t";
+        });
+        result += "CallCounts" + "\t";
+        result += "CallLocations" + "\t";
+        return result;
+    };
+    return OutputObjectCounter;
+}());
+exports.OutputObjectCounter = OutputObjectCounter;
+var OutputObjectCounterList = /** @class */ (function () {
+    function OutputObjectCounterList() {
+        this.objects = new Array();
+    }
+    OutputObjectCounterList.prototype.add = function (counter) {
+        if (this.isElement(counter) == -1) {
+            this.objects[this.objects.length] = counter;
+        }
+    };
+    OutputObjectCounterList.prototype.addAndCount = function (counter) {
+        var index;
+        index = this.isElement(counter);
+        if (index == -1) {
+            this.objects[this.objects.length] = counter;
+        }
+        else {
+            this.objects[index].countAndLocation(counter.getLocations());
+        }
+    };
+    //returns Index of Element, -1 if not element
+    OutputObjectCounterList.prototype.isElement = function (counter) {
+        var i;
+        var name;
+        var gefunden = false;
+        name = counter.getPropertyValue("NAME");
+        for (i = 0; i < this.objects.length; i++) {
+            if (this.objects[i].getPropertyValue("NAME") == name) {
+                gefunden = true;
+                return i;
+            }
+        }
+        if (!gefunden) {
+            return -1;
+        }
+    };
+    OutputObjectCounterList.prototype.getCounter = function () {
+        return this.objects;
+    };
+    OutputObjectCounterList.prototype.toString = function () {
+        if (this.objects.length > 0) {
+            var result_2 = "";
+            result_2 += this.objects[0].getHeader() + "\n\n";
+            this.objects.forEach(function (obj) {
+                result_2 += obj.toString() + "\n";
+            });
+            return result_2;
+        }
+        else {
+            return "No Entrys Found";
+        }
+    };
+    return OutputObjectCounterList;
+}());
+exports.OutputObjectCounterList = OutputObjectCounterList;
 //Container for a single MendixProperty
 var OutputObjectProperty = /** @class */ (function () {
     function OutputObjectProperty(name, value) {

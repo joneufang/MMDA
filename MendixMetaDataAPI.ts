@@ -1652,6 +1652,65 @@ export class MMDAProject {
     protected loadAllSnippetsAsPromise(snippet : pages.ISnippet[]): when.Promise<pages.Snippet[]> {
         return when.all<pages.Snippet[]>(snippet.map( snip => loadAsPromise(snip)));
     }
+
+    protected returnCustomWidgets(customwidgets : MMDAO.OutputObjectCounterList, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string)
+    {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+
+        customwidgets.getCounter().forEach((cwcounter) => {
+            var cwadapter : MMDAA.CustomWidgetAdapter = new MMDAA.CustomWidgetAdapter();
+            var propertys : MMDAO.OutputObjectProperty[] = new Array();
+            var MMDAobj : MMDAO.OutputObject;
+            propertys = cwadapter.getCustomWidgetPropertys(cwcounter, qrypropertys);
+            MMDAobj = new MMDAO.OutputObject(propertys,"CustomWidget");                   //Get filtered Documents
+            if(cwadapter.filter(MMDAobj,filter))
+            {
+                outputobjects.addObject(MMDAobj);                        //filter object
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
+    /*
+    Gets Documents from whole Project
+    Parameter: qrypropertys : string[]      Array of property constants of wanted propertys
+    Parameter: qryfiltertypes : string[]    Array of filter constants of propertys to filter
+    Parameter: qryfiltervalues : string[]   Array of Values for the filters
+    Parameter: qrysortcolumns : number[]    Array of Columnnumbers for sorting
+    Parameter: qryresulttype : string       Constant which ResultType should be used
+    */
+    protected getProjectCustomWidgets(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allDocuments();
+        })
+        .then((documents) => { 
+            return this.loadAllDocumentsAsPromise(documents);
+        })
+        .done((loadeddocs) => {
+            var customwidgetadapter : MMDAA.CustomWidgetAdapter = new MMDAA.CustomWidgetAdapter();
+            var customwidgetlist : MMDAO.OutputObjectCounterList = new MMDAO.OutputObjectCounterList();
+            customwidgetlist = customwidgetadapter.getCounter(loadeddocs);
+            this.returnCustomWidgets(customwidgetlist, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    }
+
+    public getProjectCustomWidgetsAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
+        this.getProjectCustomWidgets(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getProjectCustomWidgetsAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
+        this.getProjectCustomWidgets(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getProjectCustomWidgetsAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
+        this.getProjectCustomWidgets(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getProjectCustomWidgetsAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
+        this.getProjectCustomWidgets(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
 }    
 
 export class Filter {

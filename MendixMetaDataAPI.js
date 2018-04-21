@@ -1426,6 +1426,57 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.loadAllSnippetsAsPromise = function (snippet) {
         return when.all(snippet.map(function (snip) { return mendixplatformsdk_1.loadAsPromise(snip); }));
     };
+    MMDAProject.prototype.returnCustomWidgets = function (customwidgets, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        customwidgets.getCounter().forEach(function (cwcounter) {
+            var cwadapter = new MMDAA.CustomWidgetAdapter();
+            var propertys = new Array();
+            var MMDAobj;
+            propertys = cwadapter.getCustomWidgetPropertys(cwcounter, qrypropertys);
+            MMDAobj = new MMDAO.OutputObject(propertys, "CustomWidget"); //Get filtered Documents
+            if (cwadapter.filter(MMDAobj, filter)) {
+                outputobjects.addObject(MMDAobj); //filter object
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+        outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+        console.log("Im Done!!!");
+    };
+    /*
+    Gets Documents from whole Project
+    Parameter: qrypropertys : string[]      Array of property constants of wanted propertys
+    Parameter: qryfiltertypes : string[]    Array of filter constants of propertys to filter
+    Parameter: qryfiltervalues : string[]   Array of Values for the filters
+    Parameter: qrysortcolumns : number[]    Array of Columnnumbers for sorting
+    Parameter: qryresulttype : string       Constant which ResultType should be used
+    */
+    MMDAProject.prototype.getProjectCustomWidgets = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allDocuments();
+        })
+            .then(function (documents) {
+            return _this.loadAllDocumentsAsPromise(documents);
+        })
+            .done(function (loadeddocs) {
+            var customwidgetadapter = new MMDAA.CustomWidgetAdapter();
+            var customwidgetlist = new MMDAO.OutputObjectCounterList();
+            customwidgetlist = customwidgetadapter.getCounter(loadeddocs);
+            _this.returnCustomWidgets(customwidgetlist, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getProjectCustomWidgetsAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectCustomWidgets(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectCustomWidgetsAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectCustomWidgets(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectCustomWidgetsAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectCustomWidgets(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectCustomWidgetsAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectCustomWidgets(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
     //Constants to define output target
     MMDAProject.TEXTFILE = "TEXTFILE";
     MMDAProject.HTMLTABLE = "HTMLTABLE";

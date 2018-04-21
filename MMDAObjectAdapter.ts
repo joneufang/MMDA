@@ -1,4 +1,5 @@
 import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates, AbstractElement, constants, enumerations, images, microflows, regularexpressions} from "mendixmodelsdk";
+import {loadAsPromise} from "mendixplatformsdk";
 import * as MMDAO from "./MMDAOutputObject";
 import * as MMDA from "./MendixMetaDataAPI";
 import * as qrycons from "./MMDAQueryConstants";
@@ -1053,4 +1054,158 @@ export class SnippetAdapter extends DocumentAdapter {
         return property;
     }
 
+}
+
+export class ElementAdapter extends AbstractElementAdapter {
+    constructor() {
+        super();   
+    }
+}
+
+export class WidgetAdapter extends ElementAdapter {
+    constructor() {
+        super();   
+    }
+}
+
+export class CustomWidgetAdapter extends WidgetAdapter {
+    constructor() {
+        super();   
+    }
+
+    public getCustomWidgetPropertys(customwidget : MMDAO.OutputObjectCounter, qrypropertys : string[]) : MMDAO.OutputObjectProperty[] {
+        var propertys : MMDAO.OutputObjectProperty[] = new Array();
+        if(qrypropertys[0] == qrycons.customwidgetscalls.ALL)
+        {
+            propertys[propertys.length] = this.getName(customwidget);
+            propertys[propertys.length] = this.getCallType(customwidget);
+            propertys[propertys.length] = this.getCallCount(customwidget);
+            propertys[propertys.length] = this.getCallLocations(customwidget);   
+        }
+        else
+        {
+            qrypropertys.forEach((qryprop) => {
+                if(qryprop == qrycons.customwidgetscalls.NAME)
+                {
+                    propertys[propertys.length] = this.getName(customwidget);
+                }
+                else if(qryprop == qrycons.customwidgetscalls.TYPE)
+                {
+                    propertys[propertys.length] = this.getCallType(customwidget);
+                }
+                else if(qryprop == qrycons.customwidgetscalls.CALLCOUNT)
+                {
+                    propertys[propertys.length] = this.getCallCount(customwidget);
+                }
+                else if(qryprop == qrycons.customwidgetscalls.CALLLOCATIONS)
+                {
+                    propertys[propertys.length] = this.getCallLocations(customwidget);
+                }
+                else
+                {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property","Value of Unknown Property");
+                }
+            })
+        }
+        return propertys;
+    }
+
+    public getName(cw : MMDAO.OutputObjectCounter) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.NAME,cw.getPropertyValue(qrycons.customwidgetscalls.NAME));
+
+        return property;
+    }
+
+    public getCallType(cw : MMDAO.OutputObjectCounter) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.TYPE,cw.getPropertyValue(qrycons.customwidgetscalls.TYPE));
+
+        return property;
+    }
+
+    public getCallCount(cw : MMDAO.OutputObjectCounter) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.CALLCOUNT,cw.getCount().toString());
+
+        return property;
+    }
+
+    public getCallLocations(cw : MMDAO.OutputObjectCounter) : MMDAO.OutputObjectProperty {
+        var property : MMDAO.OutputObjectProperty;
+        
+        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.CALLLOCATIONS,cw.getLocations());
+
+        return property;
+    }
+
+    public getCounter(docs : projects.Document[]) : MMDAO.OutputObjectCounterList {
+        var list : MMDAO.OutputObjectCounterList = new MMDAO.OutputObjectCounterList();
+        var counter : MMDAO.OutputObjectCounter[] = new Array();
+        var calls : string[];
+        docs.forEach((doc) => {
+                if(doc instanceof pages.Page || doc instanceof pages.Snippet || doc instanceof pages.Layout) {
+                    var returnedcounter : MMDAO.OutputObjectCounter[] = new Array();
+                    returnedcounter = this.traverseForCustomWidgets(doc);
+                    returnedcounter.forEach((count) => {
+                        counter[counter.length] = count;
+                    })
+                }
+            })
+        calls = this.traverseForSnippetandLayoutCalls(docs);
+        //Calls verarbeiten
+        calls.forEach((call) => {
+            docs.forEach((doc) => {
+                if(doc.qualifiedName == call){
+                    var returnedcounter : MMDAO.OutputObjectCounter[] = new Array();
+                    returnedcounter = this.traverseForCustomWidgets(doc);
+                    returnedcounter.forEach((count) => {
+                        counter[counter.length] = count;
+                    })
+                }
+            }) 
+        })    
+        counter.forEach((count) => {
+            list.addAndCount(count);
+        })
+        return list;
+    }
+
+    public traverseForSnippetandLayoutCalls(docs : projects.Document[]) : string[] {
+        var names : string[] = new Array();
+        docs.forEach((doc) => {
+            doc.traverse((structure) => {
+                if(structure instanceof pages.SnippetCall)
+                {
+                    names[names.length] = structure.snippetQualifiedName;
+                }
+                if(structure instanceof pages.LayoutCall)
+                {
+                    names[names.length] = structure.layoutQualifiedName;
+                }
+            })
+        })
+        return names;
+    }
+
+    public traverseForCustomWidgets(doc : projects.Document) : MMDAO.OutputObjectCounter[] {
+        var counter : MMDAO.OutputObjectCounter[] = new Array();
+        doc.traverse((structure) => {
+            if(structure instanceof pages.Widget && structure.structureTypeName === "CustomWidgets$CustomWidget") {
+                var widget_name;
+                structure.traverse((elem) => {
+                    if(elem instanceof customwidgets.CustomWidgetType) {
+                        var cwtype : customwidgets.CustomWidgetType;
+                        cwtype = elem;
+                        widget_name = cwtype.name;
+                    }
+                })
+                counter[counter.length] = new MMDAO.OutputObjectCounter([new MMDAO.OutputObjectProperty("NAME",widget_name), new MMDAO.OutputObjectProperty("TYPE",structure.structureTypeName)],doc.qualifiedName);
+            }
+        });
+        return counter;
+    }
 }

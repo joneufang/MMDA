@@ -864,3 +864,140 @@ var SnippetAdapter = /** @class */ (function (_super) {
     return SnippetAdapter;
 }(DocumentAdapter));
 exports.SnippetAdapter = SnippetAdapter;
+var ElementAdapter = /** @class */ (function (_super) {
+    __extends(ElementAdapter, _super);
+    function ElementAdapter() {
+        return _super.call(this) || this;
+    }
+    return ElementAdapter;
+}(AbstractElementAdapter));
+exports.ElementAdapter = ElementAdapter;
+var WidgetAdapter = /** @class */ (function (_super) {
+    __extends(WidgetAdapter, _super);
+    function WidgetAdapter() {
+        return _super.call(this) || this;
+    }
+    return WidgetAdapter;
+}(ElementAdapter));
+exports.WidgetAdapter = WidgetAdapter;
+var CustomWidgetAdapter = /** @class */ (function (_super) {
+    __extends(CustomWidgetAdapter, _super);
+    function CustomWidgetAdapter() {
+        return _super.call(this) || this;
+    }
+    CustomWidgetAdapter.prototype.getCustomWidgetPropertys = function (customwidget, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.customwidgetscalls.ALL) {
+            propertys[propertys.length] = this.getName(customwidget);
+            propertys[propertys.length] = this.getCallType(customwidget);
+            propertys[propertys.length] = this.getCallCount(customwidget);
+            propertys[propertys.length] = this.getCallLocations(customwidget);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.customwidgetscalls.NAME) {
+                    propertys[propertys.length] = _this.getName(customwidget);
+                }
+                else if (qryprop == qrycons.customwidgetscalls.TYPE) {
+                    propertys[propertys.length] = _this.getCallType(customwidget);
+                }
+                else if (qryprop == qrycons.customwidgetscalls.CALLCOUNT) {
+                    propertys[propertys.length] = _this.getCallCount(customwidget);
+                }
+                else if (qryprop == qrycons.customwidgetscalls.CALLLOCATIONS) {
+                    propertys[propertys.length] = _this.getCallLocations(customwidget);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    CustomWidgetAdapter.prototype.getName = function (cw) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.NAME, cw.getPropertyValue(qrycons.customwidgetscalls.NAME));
+        return property;
+    };
+    CustomWidgetAdapter.prototype.getCallType = function (cw) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.TYPE, cw.getPropertyValue(qrycons.customwidgetscalls.TYPE));
+        return property;
+    };
+    CustomWidgetAdapter.prototype.getCallCount = function (cw) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.CALLCOUNT, cw.getCount().toString());
+        return property;
+    };
+    CustomWidgetAdapter.prototype.getCallLocations = function (cw) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.customwidgetscalls.CALLLOCATIONS, cw.getLocations());
+        return property;
+    };
+    CustomWidgetAdapter.prototype.getCounter = function (docs) {
+        var _this = this;
+        var list = new MMDAO.OutputObjectCounterList();
+        var counter = new Array();
+        var calls;
+        docs.forEach(function (doc) {
+            if (doc instanceof mendixmodelsdk_1.pages.Page || doc instanceof mendixmodelsdk_1.pages.Snippet || doc instanceof mendixmodelsdk_1.pages.Layout) {
+                var returnedcounter = new Array();
+                returnedcounter = _this.traverseForCustomWidgets(doc);
+                returnedcounter.forEach(function (count) {
+                    counter[counter.length] = count;
+                });
+            }
+        });
+        calls = this.traverseForSnippetandLayoutCalls(docs);
+        //Calls verarbeiten
+        calls.forEach(function (call) {
+            docs.forEach(function (doc) {
+                if (doc.qualifiedName == call) {
+                    var returnedcounter = new Array();
+                    returnedcounter = _this.traverseForCustomWidgets(doc);
+                    returnedcounter.forEach(function (count) {
+                        counter[counter.length] = count;
+                    });
+                }
+            });
+        });
+        counter.forEach(function (count) {
+            list.addAndCount(count);
+        });
+        return list;
+    };
+    CustomWidgetAdapter.prototype.traverseForSnippetandLayoutCalls = function (docs) {
+        var names = new Array();
+        docs.forEach(function (doc) {
+            doc.traverse(function (structure) {
+                if (structure instanceof mendixmodelsdk_1.pages.SnippetCall) {
+                    names[names.length] = structure.snippetQualifiedName;
+                }
+                if (structure instanceof mendixmodelsdk_1.pages.LayoutCall) {
+                    names[names.length] = structure.layoutQualifiedName;
+                }
+            });
+        });
+        return names;
+    };
+    CustomWidgetAdapter.prototype.traverseForCustomWidgets = function (doc) {
+        var counter = new Array();
+        doc.traverse(function (structure) {
+            if (structure instanceof mendixmodelsdk_1.pages.Widget && structure.structureTypeName === "CustomWidgets$CustomWidget") {
+                var widget_name;
+                structure.traverse(function (elem) {
+                    if (elem instanceof mendixmodelsdk_1.customwidgets.CustomWidgetType) {
+                        var cwtype;
+                        cwtype = elem;
+                        widget_name = cwtype.name;
+                    }
+                });
+                counter[counter.length] = new MMDAO.OutputObjectCounter([new MMDAO.OutputObjectProperty("NAME", widget_name), new MMDAO.OutputObjectProperty("TYPE", structure.structureTypeName)], doc.qualifiedName);
+            }
+        });
+        return counter;
+    };
+    return CustomWidgetAdapter;
+}(WidgetAdapter));
+exports.CustomWidgetAdapter = CustomWidgetAdapter;

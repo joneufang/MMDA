@@ -1,11 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-//import {ModelSdkClient, IModel, IModelUnit, domainmodels, utils, pages, customwidgets, projects, documenttemplates} from "mendixmodelsdk";
-//import {MendixSdkClient, Project, OnlineWorkingCopy, loadAsPromise} from "mendixplatformsdk";
-//import when = require("when");
-//import XMLWriter = require('xml-writer');
-//import fs = require("fs-extra");
-//import * as MxAO from "./MxAOutputObject";
 //import * as MxAA from "./MxAObjectAdapter";
 var MMDA = require("./MendixMetaDataAPI");
 var MMDAQueryConstants_1 = require("./MMDAQueryConstants");
@@ -24,7 +18,7 @@ var project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getProjectFoldersAsXML([fold.ID, fold.NAME, fold.TYPE, fold.CONTAINER, fold.SUBFOLDERS, fold.DOCUMENTS],[],[],"./folders.xml");
 //project.getProjectLayoutsAsXML([lay.ID, lay.NAME, lay.TYPE, lay.CONTAINER, lay.LAYOUTTYPE],[],[],"./layouts.xml");
 //project.getProjectMicroflowsAsXML([mf.ID, mf.NAME, mf.TYPE, mf.CONTAINER, mf.RETURNTYPE],[],[],"./microflows.xml");
-project.getProjectModulesAsXML([MMDAQueryConstants_1.modules.ID, MMDAQueryConstants_1.modules.NAME, MMDAQueryConstants_1.modules.TYPE, MMDAQueryConstants_1.modules.FOLDERS, MMDAQueryConstants_1.modules.DOCUMENTS], [], [], "./modules.xml");
+//project.getProjectModulesAsXML([mod.ID, mod.NAME, mod.TYPE, mod.FOLDERS, mod.DOCUMENTS],[],[],"./modules.xml");
 //project.getProjectPagesAsTXT([pag.ID, pag.NAME, pag.TYPE, pag.LAYOUT, pag.ALLOWEDROLES, pag.URL],[],[new MMDA.Sorter(pag.NAME,false)],"./pagesDSC.txt");
 //project.getProjectPagesAsTXT([pag.ID, pag.NAME, pag.TYPE, pag.LAYOUT, pag.ALLOWEDROLES, pag.URL],[],[new MMDA.Sorter(pag.NAME,true)],"./pagesASC.txt");
 //project.getProjectPagesAsXML([pag.ID, pag.NAME, pag.TYPE, pag.CONTAINER, pag.LAYOUT, pag.ALLOWEDROLES, pag.URL],[],[],"./pages.xml");
@@ -54,6 +48,31 @@ project.getProjectModulesAsXML([MMDAQueryConstants_1.modules.ID, MMDAQueryConsta
 //project.getFolderDocumentsAsJSON("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.json");
 //project.getFolderDocumentsAsHTML("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.html");
 //qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER
+project.getProjectCustomWidgetsAsXML([MMDAQueryConstants_1.customwidgetscalls.NAME, MMDAQueryConstants_1.customwidgetscalls.TYPE, MMDAQueryConstants_1.customwidgetscalls.CALLCOUNT, MMDAQueryConstants_1.customwidgetscalls.CALLLOCATIONS], [], [], "./customwidgets.xml");
+/* //Counter Test
+var counter1 : MxAO.OutputObjectCounter;
+counter1 = new MxAO.OutputObjectCounter([],"Wohnzimmer");
+counter1.addProperty("ID","Test");
+
+var counter2 : MxAO.OutputObjectCounter;
+counter2 = new MxAO.OutputObjectCounter([],"Küche");
+counter2.addProperty("ID","Test");
+
+var counter3 : MxAO.OutputObjectCounter;
+counter3 = new MxAO.OutputObjectCounter([],"Schlafzimmer");
+counter3.addProperty("ID","Test2");
+
+var counterlist : MxAO.OutputObjectCounterList;
+counterlist = new MxAO.OutputObjectCounterList();
+
+counterlist.addAndCount(counter1);
+counterlist.addAndCount(counter2);
+counterlist.addAndCount(counter3);
+
+
+console.log(counterlist.toString());
+
+*/
 /* //REPLACE TEST
 var client = new MendixSdkClient(username, apikey);
 var project = new Project(client, projectId, "");

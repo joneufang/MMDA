@@ -343,6 +343,153 @@ export class OutputObject {
     }
 }
 
+export class OutputObjectCounter {
+    private propertys : OutputObjectProperty[];   //Array of Propertys
+    private locations : string;
+    private count : number;
+
+    constructor(propertys : OutputObjectProperty[],location : string) {
+        this.propertys = propertys;
+        this.locations = location;
+        this.count = 1;
+    }
+
+    //Add Property to Object
+    public addProperty(name : string, value : string) {
+        let prop = new OutputObjectProperty(name, value);
+        this.propertys[this.propertys.length] = prop
+    }
+
+    //Get Value of given property
+    public getPropertyValue(name : string)
+    {
+        var value : string = "Property not found";
+        this.propertys.forEach((prop) => {
+            if(prop.getName() == name)
+            {
+                if(prop.toString() == null)
+                {
+                    value = "";
+                }
+                else
+                {
+                    value = prop.toString();
+                }
+               
+            }
+        });
+        return value; 
+    }
+
+    public countAndLocation(location : string) {
+        this.count++;
+        if(!this.locations.match(location))
+        {
+            this.locations = this.locations + ", " + location;
+        }
+    }
+
+    public getLocations() {
+        return this.locations;
+    }
+
+    public getCount() {
+        return this.count;
+    }
+
+    //Serialize ObjectData
+    public toString() {
+        let result : string = "";
+        this.propertys.forEach((prop) => {
+            result += prop.toString() + "\t";
+        });
+        result += this.count + "\t";
+        result += this.locations + "\t";
+        return result;
+    }
+
+    
+    //Serialize Object Property Names
+    public getHeader() {
+        let result : string = "";
+        this.propertys.forEach((prop) => {
+            result += prop.getName() + "\t";
+        });
+        result += "CallCounts" + "\t";
+        result += "CallLocations" + "\t";
+        return result;
+    }
+
+    
+
+}
+
+export class OutputObjectCounterList {
+    private objects : OutputObjectCounter[];
+
+    constructor() {
+        this.objects = new Array();
+    }
+
+    public add(counter : OutputObjectCounter) {
+        if(this.isElement(counter)==-1){
+            this.objects[this.objects.length] = counter;
+        }
+    }
+
+    public addAndCount(counter : OutputObjectCounter) {
+        var index : number;
+        index = this.isElement(counter);
+        if(index==-1){
+            this.objects[this.objects.length] = counter;
+        }
+        else
+        {
+            this.objects[index].countAndLocation(counter.getLocations());
+        }
+    }
+
+    
+    //returns Index of Element, -1 if not element
+    public isElement(counter : OutputObjectCounter) : number {
+        var i;
+        var name : string;
+        var gefunden : boolean = false;
+        name = counter.getPropertyValue("NAME");
+        for(i=0; i < this.objects.length; i++) {
+            if(this.objects[i].getPropertyValue("NAME")==name)
+            {
+                gefunden = true;
+                return i;
+            }
+        }
+        if(!gefunden)
+        {
+            return -1;
+        }
+    }
+
+    public getCounter() {
+        return this.objects;
+    }
+
+    public toString() {
+        if(this.objects.length > 0) {
+            let result : string = "";
+            result += this.objects[0].getHeader() + "\n\n"; 
+            this.objects.forEach((obj) => {
+                result += obj.toString() + "\n";
+            });
+            return result;
+        }
+        else
+        {
+            return "No Entrys Found";
+        }
+        
+    }
+}
+
 //Container for a single MendixProperty
 export class OutputObjectProperty {
     private name : string;      //Name of the Property

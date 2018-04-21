@@ -122,3 +122,11 @@ var snippets;
     snippets.ENTITY = "ENTITY";
     snippets.ALL = "ALL";
 })(snippets = exports.snippets || (exports.snippets = {}));
+var customwidgetscalls;
+(function (customwidgetscalls) {
+    customwidgetscalls.NAME = "NAME";
+    customwidgetscalls.TYPE = "TYPE";
+    customwidgetscalls.CALLCOUNT = "CALLCOUNT";
+    customwidgetscalls.CALLLOCATIONS = "CALLLOCATIONS";
+    customwidgetscalls.ALL = "ALL";
+})(customwidgetscalls = exports.customwidgetscalls || (exports.customwidgetscalls = {}));
