@@ -6,6 +6,7 @@ var MMDAQueryConstants_1 = require("./MMDAQueryConstants");
 var username = 'jochen.neufang@mansystems.de';
 var apikey = 'e6a890bf-6377-4395-8924-87bfe8da7330';
 var projectId = "01bfc705-81e4-4ffa-8bc9-0c43e7f2b5ba";
+var projectIdTestapp = '63c56da2-8dd9-4114-8cc5-248914c72573';
 var project = new MMDA.MMDAProject(username, apikey, projectId);
 //let project = new mendixanalytics.MxAToXMLFile(username, apikey, projectId, "./Test.xml");
 //project.getDocumentsFromProject([qrycons.propertys.ALL], [], [], [1]); //All Propertys unfiltered
@@ -48,7 +49,46 @@ var project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getFolderDocumentsAsJSON("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.json");
 //project.getFolderDocumentsAsHTML("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.html");
 //qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER
-project.getProjectCustomWidgetsAsXML([MMDAQueryConstants_1.customwidgetscalls.NAME, MMDAQueryConstants_1.customwidgetscalls.TYPE, MMDAQueryConstants_1.customwidgetscalls.CALLCOUNT, MMDAQueryConstants_1.customwidgetscalls.CALLLOCATIONS], [], [], "./customwidgets.xml");
+//project.getProjectCustomWidgetsAsXML([cw.NAME, cw.TYPE, cw.CALLCOUNT, cw.CALLLOCATIONS],[],[],"./customwidgets.xml");
+project.getProjectWidgetsAsXML([MMDAQueryConstants_1.customwidgetscalls.NAME, MMDAQueryConstants_1.customwidgetscalls.TYPE, MMDAQueryConstants_1.customwidgetscalls.CALLCOUNT, MMDAQueryConstants_1.customwidgetscalls.CALLLOCATIONS], [], [], "./widgets.xml");
+/* //WidgetType test
+
+var client = new MendixSdkClient(username, apikey);
+var project = new Project(client, projectId, "");
+
+
+project.createWorkingCopy().then((workingCopy) => {
+    return workingCopy.model().allDocuments();
+})
+.then((documents) => {
+    
+    return loadAllDocumentsAsPromise(documents);
+})
+.done((loadeddocs) => {
+
+    loadeddocs.forEach((doc) => {
+       
+        doc.traverse((structure) => {
+            if(structure instanceof pages.Widget && !(structure.structureTypeName === "CustomWidgets$CustomWidget")) {
+                var widget : pages.Widget;
+                widget = structure;
+                console.log(widget.class + ";" + widget.name + ";" + widget.structureTypeName);
+            }
+        });
+        
+        
+    });
+
+
+    //Auslagern !!!!!!!!!!
+    console.log("Im Done!!!");
+    
+
+});
+
+function loadAllDocumentsAsPromise(documents: projects.IDocument[]): when.Promise<projects.Document[]> {
+    return when.all<projects.Document[]>(documents.map( doc => loadAsPromise(doc)));
+} */
 /* //Counter Test
 var counter1 : MxAO.OutputObjectCounter;
 counter1 = new MxAO.OutputObjectCounter([],"Wohnzimmer");

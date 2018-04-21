@@ -130,3 +130,11 @@ var customwidgetscalls;
     customwidgetscalls.CALLLOCATIONS = "CALLLOCATIONS";
     customwidgetscalls.ALL = "ALL";
 })(customwidgetscalls = exports.customwidgetscalls || (exports.customwidgetscalls = {}));
+var widgetscalls;
+(function (widgetscalls) {
+    widgetscalls.NAME = "NAME";
+    widgetscalls.TYPE = "TYPE";
+    widgetscalls.CALLCOUNT = "CALLCOUNT";
+    widgetscalls.CALLLOCATIONS = "CALLLOCATIONS";
+    widgetscalls.ALL = "ALL";
+})(widgetscalls = exports.widgetscalls || (exports.widgetscalls = {}));

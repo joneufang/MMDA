@@ -1461,7 +1461,7 @@ var MMDAProject = /** @class */ (function () {
             .done(function (loadeddocs) {
             var customwidgetadapter = new MMDAA.CustomWidgetAdapter();
             var customwidgetlist = new MMDAO.OutputObjectCounterList();
-            customwidgetlist = customwidgetadapter.getCounter(loadeddocs);
+            customwidgetlist = customwidgetadapter.getCustomWidgetCounter(loadeddocs);
             _this.returnCustomWidgets(customwidgetlist, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
         });
     };
@@ -1476,6 +1476,57 @@ var MMDAProject = /** @class */ (function () {
     };
     MMDAProject.prototype.getProjectCustomWidgetsAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectCustomWidgets(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
+    MMDAProject.prototype.returnWidgets = function (widgets, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        widgets.getCounter().forEach(function (wcounter) {
+            var wadapter = new MMDAA.WidgetAdapter();
+            var propertys = new Array();
+            var MMDAobj;
+            propertys = wadapter.getWidgetPropertys(wcounter, qrypropertys);
+            MMDAobj = new MMDAO.OutputObject(propertys, "Widget"); //Get filtered Documents
+            if (wadapter.filter(MMDAobj, filter)) {
+                outputobjects.addObject(MMDAobj); //filter object
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+        outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+        console.log("Im Done!!!");
+    };
+    /*
+    Gets Documents from whole Project
+    Parameter: qrypropertys : string[]      Array of property constants of wanted propertys
+    Parameter: qryfiltertypes : string[]    Array of filter constants of propertys to filter
+    Parameter: qryfiltervalues : string[]   Array of Values for the filters
+    Parameter: qrysortcolumns : number[]    Array of Columnnumbers for sorting
+    Parameter: qryresulttype : string       Constant which ResultType should be used
+    */
+    MMDAProject.prototype.getProjectWidgets = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allDocuments();
+        })
+            .then(function (documents) {
+            return _this.loadAllDocumentsAsPromise(documents);
+        })
+            .done(function (loadeddocs) {
+            var widgetadapter = new MMDAA.WidgetAdapter();
+            var widgetlist = new MMDAO.OutputObjectCounterList();
+            widgetlist = widgetadapter.getWidgetCounter(loadeddocs);
+            _this.returnWidgets(widgetlist, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getProjectWidgetsAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectWidgets(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectWidgetsAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectWidgets(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectWidgetsAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectWidgets(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectWidgetsAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectWidgets(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
     //Constants to define output target
     MMDAProject.TEXTFILE = "TEXTFILE";
