@@ -3,12 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //import * as MxAA from "./MxAObjectAdapter";
 var MMDA = require("./MendixMetaDataAPI");
 var MMDAQueryConstants_1 = require("./MMDAQueryConstants");
+var MMDAQueryConstants_2 = require("./MMDAQueryConstants");
 var username = 'jochen.neufang@mansystems.de';
 var apikey = 'e6a890bf-6377-4395-8924-87bfe8da7330';
 var projectId = "01bfc705-81e4-4ffa-8bc9-0c43e7f2b5ba";
 var projectIdTestapp = '63c56da2-8dd9-4114-8cc5-248914c72573';
 var projectIdNutrician = '0e5f230a-0269-43ac-bb2f-77bf837c722f';
-var project = new MMDA.MMDAProject(username, apikey, projectIdNutrician);
+var project = new MMDA.MMDAProject(username, apikey, projectId);
 //let project = new mendixanalytics.MxAToXMLFile(username, apikey, projectId, "./Test.xml");
 //project.getDocumentsFromProject([qrycons.propertys.ALL], [], [], [1]); //All Propertys unfiltered
 //project.getDocumentsFromProject([qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER], [], [], [qrycons.sorting.TYPE,qrycons.sorting.NAME]);  //unfiltered Result with sorting
@@ -50,9 +51,9 @@ var project = new MMDA.MMDAProject(username, apikey, projectIdNutrician);
 //project.getFolderDocumentsAsJSON("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.json");
 //project.getFolderDocumentsAsHTML("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.html");
 //qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER
-//project.getProjectCustomWidgetsAsXML([cw.NAME, cw.TYPE, cw.CALLCOUNT, cw.CALLLOCATIONS],[],[],"./customwidgets.xml");
+project.getProjectCustomWidgetsAsXML([MMDAQueryConstants_1.customwidgetcalls.NAME, MMDAQueryConstants_1.customwidgetcalls.TYPE, MMDAQueryConstants_1.customwidgetcalls.CALLCOUNT, MMDAQueryConstants_1.customwidgetcalls.CALLLOCATIONS], [], [], "./customwidgets.xml");
 //project.getProjectWidgetsAsXML([w.NAME, w.TYPE, w.CALLCOUNT, w.CALLLOCATIONS],[],[],"./widgets.xml");
-project.getProjectMicroflowCallsAsXML([MMDAQueryConstants_1.microflowcalls.ID, MMDAQueryConstants_1.microflowcalls.NAME, MMDAQueryConstants_1.microflowcalls.TYPE, MMDAQueryConstants_1.microflowcalls.CALLCOUNT, MMDAQueryConstants_1.microflowcalls.CALLLOCATIONS], [], [], "./microflowcalls.xml");
+project.getProjectMicroflowCallsAsXML([MMDAQueryConstants_2.microflowcalls.ID, MMDAQueryConstants_2.microflowcalls.NAME, MMDAQueryConstants_2.microflowcalls.TYPE, MMDAQueryConstants_2.microflowcalls.CALLCOUNT, MMDAQueryConstants_2.microflowcalls.CALLLOCATIONS], [], [], "./microflowcalls.xml");
 /* //WidgetType test
 
 var client = new MendixSdkClient(username, apikey);

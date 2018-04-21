@@ -385,7 +385,14 @@ export class OutputObjectCounter {
         this.count++;
         if(!this.locations.match(location))
         {
-            this.locations = this.locations + ", " + location;
+            if(this.locations == "")
+            {
+                this.locations = location;
+            }
+            else
+            {
+                this.locations = this.locations + ", " + location;
+            }
         }
     }
 

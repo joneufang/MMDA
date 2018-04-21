@@ -314,7 +314,12 @@ var OutputObjectCounter = /** @class */ (function () {
     OutputObjectCounter.prototype.countAndLocation = function (location) {
         this.count++;
         if (!this.locations.match(location)) {
-            this.locations = this.locations + ", " + location;
+            if (this.locations == "") {
+                this.locations = location;
+            }
+            else {
+                this.locations = this.locations + ", " + location;
+            }
         }
     };
     OutputObjectCounter.prototype.getLocations = function () {
