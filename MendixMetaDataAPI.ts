@@ -1770,6 +1770,65 @@ export class MMDAProject {
     public getProjectWidgetsAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
         this.getProjectWidgets(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     }
+
+    protected returnMicroflowCall(microflowcalls : MMDAO.OutputObjectCounterList, qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string)
+    {
+        var outputobjects : MMDAO.OutputObjectList = new MMDAO.OutputObjectList();
+
+        microflowcalls.getCounter().forEach((mfccounter) => {
+            var mfcadapter : MMDAA.MicroflowCallAdapter = new MMDAA.MicroflowCallAdapter();
+            var propertys : MMDAO.OutputObjectProperty[] = new Array();
+            var MMDAobj : MMDAO.OutputObject;
+            propertys = mfcadapter.getMicroflowCallPropertys(mfccounter, qrypropertys);
+            MMDAobj = new MMDAO.OutputObject(propertys,"MicroflowCall");                   //Get filtered Documents
+            if(mfcadapter.filter(MMDAobj,filter))
+            {
+                outputobjects.addObject(MMDAobj);                        //filter object
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns);         //Sort Objects
+        outputobjects.returnResult(qryresulttype,filename);       //Return As Output Type
+        console.log("Im Done!!!");
+    }
+
+    /*
+    Gets Documents from whole Project
+    Parameter: qrypropertys : string[]      Array of property constants of wanted propertys
+    Parameter: qryfiltertypes : string[]    Array of filter constants of propertys to filter
+    Parameter: qryfiltervalues : string[]   Array of Values for the filters
+    Parameter: qrysortcolumns : number[]    Array of Columnnumbers for sorting
+    Parameter: qryresulttype : string       Constant which ResultType should be used
+    */
+    protected getProjectMicroflowCalls(qrypropertys : string[], filter : Filter[], qrysortcolumns : Sorter[], qryresulttype : string, filename: string) {
+        this.project.createWorkingCopy().then((workingCopy) => {
+            return workingCopy.model().allDocuments();
+        })
+        .then((documents) => { 
+            return this.loadAllDocumentsAsPromise(documents);
+        })
+        .done((loadeddocs) => {
+            var mfcadapter : MMDAA.MicroflowCallAdapter = new MMDAA.MicroflowCallAdapter();
+            var mfclist : MMDAO.OutputObjectCounterList = new MMDAO.OutputObjectCounterList();
+            mfclist = mfcadapter.getMicroflowCounter(loadeddocs);
+            this.returnMicroflowCall(mfclist, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    }
+
+    public getProjectMicroflowCallsAsHTML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
+        this.getProjectMicroflowCalls(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    }
+
+    public getProjectMicroflowCallsAsXML(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
+        this.getProjectMicroflowCalls(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    }
+
+    public getProjectMicroflowCallsAsTXT(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
+        this.getProjectMicroflowCalls(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    }
+
+    public getProjectMicroflowCallsAsJSON(propertys : string[], filter : Filter[], sortcolumn : Sorter[], filename : string) {
+        this.getProjectMicroflowCalls(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    }
 }    
 
 export class Filter {

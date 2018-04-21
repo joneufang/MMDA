@@ -7,7 +7,8 @@ var username = 'jochen.neufang@mansystems.de';
 var apikey = 'e6a890bf-6377-4395-8924-87bfe8da7330';
 var projectId = "01bfc705-81e4-4ffa-8bc9-0c43e7f2b5ba";
 var projectIdTestapp = '63c56da2-8dd9-4114-8cc5-248914c72573';
-var project = new MMDA.MMDAProject(username, apikey, projectId);
+var projectIdNutrician = '0e5f230a-0269-43ac-bb2f-77bf837c722f';
+var project = new MMDA.MMDAProject(username, apikey, projectIdNutrician);
 //let project = new mendixanalytics.MxAToXMLFile(username, apikey, projectId, "./Test.xml");
 //project.getDocumentsFromProject([qrycons.propertys.ALL], [], [], [1]); //All Propertys unfiltered
 //project.getDocumentsFromProject([qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER], [], [], [qrycons.sorting.TYPE,qrycons.sorting.NAME]);  //unfiltered Result with sorting
@@ -50,7 +51,8 @@ var project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getFolderDocumentsAsHTML("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.html");
 //qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER
 //project.getProjectCustomWidgetsAsXML([cw.NAME, cw.TYPE, cw.CALLCOUNT, cw.CALLLOCATIONS],[],[],"./customwidgets.xml");
-project.getProjectWidgetsAsXML([MMDAQueryConstants_1.widgetcalls.NAME, MMDAQueryConstants_1.widgetcalls.TYPE, MMDAQueryConstants_1.widgetcalls.CALLCOUNT, MMDAQueryConstants_1.widgetcalls.CALLLOCATIONS], [], [], "./widgets.xml");
+//project.getProjectWidgetsAsXML([w.NAME, w.TYPE, w.CALLCOUNT, w.CALLLOCATIONS],[],[],"./widgets.xml");
+project.getProjectMicroflowCallsAsXML([MMDAQueryConstants_1.microflowcalls.ID, MMDAQueryConstants_1.microflowcalls.NAME, MMDAQueryConstants_1.microflowcalls.TYPE, MMDAQueryConstants_1.microflowcalls.CALLCOUNT, MMDAQueryConstants_1.microflowcalls.CALLLOCATIONS], [], [], "./microflowcalls.xml");
 /* //WidgetType test
 
 var client = new MendixSdkClient(username, apikey);

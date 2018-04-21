@@ -138,3 +138,12 @@ var widgetcalls;
     widgetcalls.CALLLOCATIONS = "CALLLOCATIONS";
     widgetcalls.ALL = "ALL";
 })(widgetcalls = exports.widgetcalls || (exports.widgetcalls = {}));
+var microflowcalls;
+(function (microflowcalls) {
+    microflowcalls.ID = "ID";
+    microflowcalls.NAME = "NAME";
+    microflowcalls.TYPE = "TYPE";
+    microflowcalls.CALLCOUNT = "CALLCOUNT";
+    microflowcalls.CALLLOCATIONS = "CALLLOCATIONS";
+    microflowcalls.ALL = "ALL";
+})(microflowcalls = exports.microflowcalls || (exports.microflowcalls = {}));

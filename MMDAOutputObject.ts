@@ -397,6 +397,10 @@ export class OutputObjectCounter {
         return this.count;
     }
 
+    public resetCount() {
+        this.count = 0;
+    }
+
     //Serialize ObjectData
     public toString() {
         let result : string = "";

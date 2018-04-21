@@ -20,6 +20,7 @@ import { regularexpressions as regex } from "./MMDAQueryConstants";
 import { snippets as snip } from "./MMDAQueryConstants";
 import { customwidgetcalls as cw } from "./MMDAQueryConstants";
 import { widgetcalls as w } from "./MMDAQueryConstants";
+import { microflowcalls as mfc } from "./MMDAQueryConstants";
 
 
 
@@ -27,9 +28,10 @@ const username = 'jochen.neufang@mansystems.de';
 const apikey = 'e6a890bf-6377-4395-8924-87bfe8da7330';
 let projectId = `01bfc705-81e4-4ffa-8bc9-0c43e7f2b5ba`;
 let projectIdTestapp = '63c56da2-8dd9-4114-8cc5-248914c72573';
+let projectIdNutrician = '0e5f230a-0269-43ac-bb2f-77bf837c722f';
 
 
-let project = new MMDA.MMDAProject(username, apikey, projectId);
+let project = new MMDA.MMDAProject(username, apikey, projectIdNutrician);
 //let project = new mendixanalytics.MxAToXMLFile(username, apikey, projectId, "./Test.xml");
 //project.getDocumentsFromProject([qrycons.propertys.ALL], [], [], [1]); //All Propertys unfiltered
 //project.getDocumentsFromProject([qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER], [], [], [qrycons.sorting.TYPE,qrycons.sorting.NAME]);  //unfiltered Result with sorting
@@ -72,7 +74,8 @@ let project = new MMDA.MMDAProject(username, apikey, projectId);
 //project.getFolderDocumentsAsHTML("00 Common",[qrycons.ID,qrycons.NAME, qrycons.TYPE, qrycons.CONTAINER],[], [qrycons.TYPE,qrycons.NAME],  "./Test.html");
 //qrycons.propertys.ID,qrycons.propertys.NAME, qrycons.propertys.TYPE, qrycons.propertys.CONTAINER
 //project.getProjectCustomWidgetsAsXML([cw.NAME, cw.TYPE, cw.CALLCOUNT, cw.CALLLOCATIONS],[],[],"./customwidgets.xml");
-project.getProjectWidgetsAsXML([w.NAME, w.TYPE, w.CALLCOUNT, w.CALLLOCATIONS],[],[],"./widgets.xml");
+//project.getProjectWidgetsAsXML([w.NAME, w.TYPE, w.CALLCOUNT, w.CALLLOCATIONS],[],[],"./widgets.xml");
+project.getProjectMicroflowCallsAsXML([mfc.ID, mfc.NAME, mfc.TYPE, mfc.CALLCOUNT, mfc.CALLLOCATIONS],[],[],"./microflowcalls.xml");
 
 
 /* //WidgetType test

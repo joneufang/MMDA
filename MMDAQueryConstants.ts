@@ -136,3 +136,12 @@ export namespace widgetcalls {
         export const CALLLOCATIONS : string = "CALLLOCATIONS";
         export const ALL : string = "ALL"; 
 }
+
+export namespace microflowcalls {
+        export const ID : string = "ID";
+        export const NAME : string = "NAME";
+        export const TYPE : string = "TYPE";
+        export const CALLCOUNT : string = "CALLCOUNT"; 
+        export const CALLLOCATIONS : string = "CALLLOCATIONS";
+        export const ALL : string = "ALL"; 
+}

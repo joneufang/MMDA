@@ -1528,6 +1528,57 @@ var MMDAProject = /** @class */ (function () {
     MMDAProject.prototype.getProjectWidgetsAsJSON = function (propertys, filter, sortcolumn, filename) {
         this.getProjectWidgets(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
     };
+    MMDAProject.prototype.returnMicroflowCall = function (microflowcalls, qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var outputobjects = new MMDAO.OutputObjectList();
+        microflowcalls.getCounter().forEach(function (mfccounter) {
+            var mfcadapter = new MMDAA.MicroflowCallAdapter();
+            var propertys = new Array();
+            var MMDAobj;
+            propertys = mfcadapter.getMicroflowCallPropertys(mfccounter, qrypropertys);
+            MMDAobj = new MMDAO.OutputObject(propertys, "MicroflowCall"); //Get filtered Documents
+            if (mfcadapter.filter(MMDAobj, filter)) {
+                outputobjects.addObject(MMDAobj); //filter object
+            }
+        });
+        outputobjects = outputobjects.sort(qrysortcolumns); //Sort Objects
+        outputobjects.returnResult(qryresulttype, filename); //Return As Output Type
+        console.log("Im Done!!!");
+    };
+    /*
+    Gets Documents from whole Project
+    Parameter: qrypropertys : string[]      Array of property constants of wanted propertys
+    Parameter: qryfiltertypes : string[]    Array of filter constants of propertys to filter
+    Parameter: qryfiltervalues : string[]   Array of Values for the filters
+    Parameter: qrysortcolumns : number[]    Array of Columnnumbers for sorting
+    Parameter: qryresulttype : string       Constant which ResultType should be used
+    */
+    MMDAProject.prototype.getProjectMicroflowCalls = function (qrypropertys, filter, qrysortcolumns, qryresulttype, filename) {
+        var _this = this;
+        this.project.createWorkingCopy().then(function (workingCopy) {
+            return workingCopy.model().allDocuments();
+        })
+            .then(function (documents) {
+            return _this.loadAllDocumentsAsPromise(documents);
+        })
+            .done(function (loadeddocs) {
+            var mfcadapter = new MMDAA.MicroflowCallAdapter();
+            var mfclist = new MMDAO.OutputObjectCounterList();
+            mfclist = mfcadapter.getMicroflowCounter(loadeddocs);
+            _this.returnMicroflowCall(mfclist, qrypropertys, filter, qrysortcolumns, qryresulttype, filename);
+        });
+    };
+    MMDAProject.prototype.getProjectMicroflowCallsAsHTML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectMicroflowCalls(propertys, filter, sortcolumn, MMDAProject.HTMLTABLE, filename);
+    };
+    MMDAProject.prototype.getProjectMicroflowCallsAsXML = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectMicroflowCalls(propertys, filter, sortcolumn, MMDAProject.XML, filename);
+    };
+    MMDAProject.prototype.getProjectMicroflowCallsAsTXT = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectMicroflowCalls(propertys, filter, sortcolumn, MMDAProject.TEXTFILE, filename);
+    };
+    MMDAProject.prototype.getProjectMicroflowCallsAsJSON = function (propertys, filter, sortcolumn, filename) {
+        this.getProjectMicroflowCalls(propertys, filter, sortcolumn, MMDAProject.JSON, filename);
+    };
     //Constants to define output target
     MMDAProject.TEXTFILE = "TEXTFILE";
     MMDAProject.HTMLTABLE = "HTMLTABLE";

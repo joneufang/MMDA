@@ -323,6 +323,9 @@ var OutputObjectCounter = /** @class */ (function () {
     OutputObjectCounter.prototype.getCount = function () {
         return this.count;
     };
+    OutputObjectCounter.prototype.resetCount = function () {
+        this.count = 0;
+    };
     //Serialize ObjectData
     OutputObjectCounter.prototype.toString = function () {
         var result = "";

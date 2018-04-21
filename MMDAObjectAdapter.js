@@ -1074,3 +1074,134 @@ var CustomWidgetAdapter = /** @class */ (function (_super) {
     return CustomWidgetAdapter;
 }(WidgetAdapter));
 exports.CustomWidgetAdapter = CustomWidgetAdapter;
+var MicroflowCallAdapter = /** @class */ (function (_super) {
+    __extends(MicroflowCallAdapter, _super);
+    function MicroflowCallAdapter() {
+        return _super.call(this) || this;
+    }
+    MicroflowCallAdapter.prototype.getMicroflowCallPropertys = function (microflowcall, qrypropertys) {
+        var _this = this;
+        var propertys = new Array();
+        if (qrypropertys[0] == qrycons.microflowcalls.ALL) {
+            propertys[propertys.length] = this.getName(microflowcall);
+            propertys[propertys.length] = this.getCallType(microflowcall);
+            propertys[propertys.length] = this.getCallCount(microflowcall);
+            propertys[propertys.length] = this.getCallLocations(microflowcall);
+        }
+        else {
+            qrypropertys.forEach(function (qryprop) {
+                if (qryprop == qrycons.snippets.ID) {
+                    propertys[propertys.length] = _this.getID(microflowcall);
+                }
+                else if (qryprop == qrycons.microflowcalls.NAME) {
+                    propertys[propertys.length] = _this.getName(microflowcall);
+                }
+                else if (qryprop == qrycons.microflowcalls.TYPE) {
+                    propertys[propertys.length] = _this.getCallType(microflowcall);
+                }
+                else if (qryprop == qrycons.microflowcalls.CALLCOUNT) {
+                    propertys[propertys.length] = _this.getCallCount(microflowcall);
+                }
+                else if (qryprop == qrycons.microflowcalls.CALLLOCATIONS) {
+                    propertys[propertys.length] = _this.getCallLocations(microflowcall);
+                }
+                else {
+                    propertys[propertys.length] = new MMDAO.OutputObjectProperty("Unknown Property", "Value of Unknown Property");
+                }
+            });
+        }
+        return propertys;
+    };
+    MicroflowCallAdapter.prototype.getID = function (mf) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.microflowcalls.ID, mf.getPropertyValue(qrycons.microflowcalls.ID));
+        return property;
+    };
+    MicroflowCallAdapter.prototype.getName = function (mf) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.microflowcalls.NAME, mf.getPropertyValue(qrycons.microflowcalls.NAME));
+        return property;
+    };
+    MicroflowCallAdapter.prototype.getCallType = function (mf) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.microflowcalls.TYPE, mf.getPropertyValue(qrycons.microflowcalls.TYPE));
+        return property;
+    };
+    MicroflowCallAdapter.prototype.getCallCount = function (mf) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.microflowcalls.CALLCOUNT, mf.getCount().toString());
+        return property;
+    };
+    MicroflowCallAdapter.prototype.getCallLocations = function (mf) {
+        var property;
+        property = new MMDAO.OutputObjectProperty(qrycons.microflowcalls.CALLLOCATIONS, mf.getLocations());
+        return property;
+    };
+    MicroflowCallAdapter.prototype.getMicroflowCounter = function (docs) {
+        var _this = this;
+        var list = new MMDAO.OutputObjectCounterList();
+        var counter = new Array();
+        var calls;
+        docs.forEach(function (doc) {
+            if (doc instanceof mendixmodelsdk_1.microflows.Microflow) {
+                var mf;
+                mf = new MMDAO.OutputObjectCounter([new MMDAO.OutputObjectProperty("ID", doc.id), new MMDAO.OutputObjectProperty("NAME", doc.qualifiedName), new MMDAO.OutputObjectProperty("TYPE", doc.structureTypeName)], "");
+                mf.resetCount();
+                counter[counter.length] = mf;
+            }
+        });
+        counter.forEach(function (count) {
+            list.addAndCount(count);
+        });
+        counter = new Array();
+        docs.forEach(function (doc) {
+            var returnedcounter = new Array();
+            returnedcounter = _this.traverseForMicroflowCalls(doc);
+            returnedcounter.forEach(function (count) {
+                counter[counter.length] = count;
+            });
+        });
+        //Calls verarbeiten
+        calls = this.traverseForSnippetandLayoutCalls(docs);
+        calls.forEach(function (call) {
+            docs.forEach(function (doc) {
+                if (doc.qualifiedName == call) {
+                    var returnedcounter = new Array();
+                    returnedcounter = _this.traverseForMicroflowCalls(doc);
+                    returnedcounter.forEach(function (count) {
+                        counter[counter.length] = count;
+                    });
+                }
+            });
+        });
+        counter.forEach(function (count) {
+            list.addAndCount(count);
+        });
+        return list;
+    };
+    MicroflowCallAdapter.prototype.traverseForSnippetandLayoutCalls = function (docs) {
+        var names = new Array();
+        docs.forEach(function (doc) {
+            doc.traverse(function (structure) {
+                if (structure instanceof mendixmodelsdk_1.pages.SnippetCall) {
+                    names[names.length] = structure.snippetQualifiedName;
+                }
+                if (structure instanceof mendixmodelsdk_1.pages.LayoutCall) {
+                    names[names.length] = structure.layoutQualifiedName;
+                }
+            });
+        });
+        return names;
+    };
+    MicroflowCallAdapter.prototype.traverseForMicroflowCalls = function (doc) {
+        var counter = new Array();
+        doc.traverse(function (structure) {
+            if (structure instanceof mendixmodelsdk_1.microflows.MicroflowCall || structure instanceof mendixmodelsdk_1.mappings.MappingMicroflowCall || structure instanceof mendixmodelsdk_1.pages.MicroflowSettings) {
+                counter[counter.length] = new MMDAO.OutputObjectCounter([new MMDAO.OutputObjectProperty("NAME", structure.microflowQualifiedName), new MMDAO.OutputObjectProperty("TYPE", "Microflows$Microflow")], doc.qualifiedName);
+            }
+        });
+        return counter;
+    };
+    return MicroflowCallAdapter;
+}(ElementAdapter));
+exports.MicroflowCallAdapter = MicroflowCallAdapter;
